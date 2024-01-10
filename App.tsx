@@ -1,118 +1,97 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
 import React from 'react';
-import type {PropsWithChildren} from 'react';
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
+  AlertDialog,
+  AlertDialogBody,
+  Button,
+  ButtonText,
+  Center,
+  GluestackUIProvider,
   Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+  AlertDialogFooter,
+  ButtonGroup,
+  AlertDialogCloseButton,
+  AlertDialogContent,
+  AlertDialogBackdrop,
+  Heading,
+  Icon,
+  CloseIcon,
+  AlertDialogHeader,
+} from '@gluestack-ui/themed';
+import {config} from '@gluestack-ui/config'; // Optional if you want to use default theme
+import {NavBar} from './src/components/navigation/Navbar';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+// type HomeScreenProps = NativeStackScreenProps<any, 'Home'>;
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+// const HomeScreen: React.FC<HomeScreenProps> = props => {
+//   console.log(props);
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+//   return (
+//     <SafeAreaView>
+//       <Text>qweqweqwe</Text>
+//     </SafeAreaView>
+//   );
+// };
+
+function Example() {
+  const [showAlertDialog, setShowAlertDialog] = React.useState(false);
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
+    <Center h={300}>
+      <Button onPress={() => setShowAlertDialog(true)}>
+        <ButtonText>Click me</ButtonText>
+      </Button>
+      <AlertDialog
+        isOpen={showAlertDialog}
+        onClose={() => {
+          setShowAlertDialog(false);
+        }}>
+        <AlertDialogBackdrop />
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <Heading size="lg">Deactivate account</Heading>
+            <AlertDialogCloseButton>
+              <Icon as={CloseIcon} />
+            </AlertDialogCloseButton>
+          </AlertDialogHeader>
+          <AlertDialogBody>
+            <Text size="sm">
+              Are you sure you want to deactivate your account? Your data will
+              be permanently removed and cannot be undone.
+            </Text>
+          </AlertDialogBody>
+          <AlertDialogFooter>
+            <ButtonGroup space="lg">
+              <Button
+                variant="outline"
+                action="secondary"
+                onPress={() => {
+                  setShowAlertDialog(false);
+                }}>
+                <ButtonText>Cancel</ButtonText>
+              </Button>
+              <Button
+                bg="$error600"
+                action="negative"
+                onPress={() => {
+                  setShowAlertDialog(false);
+                }}>
+                <ButtonText>Deactivate</ButtonText>
+              </Button>
+            </ButtonGroup>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </Center>
   );
 }
 
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
+function App() {
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <GluestackUIProvider config={config}>
+      <Text>Hello World!</Text>
+      <Example />
+      <NavBar />
+    </GluestackUIProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
 
 export default App;

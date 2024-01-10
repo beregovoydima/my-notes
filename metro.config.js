@@ -1,3 +1,4 @@
+const path = require('path');
 const {getDefaultConfig, mergeConfig} = require('@react-native/metro-config');
 
 /**
@@ -6,6 +7,16 @@ const {getDefaultConfig, mergeConfig} = require('@react-native/metro-config');
  *
  * @type {import('metro-config').MetroConfig}
  */
-const config = {};
+
+const config = {
+  resolver: {
+    extraNodeModules: {
+      '@': path.resolve(__dirname, 'src'),
+    },
+  },
+  watchFolders: [
+    path.resolve(__dirname, 'src'), // Make sure to add the project root to the watchFolders
+  ],
+};
 
 module.exports = mergeConfig(getDefaultConfig(__dirname), config);

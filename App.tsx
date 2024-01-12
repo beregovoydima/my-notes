@@ -1,25 +1,16 @@
-import React from 'react';
-import {
-  AlertDialog,
-  AlertDialogBody,
-  Button,
-  ButtonText,
-  Center,
-  GluestackUIProvider,
-  Text,
-  AlertDialogFooter,
-  ButtonGroup,
-  AlertDialogCloseButton,
-  AlertDialogContent,
-  AlertDialogBackdrop,
-  Heading,
-  Icon,
-  CloseIcon,
-  AlertDialogHeader,
-} from '@gluestack-ui/themed';
-import {config} from '@gluestack-ui/config'; // Optional if you want to use default theme
-import {NavBar} from './src/components/navigation/Navbar';
-
+import React, {useState} from 'react';
+import {PaperProvider} from 'react-native-paper';
+import {NavigationContainer} from '@react-navigation/native';
+import {lightTheme, darkTheme} from './src/assets/config/colors';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {Appearance, StyleSheet, View} from 'react-native';
+import {TabMenu} from './src/components/navigation/TabMenu';
+import {PagesType} from './src/core/interfaces';
+import {NotesPage} from './src/pages/notes/NotesPage';
+import {CalendarPage} from './src/pages/calendar/CalendarPage';
+import {TasksPage} from './src/pages/tasks/TasksPage';
+import {SearchPage} from './src/pages/search/SearchPage';
+import {MorePage} from './src/pages/more/MorePage';
 // type HomeScreenProps = NativeStackScreenProps<any, 'Home'>;
 
 // const HomeScreen: React.FC<HomeScreenProps> = props => {
@@ -32,66 +23,58 @@ import {NavBar} from './src/components/navigation/Navbar';
 //   );
 // };
 
-function Example() {
-  const [showAlertDialog, setShowAlertDialog] = React.useState(false);
+const Stack = createNativeStackNavigator();
+
+function App() {
+  const isDarkMode = Appearance.getColorScheme() === 'dark';
+
+  const [pages] = useState<{name: PagesType; component: any}[]>([
+    {name: 'Notes', component: NotesPage},
+    {name: 'Calendar', component: CalendarPage},
+    {name: 'Tasks', component: TasksPage},
+    {name: 'Search', component: SearchPage},
+    {name: 'More', component: MorePage},
+  ]);
+
+  const [activePage, setActivePage] = useState<PagesType>('Notes');
+
+  const changeActivePage = (page: PagesType) => {
+    setActivePage(page);
+  };
+
   return (
-    <Center h={300}>
-      <Button onPress={() => setShowAlertDialog(true)}>
-        <ButtonText>Click me</ButtonText>
-      </Button>
-      <AlertDialog
-        isOpen={showAlertDialog}
-        onClose={() => {
-          setShowAlertDialog(false);
-        }}>
-        <AlertDialogBackdrop />
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <Heading size="lg">Deactivate account</Heading>
-            <AlertDialogCloseButton>
-              <Icon as={CloseIcon} />
-            </AlertDialogCloseButton>
-          </AlertDialogHeader>
-          <AlertDialogBody>
-            <Text size="sm">
-              Are you sure you want to deactivate your account? Your data will
-              be permanently removed and cannot be undone.
-            </Text>
-          </AlertDialogBody>
-          <AlertDialogFooter>
-            <ButtonGroup space="lg">
-              <Button
-                variant="outline"
-                action="secondary"
-                onPress={() => {
-                  setShowAlertDialog(false);
-                }}>
-                <ButtonText>Cancel</ButtonText>
-              </Button>
-              <Button
-                bg="$error600"
-                action="negative"
-                onPress={() => {
-                  setShowAlertDialog(false);
-                }}>
-                <ButtonText>Deactivate</ButtonText>
-              </Button>
-            </ButtonGroup>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </Center>
+    <NavigationContainer>
+      <PaperProvider theme={isDarkMode ? darkTheme : lightTheme}>
+        <View style={styles.main}>
+          <Stack.Navigator>
+            {pages.map(el => {
+              return (
+                <Stack.Screen
+                  key={el.name}
+                  name={el.name}
+                  component={el.component}
+                  options={{headerShown: false}}
+                />
+              );
+            })}
+          </Stack.Navigator>
+          <TabMenu
+            activePage={activePage}
+            changeActivePage={changeActivePage}
+          />
+        </View>
+      </PaperProvider>
+    </NavigationContainer>
   );
 }
 
-function App() {
-  return (
-    <GluestackUIProvider config={config}>
-      <Text>Hello World!</Text>
-      <Example />
-      <NavBar />
-    </GluestackUIProvider>
-  );
-}
+const styles = StyleSheet.create({
+  main: {
+    display: 'flex',
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
+});
 
 export default App;

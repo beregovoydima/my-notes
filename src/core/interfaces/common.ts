@@ -5,3 +5,11 @@ export interface ApiResponse<T> {
     statusText: string;
   };
 }
+
+export type PagesType =
+  | 'Notes'
+  | 'Calendar'
+  | 'Tasks'
+  | 'Search'
+  | 'Settings'
+  | 'More';

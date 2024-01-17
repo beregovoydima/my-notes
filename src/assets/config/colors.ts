@@ -70,7 +70,7 @@ export const lightColors = {
   greyColor: '#6D7693',
   lineGreyColor: '#d9dde0',
   // primaryContainer: '#d9dde0',
-  // secondaryContainer: '#ecf0f1',
+  // secondaryContainer: '#ecf0f1', //background top active button tabs
 };
 
 export const darkColors = {

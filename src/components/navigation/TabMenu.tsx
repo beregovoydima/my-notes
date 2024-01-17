@@ -1,6 +1,6 @@
 // TabMenu.js
 import {useTheme} from '@/assets/config/colors';
-import {MenuTab, PagesType} from '@/core/interfaces';
+import {MenuTab, PagesType, ScreenNavigationProp} from '@/core/interfaces';
 import {useNavigation} from '@react-navigation/native';
 import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
@@ -21,10 +21,9 @@ export const TabMenu = ({activePage, changeActivePage}: Props) => {
   ]);
   const {colors} = useTheme();
 
-  const navigation = useNavigation();
+  const navigation: ScreenNavigationProp = useNavigation();
   const changePage = (page: PagesType) => {
     changeActivePage(page);
-    //@ts-ignore
     navigation.navigate(page);
   };
   return (

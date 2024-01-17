@@ -25,6 +25,7 @@ export interface NotesItemChildren {
 }
 
 export interface NotesFolderItem {
+  id: number;
   name: string;
   label: string;
   isDeletable: boolean;

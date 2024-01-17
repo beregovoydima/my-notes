@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import {PaperProvider} from 'react-native-paper';
 import {NavigationContainer} from '@react-navigation/native';
-import {lightTheme, darkTheme} from './src/assets/config/colors';
+import {lightTheme} from './src/assets/config/colors';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {Appearance, StyleSheet, View} from 'react-native';
+import {Appearance, StyleSheet} from 'react-native';
 import {TabMenu} from './src/components/navigation/TabMenu';
 import {PagesType} from './src/core/interfaces';
 import {NotesPage} from './src/pages/notes/NotesPage';
@@ -11,6 +11,9 @@ import {CalendarPage} from './src/pages/calendar/CalendarPage';
 import {TasksPage} from './src/pages/tasks/TasksPage';
 import {SearchPage} from './src/pages/search/SearchPage';
 import {MorePage} from './src/pages/more/MorePage';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {NoteEditPage} from './src/pages/notes/NoteEditPage';
+
 // type HomeScreenProps = NativeStackScreenProps<any, 'Home'>;
 
 // const HomeScreen: React.FC<HomeScreenProps> = props => {
@@ -44,8 +47,8 @@ function App() {
 
   return (
     <NavigationContainer>
-      <PaperProvider theme={isDarkMode ? darkTheme : lightTheme}>
-        <View style={styles.main}>
+      <PaperProvider theme={isDarkMode ? lightTheme : lightTheme}>
+        <GestureHandlerRootView style={styles.main}>
           <Stack.Navigator>
             {pages.map(el => {
               return (
@@ -57,12 +60,17 @@ function App() {
                 />
               );
             })}
+            <Stack.Screen
+              name="NoteEdit"
+              component={NoteEditPage}
+              options={{headerShown: false}}
+            />
           </Stack.Navigator>
           <TabMenu
             activePage={activePage}
             changeActivePage={changeActivePage}
           />
-        </View>
+        </GestureHandlerRootView>
       </PaperProvider>
     </NavigationContainer>
   );

@@ -1,5 +1,7 @@
-import {NotesItemList} from '@/core/interfaces';
+import {NoteEditScreenRouteProp, NotesItemList} from '@/core/interfaces';
 import {notesService} from '@/core/services';
+import {useNavigation} from '@react-navigation/native';
+import moment from 'moment';
 import React, {useCallback, useEffect, useState} from 'react';
 import {
   Text,
@@ -13,47 +15,32 @@ import {Button} from 'react-native-paper';
 import {
   actions,
   FONT_SIZE,
+  IconRecord,
   RichEditor,
   RichToolbar,
 } from 'react-native-pell-rich-editor';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-interface IBarIcon {
-  disabled: boolean;
-  iconGap: number;
-  iconSize: number;
-  selected: boolean;
-  tintColor: string;
-}
-
-export const NoteEditPage = () => {
-  const handleHead = (icon: IBarIcon) => {
+export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
+  const handleHead = (icon: IconRecord) => {
     return <Text style={{color: icon.tintColor}}>H12</Text>;
   };
+  console.log(1, route.params?.noteId);
 
   const [note, setNote] = useState<NotesItemList>({
     id: Date.now(),
     type: 'note', // 'note, list'
+    created: moment().format(),
+    updated: null,
     color: '', // need types
     folder: '',
-    title: 'First', //string
-    label: 'qweqweqe',
+    title: '', //string
+    label: '',
     files: [],
     fontWeight: 400, // font weight
     fontSize: 16, //font Size
     checked: false,
-    children: [
-      {
-        id: 1,
-        label: 'qwe1',
-        checked: false,
-      },
-      {
-        id: 2,
-        label: 'qweq',
-        checked: false,
-      },
-    ],
+    children: [],
   });
 
   const [text, setDescription] = useState<string>('');
@@ -66,38 +53,28 @@ export const NoteEditPage = () => {
     richTextRef.current?.setFontSize(size[4] as FONT_SIZE);
   }, []);
 
-  const getNotesCollection = async () => {
-    const response = await notesService.getCollectionNote();
+  useEffect(() => {
+    getNotesCollection();
+  }, []);
 
+  const getNotesCollection = () => {
+    const response = notesService.getCollectionNote();
     if (response && response.length > 0) {
       setNote(prevNote => ({
         ...prevNote,
-        label: response[0].label,
+        label: response.at(-1)?.label || '',
       }));
     }
   };
 
-  useEffect(() => {
-    getNotesCollection();
-    console.log('mount');
-
-    return () => {
-      // Код, который нужно выполнить при размонтировании компонента (аналог componentWillUnmount)
-      console.log('Component will unmount');
-    };
-  }, []);
-
-  // const setFontSize = fontSize => {
-  //   console.log(fontSize);
-  //   richTextRef.current?.setFontSize(fontSize);
-  // };
-
   const handleSave = async () => {
     note.label = text;
+    note.id = Date.now();
+
     await notesService.setNote(note);
   };
 
-  const getIcon = (icon: IBarIcon) => {
+  const getIcon = (icon: IconRecord) => {
     return <Icon name="folder" size={icon.iconSize} color={icon.tintColor} />;
   };
 
@@ -111,7 +88,6 @@ export const NoteEditPage = () => {
 
   const changeDescription = (description: string) => {
     setDescription(description);
-    console.log('descriptionText:', description);
   };
 
   return (
@@ -124,7 +100,6 @@ export const NoteEditPage = () => {
             ref={ref => (richTextRef.current = ref)}
             placeholder={'please input content'}
             onChange={changeDescription}
-            initialHeight={500}
             initialContentHTML={note.label}
           />
         </KeyboardAvoidingView>
@@ -150,7 +125,7 @@ export const NoteEditPage = () => {
         iconMap={{
           [actions.heading1]: handleHead,
         }}
-        getIcon={(icon: IBarIcon) => getIcon(icon)}
+        getIcon={(icon: IconRecord) => getIcon(icon)}
         fontSize={handleFontSize}
       />
       <Button onPress={handleSave}>Save</Button>

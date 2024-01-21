@@ -1,7 +1,8 @@
+import {ParamListBase, RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
 export type RootStackParamList = {
-  NoteEdit: undefined;
+  NoteEdit: {noteId?: null | number};
   Notes: undefined;
   Calendar: undefined;
   Tasks: undefined;
@@ -12,7 +13,11 @@ export type RootStackParamList = {
   // Другие экраны
 };
 
-export type ScreenNavigationProp = NativeStackNavigationProp<
-  RootStackParamList,
-  'NoteEdit'
->;
+export type ScreenNavigationProp =
+  NativeStackNavigationProp<RootStackParamList>;
+
+export type ExtendedScreenNavigationProp = ScreenNavigationProp & {
+  getCurrentRoute: () => RouteProp<ParamListBase> | undefined; // Замените any на фактический тип, который возвращает getCurrentRoute
+};
+
+export type NoteEditScreenRouteProp = RouteProp<RootStackParamList, 'NoteEdit'>;

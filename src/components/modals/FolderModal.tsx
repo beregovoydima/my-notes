@@ -1,26 +1,22 @@
-import {useTheme} from '@/assets/config/colors';
 import {NotesFolderItem} from '@/core/interfaces';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Modal, Portal, Text, IconButton, TextInput} from 'react-native-paper';
+import {Modal, Portal, Text, TextInput, Button} from 'react-native-paper';
 
 interface Props {
   visible: boolean;
   hideModal: () => void;
   saveFolder: (val: string, id?: number) => void;
-  editFolder: NotesFolderItem | null;
+  editFolderData: NotesFolderItem | null;
 }
 
 export const FolderModal = ({
   visible,
   hideModal,
   saveFolder,
-  editFolder,
+  editFolderData,
 }: Props) => {
-  const {colors} = useTheme();
   const [text, setText] = useState('');
-
-  const containerStyle = {backgroundColor: 'white', padding: 20, margin: 20};
 
   const closeModal = () => {
     setText('');
@@ -28,8 +24,8 @@ export const FolderModal = ({
   };
 
   const save = () => {
-    if (editFolder) {
-      saveFolder(text, editFolder.id);
+    if (editFolderData) {
+      saveFolder(text, editFolderData.id);
     } else {
       saveFolder(text);
     }
@@ -38,10 +34,10 @@ export const FolderModal = ({
   };
 
   useEffect(() => {
-    if (editFolder) {
-      setText(editFolder.label);
+    if (editFolderData) {
+      setText(editFolderData.label);
     }
-  }, [editFolder]);
+  }, [editFolderData]);
 
   return (
     <>
@@ -49,9 +45,9 @@ export const FolderModal = ({
         <Modal
           visible={visible}
           onDismiss={closeModal}
-          contentContainerStyle={containerStyle}>
+          contentContainerStyle={styles.containerStyle}>
           <Text variant="titleLarge" style={styles.modal}>
-            {editFolder ? 'Редактировать' : 'Создать'}
+            {editFolderData ? 'Редактировать' : 'Создать'}
           </Text>
           <TextInput
             label="Название"
@@ -61,20 +57,12 @@ export const FolderModal = ({
             onChangeText={val => setText(val)}
           />
           <View style={styles.footer}>
-            <IconButton
-              icon="close"
-              iconColor={colors.whiteColor}
-              style={[styles.button, {backgroundColor: colors.error}]}
-              mode="contained"
-              onPress={() => closeModal()}
-            />
-            <IconButton
-              iconColor={colors.whiteColor}
-              style={[styles.button, {backgroundColor: colors.success}]}
-              icon="check"
-              mode="contained"
-              onPress={() => save()}
-            />
+            <Button style={[styles.button]} onPress={() => closeModal()}>
+              Отмена
+            </Button>
+            <Button style={[styles.button]} onPress={() => save()}>
+              Сохранить
+            </Button>
           </View>
         </Modal>
       </Portal>
@@ -83,8 +71,15 @@ export const FolderModal = ({
 };
 
 const styles = StyleSheet.create({
+  containerStyle: {
+    backgroundColor: 'white',
+    padding: 20,
+    margin: 20,
+    borderRadius: 8,
+  },
   modal: {
-    marginTop: 20,
+    borderRadius: 8,
+    marginTop: 0,
     marginBottom: 20,
   },
   button: {
@@ -95,6 +90,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    marginTop: 20,
+    marginTop: 40,
   },
 });

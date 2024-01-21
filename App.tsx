@@ -13,6 +13,8 @@ import {SearchPage} from './src/pages/search/SearchPage';
 import {MorePage} from './src/pages/more/MorePage';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {NoteEditPage} from './src/pages/notes/NoteEditPage';
+import {Provider} from 'react-redux';
+import store from './src/framework/store/store';
 
 // type HomeScreenProps = NativeStackScreenProps<any, 'Home'>;
 
@@ -47,31 +49,33 @@ function App() {
 
   return (
     <NavigationContainer>
-      <PaperProvider theme={isDarkMode ? lightTheme : lightTheme}>
-        <GestureHandlerRootView style={styles.main}>
-          <Stack.Navigator>
-            {pages.map(el => {
-              return (
-                <Stack.Screen
-                  key={el.name}
-                  name={el.name}
-                  component={el.component}
-                  options={{headerShown: false}}
-                />
-              );
-            })}
-            <Stack.Screen
-              name="NoteEdit"
-              component={NoteEditPage}
-              options={{headerShown: false}}
+      <Provider store={store}>
+        <PaperProvider theme={isDarkMode ? lightTheme : lightTheme}>
+          <GestureHandlerRootView style={styles.main}>
+            <Stack.Navigator>
+              {pages.map(el => {
+                return (
+                  <Stack.Screen
+                    key={el.name}
+                    name={el.name}
+                    component={el.component}
+                    options={{headerShown: false}}
+                  />
+                );
+              })}
+              <Stack.Screen
+                name="NoteEdit"
+                component={NoteEditPage}
+                options={{headerShown: false}}
+              />
+            </Stack.Navigator>
+            <TabMenu
+              activePage={activePage}
+              changeActivePage={changeActivePage}
             />
-          </Stack.Navigator>
-          <TabMenu
-            activePage={activePage}
-            changeActivePage={changeActivePage}
-          />
-        </GestureHandlerRootView>
-      </PaperProvider>
+          </GestureHandlerRootView>
+        </PaperProvider>
+      </Provider>
     </NavigationContainer>
   );
 }

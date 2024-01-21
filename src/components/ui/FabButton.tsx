@@ -41,7 +41,7 @@ export const FabButton = ({showFolderModal, fabVisible}: Props) => {
             icon: ({size}) => getIcon(size, 'plus'),
             label: 'Создать заметку',
             labelTextColor: colors.text,
-            onPress: () => navigation.navigate('NoteEdit'),
+            onPress: () => navigation.navigate('NoteEdit', {noteId: null}),
           },
           {
             icon: ({size}) => getIcon(size, 'clipboard-list'),

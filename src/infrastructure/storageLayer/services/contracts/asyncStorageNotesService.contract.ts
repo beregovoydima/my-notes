@@ -1,7 +1,10 @@
-import {NotesItemList} from '@/core/interfaces';
+import {NotesFolderItem, NotesItemList} from '@/core/interfaces';
 
 export interface AsyncStorageNotesServiceContract {
-  setNote(note: NotesItemList): Promise<void>;
+  setNotes(note: NotesItemList[]): Promise<void>;
   getCollectionNote(): Promise<NotesItemList[] | null>;
-  removeNotes(): Promise<void>;
+  removeAllNotes(): Promise<void>;
+  setFolders(folders: NotesFolderItem[]): Promise<void>;
+  getFoldersCollection(): Promise<NotesFolderItem[] | null>;
+  removeAllNotes(): Promise<void>;
 }

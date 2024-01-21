@@ -6,6 +6,8 @@ export type NoteType = 'note' | 'list';
 
 export interface NotesItemList {
   id: number;
+  created: Date | string | null;
+  updated: Date | string | null;
   type: NoteType; // 'note, list'
   color: string; // need types
   folder: string;
@@ -29,4 +31,6 @@ export interface NotesFolderItem {
   name: string;
   label: string;
   isDeletable: boolean;
+  created: Date | string;
+  updated: Date | string | null;
 }

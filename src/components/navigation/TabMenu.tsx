@@ -1,17 +1,21 @@
 // TabMenu.js
 import {useTheme} from '@/assets/config/colors';
-import {MenuTab, PagesType, ScreenNavigationProp} from '@/core/interfaces';
+import {
+  ExtendedScreenNavigationProp,
+  MenuTab,
+  PagesType,
+} from '@/core/interfaces';
 import {useNavigation} from '@react-navigation/native';
 import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import SimpleIcon from 'react-native-vector-icons/SimpleLineIcons';
 
 interface Props {
-  activePage: string;
+  activePage: PagesType;
   changeActivePage: (page: PagesType) => void;
 }
 
-export const TabMenu = ({activePage, changeActivePage}: Props) => {
+export const TabMenu = ({changeActivePage, activePage}: Props) => {
   const [item] = useState<MenuTab[]>([
     {label: 'Заметки', icon: 'note', name: 'Notes'},
     {label: 'Календарь', icon: 'calendar', name: 'Calendar'},
@@ -21,11 +25,13 @@ export const TabMenu = ({activePage, changeActivePage}: Props) => {
   ]);
   const {colors} = useTheme();
 
-  const navigation: ScreenNavigationProp = useNavigation();
+  const navigation: ExtendedScreenNavigationProp = useNavigation();
+
   const changePage = (page: PagesType) => {
     changeActivePage(page);
     navigation.navigate(page);
   };
+
   return (
     <View
       style={[
@@ -41,7 +47,7 @@ export const TabMenu = ({activePage, changeActivePage}: Props) => {
             <SimpleIcon
               name={el.icon}
               color={activePage === el.name ? colors.primary : colors.greyColor}
-              size={22}
+              size={20}
               onPress={() => changePage(el.name)}
             />
             <Text

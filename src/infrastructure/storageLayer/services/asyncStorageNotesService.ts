@@ -1,38 +1,50 @@
-import {NotesItemList} from '@/core/interfaces';
+import {NotesFolderItem, NotesItemList} from '@/core/interfaces';
 import {AsyncStorageRepositoryContract} from '../asyncStorageRepository/contracts';
 import {AsyncStorageNotesServiceContract} from './contracts';
 
 export class AsyncStorageNotesService
   implements AsyncStorageNotesServiceContract
 {
+  readonly #notes = 'notes';
+  readonly #folders = 'folders';
+
   constructor(
     private readonly asyncStorageRepository: AsyncStorageRepositoryContract,
   ) {}
 
-  public async setNote(note: NotesItemList): Promise<void> {
-    const notes = await this.getCollectionNote();
-    if (notes) {
-      return await this.asyncStorageRepository.set(
-        'notes',
-        JSON.stringify([...notes, note]),
-      );
-    } else {
-      return await this.asyncStorageRepository.set(
-        'notes',
-        JSON.stringify([note]),
-      );
-    }
+  public async setNotes(notes: NotesItemList[]): Promise<void> {
+    const response = await this.asyncStorageRepository.set(
+      this.#notes,
+      JSON.stringify(notes),
+    );
+
+    return response;
   }
 
   public async getCollectionNote(): Promise<NotesItemList[] | null> {
-    const response = await this.asyncStorageRepository.get('notes');
+    const response = await this.asyncStorageRepository.get(this.#notes);
     if (response) {
       return JSON.parse(response);
     }
     return null;
   }
 
-  public async removeNotes(): Promise<void> {
-    return await this.asyncStorageRepository.remove('notes');
+  public async removeAllNotes(): Promise<void> {
+    return await this.asyncStorageRepository.remove(this.#notes);
+  }
+
+  public async setFolders(folders: NotesFolderItem[]): Promise<void> {
+    return await this.asyncStorageRepository.set(
+      this.#folders,
+      JSON.stringify(folders),
+    );
+  }
+
+  public async getFoldersCollection(): Promise<NotesFolderItem[] | null> {
+    const response = await this.asyncStorageRepository.get(this.#folders);
+    if (response) {
+      return JSON.parse(response);
+    }
+    return null;
   }
 }

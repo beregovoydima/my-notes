@@ -4,26 +4,18 @@ export type NotesPageType = 'notes' | 'folders' | 'list';
 
 export type NoteType = 'note' | 'list';
 
-export interface NotesItemList {
+export interface NotesItems {
   id: number;
   created: Date | string | null;
   updated: Date | string | null;
   type: NoteType; // 'note, list'
-  color: string; // need types
-  folder: string;
+  color: string | null; // need types
+  folder: string | null;
   title: string; //string
   label: string;
   files: [];
   fontWeight: FontWeightType; // font weight
   fontSize: FontWeightSize; //font Size
-  checked: boolean;
-  children: NotesItemChildren[];
-}
-
-export interface NotesItemChildren {
-  id: number;
-  label: string;
-  checked: boolean;
 }
 
 export interface NotesFolderItem {
@@ -33,4 +25,28 @@ export interface NotesFolderItem {
   isDeletable: boolean;
   created: Date | string;
   updated: Date | string | null;
+}
+
+export interface NotesListItem {
+  id: number;
+  type: NoteType;
+  title: string;
+  color: string | null; // need types
+  folder: string | null;
+  created: Date | string;
+  updated: Date | string | null;
+  items: NotesListItemChildren[];
+}
+
+export interface NotesListItemChildren {
+  id: number;
+  text: string;
+  isChecked: boolean;
+  children: NotesListItemChildrenItem[];
+}
+
+export interface NotesListItemChildrenItem {
+  id: number;
+  text: string;
+  isChecked: boolean;
 }

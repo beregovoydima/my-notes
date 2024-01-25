@@ -1,28 +1,21 @@
 import {useTheme} from '@/assets/config/colors';
-import {NotesItemList, ScreenNavigationProp} from '@/core/interfaces';
+import {NotesItems, ScreenNavigationProp} from '@/core/interfaces';
 import {useNavigation} from '@react-navigation/native';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Avatar, Card, Text} from 'react-native-paper';
 import {NotesMenu} from '../ui/menu/NotesMenu';
 import {notesService} from '@/core/services';
+import moment from 'moment';
 
 interface Props {
-  notes: NotesItemList[];
+  notes: NotesItems[];
 }
 
 export const NotesItem = ({notes}: Props) => {
   const {colors} = useTheme();
 
   const navigation: ScreenNavigationProp = useNavigation();
-
-  // const getLeftIcon = (props: any) => {
-  //   return <Avatar.Icon {...props} icon="folder" />;
-  // };
-
-  // const getRightIcon = (props: any) => {
-  //   return <IconButton {...props} icon="dots-vertical" onPress={() => {}} />;
-  // };
 
   const saveNotesInStorage = async () => {
     const response = notesService.getCollectionNote();
@@ -36,13 +29,16 @@ export const NotesItem = ({notes}: Props) => {
     return stringWithLineBreaks.replace(/<[^>]*>/g, ' ');
   };
 
-  const LeftContent = props => <Avatar.Icon {...props} icon="folder" />;
+  const leftContent = (props: {size: number}) => {
+    return <Avatar.Icon {...props} icon="note" />;
+  };
 
   const deleteNote = (id: number) => {
     const findNote = notes.find(el => el.id === id);
     if (findNote) {
-      notesService.setNotesInStore([...notes.filter(el => el.id !== id)]);
       saveNotesInStorage();
+
+      notesService.setNotesInStore([...notes.filter(el => el.id !== id)]);
     }
   };
 
@@ -50,36 +46,44 @@ export const NotesItem = ({notes}: Props) => {
     navigation.navigate('NoteEdit', {noteId: id});
   };
 
-  const getMoreIcon = (note: NotesItemList) => {
+  const getMoreIcon = (note: NotesItems, index: number) => {
     return (
       <NotesMenu
         editNote={() => editNote(note.id)}
         notes={note}
         deleteNote={deleteNote}
+        index={index}
       />
     );
   };
   return (
     <>
-      {notes.map(el => {
-        return (
-          <View key={el.id} style={styles.item}>
-            <Card
-              style={{backgroundColor: colors.whiteColor}}
-              onPress={() => editNote(el.id)}>
-              <Card.Title
-                title={el.title}
-                subtitle={stripHtmlTags(el.label)}
-                left={LeftContent}
-                right={() => getMoreIcon(el)}
-              />
-              <Card.Content>
-                <Text variant="labelMedium">{stripHtmlTags(el.label)}</Text>
-              </Card.Content>
-            </Card>
-          </View>
-        );
-      })}
+      {notes.length ? (
+        notes.map((el, index) => {
+          return (
+            <View key={el.id} style={styles.item}>
+              <Card
+                style={{backgroundColor: colors.whiteColor}}
+                onPress={() => editNote(el.id)}>
+                <Card.Title
+                  title={el.title || stripHtmlTags(el.label)}
+                  left={props => leftContent(props)}
+                  right={() => getMoreIcon(el, index)}
+                />
+                <Card.Content>
+                  <Text variant="labelSmall" style={{color: colors.greyColor}}>
+                    {moment(el.updated ? el.updated : el.created).format(
+                      'YYYY-MM-DD HH:mm',
+                    )}
+                  </Text>
+                </Card.Content>
+              </Card>
+            </View>
+          );
+        })
+      ) : (
+        <></>
+      )}
     </>
   );
 };

@@ -1,19 +1,19 @@
 import {NoteStoreServiceContract} from '@/infrastructure/storeLayer/services/contracts';
 import {StoreRepositoryContract} from '@/infrastructure/storeLayer/repository/contracts';
-import {NotesFolderItem, NotesItemList} from '@/core/interfaces';
+import {NotesFolderItem, NotesItems} from '@/core/interfaces';
 
 export class NoteStoreService implements NoteStoreServiceContract {
   constructor(private readonly storeRepository: StoreRepositoryContract) {}
 
-  public setNotesCollection(notes: NotesItemList[]): void {
+  public setNotesCollection(notes: NotesItems[]): void {
     this.storeRepository.set('notes', 'setNotes', notes);
   }
 
-  public getNotesCollection(): NotesItemList[] {
+  public getNotesCollection(): NotesItems[] {
     return this.storeRepository.get('notes', 'notes');
   }
 
-  public setNote(note: NotesItemList): void {
+  public setNote(note: NotesItems): void {
     this.storeRepository.set('notes', 'setNote', note);
   }
 

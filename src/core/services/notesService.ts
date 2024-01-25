@@ -1,4 +1,4 @@
-import {NotesFolderItem, NotesItemList} from '../interfaces';
+import {NotesFolderItem, NotesItems} from '../interfaces';
 import {NotesServiceContract} from '../contracts/notesService.contract';
 import {AsyncStorageNotesServiceContract} from '@/infrastructure/storageLayer/services/contracts';
 import {NoteStoreServiceContract} from '@/infrastructure/storeLayer/services/contracts';
@@ -9,21 +9,21 @@ export class NotesService implements NotesServiceContract {
     private readonly notesStoreService: NoteStoreServiceContract,
   ) {}
 
-  public async setNote(note: NotesItemList): Promise<void> {
+  public async setNote(note: NotesItems): Promise<void> {
     const notes = this.notesStoreService.getNotesCollection();
     this.setNotesInStore([...notes, note]);
     return await this.asyncStorageNotesService.setNotes([...notes, note]);
   }
 
-  public async setNotesinStorage(notes: NotesItemList[]): Promise<void> {
+  public async setNotesinStorage(notes: NotesItems[]): Promise<void> {
     return await this.asyncStorageNotesService.setNotes([...notes]);
   }
 
-  public setNotesInStore(notes: NotesItemList[]): void {
+  public setNotesInStore(notes: NotesItems[]): void {
     this.notesStoreService.setNotesCollection(notes);
   }
 
-  public async getCollectionNoteFromStorage(): Promise<NotesItemList[] | null> {
+  public async getCollectionNoteFromStorage(): Promise<NotesItems[] | null> {
     return await this.asyncStorageNotesService.getCollectionNote();
   }
 
@@ -31,7 +31,7 @@ export class NotesService implements NotesServiceContract {
     return await this.removeNotes();
   }
 
-  public getCollectionNote(): NotesItemList[] {
+  public getCollectionNote(): NotesItems[] {
     return this.notesStoreService.getNotesCollection();
   }
 

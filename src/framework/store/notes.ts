@@ -1,9 +1,9 @@
 // counterSlice.js
-import {NotesItemList} from '@/core/interfaces';
+import {NotesItems} from '@/core/interfaces';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 export interface StateNotes {
-  notes: NotesItemList[];
+  notes: NotesItems[];
 }
 
 const initialState: StateNotes = {
@@ -14,13 +14,13 @@ const notesSlice = createSlice({
   name: 'notes',
   initialState,
   reducers: {
-    setNotes: (state, action: PayloadAction<NotesItemList[]>) => {
+    setNotes: (state, action: PayloadAction<NotesItems[]>) => {
       state.notes = [...action.payload];
     },
     removeNoteById: (state, action: PayloadAction<number>) => {
       state.notes = [...state.notes.filter(el => el.id !== action.payload)];
     },
-    setNote: (state, action: PayloadAction<NotesItemList>) => {
+    setNote: (state, action: PayloadAction<NotesItems>) => {
       state.notes = [...state.notes, action.payload];
     },
   },

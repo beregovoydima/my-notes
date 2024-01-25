@@ -1,12 +1,12 @@
-import {NotesFolderItem, NotesItemList} from '@/core/interfaces';
+import {NotesFolderItem, NotesItems} from '@/core/interfaces';
 
 export interface NotesServiceContract {
-  setNote(note: NotesItemList): Promise<void>;
-  getCollectionNoteFromStorage(): Promise<NotesItemList[] | null>;
+  setNote(note: NotesItems): Promise<void>;
+  getCollectionNoteFromStorage(): Promise<NotesItems[] | null>;
   removeNotes(): Promise<void>;
-  setNotesInStore(notes: NotesItemList[]): void;
-  getCollectionNote(): NotesItemList[];
-  setNotesinStorage(notes: NotesItemList[]): Promise<void>;
+  setNotesInStore(notes: NotesItems[]): void;
+  getCollectionNote(): NotesItems[];
+  setNotesinStorage(notes: NotesItems[]): Promise<void>;
   setFoldersInStorage(folders: NotesFolderItem[]): Promise<void>;
   getFoldersCollectionFromStorage(): Promise<NotesFolderItem[] | null>;
   removeFolder(id: number): Promise<void>;

@@ -8,10 +8,15 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface Props {
   showFolderModal: () => void;
+  showListModal: () => void;
   fabVisible: boolean;
 }
 
-export const FabButton = ({showFolderModal, fabVisible}: Props) => {
+export const FabButton = ({
+  showFolderModal,
+  showListModal,
+  fabVisible,
+}: Props) => {
   const [state, setState] = useState({open: false});
   const navigation: ScreenNavigationProp = useNavigation();
 
@@ -47,7 +52,7 @@ export const FabButton = ({showFolderModal, fabVisible}: Props) => {
             icon: ({size}) => getIcon(size, 'clipboard-list'),
             label: 'Создать список',
             labelTextColor: colors.text,
-            onPress: () => console.log('Pressed email'),
+            onPress: () => showListModal(),
           },
           {
             icon: ({size}) => getIcon(size, 'folder'),

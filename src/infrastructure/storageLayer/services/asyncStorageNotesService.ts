@@ -1,4 +1,4 @@
-import {NotesFolderItem, NotesItemList} from '@/core/interfaces';
+import {NotesFolderItem, NotesItems} from '@/core/interfaces';
 import {AsyncStorageRepositoryContract} from '../asyncStorageRepository/contracts';
 import {AsyncStorageNotesServiceContract} from './contracts';
 
@@ -12,7 +12,7 @@ export class AsyncStorageNotesService
     private readonly asyncStorageRepository: AsyncStorageRepositoryContract,
   ) {}
 
-  public async setNotes(notes: NotesItemList[]): Promise<void> {
+  public async setNotes(notes: NotesItems[]): Promise<void> {
     const response = await this.asyncStorageRepository.set(
       this.#notes,
       JSON.stringify(notes),
@@ -21,7 +21,7 @@ export class AsyncStorageNotesService
     return response;
   }
 
-  public async getCollectionNote(): Promise<NotesItemList[] | null> {
+  public async getCollectionNote(): Promise<NotesItems[] | null> {
     const response = await this.asyncStorageRepository.get(this.#notes);
     if (response) {
       return JSON.parse(response);

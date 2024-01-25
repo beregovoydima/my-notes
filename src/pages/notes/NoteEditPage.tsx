@@ -1,8 +1,8 @@
-import {NoteEditScreenRouteProp, NotesItemList} from '@/core/interfaces';
+import {NoteEditScreenRouteProp, NotesItems} from '@/core/interfaces';
 import {notesService} from '@/core/services';
 import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   Text,
   Platform,
@@ -10,8 +10,9 @@ import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
+  View,
 } from 'react-native';
-import {Button} from 'react-native-paper';
+import {Button, TextInput} from 'react-native-paper';
 import {
   actions,
   FONT_SIZE,
@@ -25,9 +26,11 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
   const handleHead = (icon: IconRecord) => {
     return <Text style={{color: icon.tintColor}}>H12</Text>;
   };
+
+  const [isEdit, setIsEdit] = useState(false);
   console.log(1, route.params?.noteId);
 
-  const [note, setNote] = useState<NotesItemList>({
+  const [note, setNote] = useState<NotesItems>({
     id: Date.now(),
     type: 'note', // 'note, list'
     created: moment().format(),
@@ -44,6 +47,7 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
   });
 
   const [text, setDescription] = useState<string>('');
+  const [title, setTitle] = useState('');
 
   const richTextRef = React.useRef<RichEditor | null>(null);
 
@@ -54,18 +58,16 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
   }, []);
 
   useEffect(() => {
-    getNotesCollection();
-  }, []);
-
-  const getNotesCollection = () => {
     const response = notesService.getCollectionNote();
-    if (response && response.length > 0) {
+    if (response.length && route.params?.noteId) {
+      const findNote = response.find(el => el.id === route.params.noteId);
       setNote(prevNote => ({
         ...prevNote,
-        label: response.at(-1)?.label || '',
+        label: findNote?.label || '',
+        title: findNote?.title || '',
       }));
     }
-  };
+  }, [route.params.noteId]);
 
   const handleSave = async () => {
     note.label = text;
@@ -90,12 +92,39 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
     setDescription(description);
   };
 
+  const textInput = useRef(null);
+
+  useEffect(() => {
+    if (isEdit) {
+      // Фокусируемся на текстовом поле при входе в режим редактирования
+      textInput.current?.focus();
+    }
+  }, [isEdit]);
+
+  const editMode = () => {
+    setIsEdit(true);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.container}>
+        <View>
+          {isEdit ? (
+            <TextInput
+              ref={textInput}
+              label="Title"
+              value={title}
+              onEndEditing={() => setIsEdit(false)}
+              onChangeText={e => setTitle(e)}
+            />
+          ) : (
+            <Text style={styles.title} onPress={() => editMode()}>
+              {title ? title : 'Заголовок'}
+            </Text>
+          )}
+        </View>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-          <Text style={styles.title}>Title</Text>
           <RichEditor
             ref={ref => (richTextRef.current = ref)}
             placeholder={'please input content'}

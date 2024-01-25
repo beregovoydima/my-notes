@@ -1,8 +1,8 @@
 import {useTheme} from '@/assets/config/colors';
 import {NotesFolderItem} from '@/core/interfaces';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Avatar, Card} from 'react-native-paper';
+import {Avatar, Card, Text} from 'react-native-paper';
 import {FoldersMenu} from '../ui/menu/FoldersMenu';
 import {notesService} from '@/core/services';
 import {FolderModal} from '@/components/modals/FolderModal';
@@ -31,13 +31,6 @@ export const FoldersItem = ({
 
   const getLeftIcon = (props: any) => {
     return <Avatar.Icon {...props} icon="folder" />;
-  };
-
-  const setFolders = async () => {
-    const response = await notesService.getFoldersCollectionFromStorage();
-    if (response) {
-      notesService.setFolders(response);
-    }
   };
 
   const hideFollderModal = () => {
@@ -88,22 +81,27 @@ export const FoldersItem = ({
     }
   };
 
+  const sortedFolders = useMemo(() => {
+    return [...folders].sort((a, b) =>
+      moment(b.updated ? b.updated : b.created) >
+      moment(a.updated ? a.updated : a.created)
+        ? 1
+        : -1,
+    );
+  }, [folders]);
+
   useEffect(() => {
     if (editFolderData) {
       setVisibleFolderModal();
     }
   }, [editFolderData, setVisibleFolderModal]);
 
-  useEffect(() => {
-    setFolders();
-  }, []);
-
   const getMoreIcon = (folder: NotesFolderItem) => {
     return (
       <FoldersMenu
         editFolder={() => setEditFolder(folder)}
         folder={folder}
-        deleteFolder={deleteFolder}
+        deleteFolder={() => deleteFolder(folder.id)}
       />
     );
   };
@@ -117,11 +115,10 @@ export const FoldersItem = ({
         editFolderData={editFolderData}
       />
 
-      {folders.map(el => {
+      {sortedFolders.map(el => {
         return (
-          <View style={styles.item}>
+          <View key={el.id} style={[styles.item]}>
             <Card
-              key={el.id}
               style={[
                 {
                   backgroundColor: colors.whiteColor,
@@ -132,6 +129,13 @@ export const FoldersItem = ({
                 left={getLeftIcon}
                 right={() => getMoreIcon(el)}
               />
+              <Card.Content>
+                <Text variant="labelSmall" style={{color: colors.greyColor}}>
+                  {moment(el.updated ? el.updated : el.created).format(
+                    'YYYY-MM-DD HH:mm',
+                  )}
+                </Text>
+              </Card.Content>
             </Card>
           </View>
         );

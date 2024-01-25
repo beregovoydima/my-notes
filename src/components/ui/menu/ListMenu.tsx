@@ -4,13 +4,12 @@ import {StyleSheet, View} from 'react-native';
 import {Divider, IconButton, Menu} from 'react-native-paper';
 
 interface Props {
-  editNote: (id: number) => void;
-  deleteNote: (id: number, index: number) => void;
-  notes: any;
-  index: number;
+  editList: (id: number) => void;
+  deleteList: (id: number) => void;
+  listId: number;
 }
 
-export const NotesMenu = ({editNote, deleteNote, notes, index}: Props) => {
+export const ListMenu = ({editList, deleteList, listId}: Props) => {
   const {colors} = useTheme();
   const [visible, setVisible] = useState(false);
 
@@ -19,11 +18,11 @@ export const NotesMenu = ({editNote, deleteNote, notes, index}: Props) => {
 
   const changeFolder = () => {
     closeMenu();
-    editNote(notes.id);
+    editList(listId);
   };
 
   const delFolder = () => {
-    deleteNote(notes.id, index);
+    deleteList(listId);
   };
 
   return (
@@ -33,7 +32,13 @@ export const NotesMenu = ({editNote, deleteNote, notes, index}: Props) => {
         onDismiss={closeMenu}
         contentStyle={[{backgroundColor: colors.background}, styles.content]}
         anchor={
-          <IconButton size={24} icon="dots-vertical" onPress={openMenu} />
+          <IconButton
+            style={styles.icon}
+            size={26}
+            icon="dots-vertical"
+            iconColor={colors.greyColor}
+            onPress={openMenu}
+          />
         }>
         <Menu.Item
           onPress={() => {
@@ -54,5 +59,8 @@ const styles = StyleSheet.create({
   content: {
     top: 16,
     right: 16,
+  },
+  icon: {
+    margin: 0,
   },
 });

@@ -17,7 +17,7 @@ export function NotesPage({route}: {route: any}) {
   const [isFolderModalVisible, setVisibleFolderModal] = useState(false);
   const [isListModalVisible, setIsListModalVisible] = useState(false);
   const [page, setValue] = useState<NotesPageType>('notes');
-  const notes = useSelector(() => notesService.getCollectionNote());
+  const notes = useSelector(() => notesService.storeGetCollectionNote());
 
   const scrollViewRef = useRef<ScrollView | null>(null);
 
@@ -61,16 +61,16 @@ export function NotesPage({route}: {route: any}) {
   }, [notes]);
 
   const setNotesCollection = async () => {
-    const notesCollection = await notesService.getCollectionNoteFromStorage();
+    const notesCollection = await notesService.storageGetCollectionNote();
     if (notesCollection) {
-      notesService.setNotesInStore([...notesCollection]);
+      notesService.storeSetNotes([...notesCollection]);
     }
   };
 
   const setFolders = async () => {
-    const response = await notesService.getFoldersCollectionFromStorage();
+    const response = await notesService.storageGetFoldersCollection();
     if (response) {
-      notesService.setFolders(response);
+      notesService.storeSetFolders(response);
     }
   };
 
@@ -97,6 +97,7 @@ export function NotesPage({route}: {route: any}) {
         <ListItem
           listModalVisible={isListModalVisible}
           hideListModal={hideListModal}
+          openListModal={showListModal}
         />
       );
     }

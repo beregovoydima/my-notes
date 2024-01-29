@@ -1,4 +1,4 @@
-import {NotesFolderItem, NotesItems} from '../interfaces';
+import {NotesFolderItem, NotesItems, NotesListItem} from '../interfaces';
 import {NotesServiceContract} from '../contracts/notesService.contract';
 import {AsyncStorageNotesServiceContract} from '@/infrastructure/storageLayer/services/contracts';
 import {NoteStoreServiceContract} from '@/infrastructure/storeLayer/services/contracts';
@@ -9,57 +9,85 @@ export class NotesService implements NotesServiceContract {
     private readonly notesStoreService: NoteStoreServiceContract,
   ) {}
 
-  public async setNote(note: NotesItems): Promise<void> {
+  public async storeSetNote(note: NotesItems): Promise<void> {
     const notes = this.notesStoreService.getNotesCollection();
-    this.setNotesInStore([...notes, note]);
+    this.storeSetNotes([...notes, note]);
     return await this.asyncStorageNotesService.setNotes([...notes, note]);
   }
 
-  public async setNotesinStorage(notes: NotesItems[]): Promise<void> {
+  public async storageSetNotes(notes: NotesItems[]): Promise<void> {
     return await this.asyncStorageNotesService.setNotes([...notes]);
   }
 
-  public setNotesInStore(notes: NotesItems[]): void {
+  public storeSetNotes(notes: NotesItems[]): void {
     this.notesStoreService.setNotesCollection(notes);
   }
 
-  public async getCollectionNoteFromStorage(): Promise<NotesItems[] | null> {
+  public async storageGetCollectionNote(): Promise<NotesItems[] | null> {
     return await this.asyncStorageNotesService.getCollectionNote();
   }
 
-  public async removeNotes(): Promise<void> {
-    return await this.removeNotes();
+  public async storageRemoveNotes(): Promise<void> {
+    return await this.asyncStorageNotesService.removeAllNotes();
   }
 
-  public getCollectionNote(): NotesItems[] {
+  public storeGetCollectionNote(): NotesItems[] {
     return this.notesStoreService.getNotesCollection();
   }
 
-  public async setFoldersInStorage(folders: NotesFolderItem[]): Promise<void> {
+  public async storageSetFolders(folders: NotesFolderItem[]): Promise<void> {
     await this.asyncStorageNotesService.setFolders([...folders]);
   }
 
-  public async getFoldersCollectionFromStorage(): Promise<
+  public async storageGetFoldersCollection(): Promise<
     NotesFolderItem[] | null
   > {
     return await this.asyncStorageNotesService.getFoldersCollection();
   }
 
-  public removeFolder(id: number): Promise<void> {}
+  public async storageRemoveFolder(id: number): Promise<void> {
+    console.log(id);
 
-  public removeAllNotes(): Promise<void> {
-    throw new Error('Method not implemented.');
+    // this.asyncStorageNotesService.
   }
 
-  public getFoldersCollection(): NotesFolderItem[] {
+  public async storageRemoveAllNotes(): Promise<void> {
+    return await this.asyncStorageNotesService.removeAllNotes();
+  }
+
+  public storeGetFoldersCollection(): NotesFolderItem[] {
     return this.notesStoreService.getFoldersCollection();
   }
 
-  public setFolder(folder: NotesFolderItem): void {
+  public storeSetFolder(folder: NotesFolderItem): void {
     this.notesStoreService.setFolder(folder);
   }
 
-  public setFolders(folders: NotesFolderItem[]): void {
+  public storeSetFolders(folders: NotesFolderItem[]): void {
     this.notesStoreService.setFoldersCollection(folders);
+  }
+
+  public storeAddList(list: NotesListItem): void {
+    this.notesStoreService.setList(list);
+  }
+
+  public storeGetListCollection(): NotesListItem[] {
+    return this.notesStoreService.getListCollection();
+  }
+
+  public storeUpdateList(list: NotesListItem): void {
+    this.notesStoreService.updateList(list);
+  }
+
+  public storeSetListCollection(lists: NotesListItem[]): void {
+    this.notesStoreService.setListCollection(lists);
+  }
+
+  public async storageSetLists(lists: NotesListItem[]): Promise<void> {
+    this.asyncStorageNotesService.setLists(lists);
+  }
+
+  public async storageGetListCollection(): Promise<NotesListItem[] | null> {
+    return await this.asyncStorageNotesService.getListCollection();
   }
 }

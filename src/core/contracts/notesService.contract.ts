@@ -1,17 +1,23 @@
-import {NotesFolderItem, NotesItems} from '@/core/interfaces';
+import {NotesFolderItem, NotesItems, NotesListItem} from '@/core/interfaces';
 
 export interface NotesServiceContract {
-  setNote(note: NotesItems): Promise<void>;
-  getCollectionNoteFromStorage(): Promise<NotesItems[] | null>;
-  removeNotes(): Promise<void>;
-  setNotesInStore(notes: NotesItems[]): void;
-  getCollectionNote(): NotesItems[];
-  setNotesinStorage(notes: NotesItems[]): Promise<void>;
-  setFoldersInStorage(folders: NotesFolderItem[]): Promise<void>;
-  getFoldersCollectionFromStorage(): Promise<NotesFolderItem[] | null>;
-  removeFolder(id: number): Promise<void>;
-  removeAllNotes(): Promise<void>;
-  getFoldersCollection(): NotesFolderItem[];
-  setFolders(folders: NotesFolderItem[]): void;
-  setFolder(folder: NotesFolderItem): void;
+  storeSetNote(note: NotesItems): Promise<void>;
+  storageSetNotes(notes: NotesItems[]): Promise<void>;
+  storeSetNotes(notes: NotesItems[]): void;
+  storageGetCollectionNote(): Promise<NotesItems[] | null>;
+  storageRemoveNotes(): Promise<void>;
+  storeGetCollectionNote(): NotesItems[];
+  storageSetFolders(folders: NotesFolderItem[]): Promise<void>;
+  storageGetFoldersCollection(): Promise<NotesFolderItem[] | null>;
+  storageRemoveFolder(id: number): Promise<void>;
+  storageRemoveAllNotes(): Promise<void>;
+  storeGetFoldersCollection(): NotesFolderItem[];
+  storeSetFolder(folder: NotesFolderItem): void;
+  storeSetFolders(folders: NotesFolderItem[]): void;
+  storeAddList(list: NotesListItem): void;
+  storeGetListCollection(): NotesListItem[];
+  storeUpdateList(list: NotesListItem): void;
+  storeSetListCollection(lists: NotesListItem[]): void;
+  storageSetLists(lists: NotesListItem[]): Promise<void>;
+  storageGetListCollection(): Promise<NotesListItem[] | null>;
 }

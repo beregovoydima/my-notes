@@ -1,7 +1,7 @@
 import {useTheme} from '@/assets/config/colors';
 import {ListMenu} from '@/components/ui/menu/ListMenu';
 import {NotesListItem, NotesListItemChildren} from '@/core/interfaces';
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Avatar, Card, Text} from 'react-native-paper';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -11,24 +11,39 @@ import {ListCardItemCildren} from './ListCardItemChildren';
 interface Props {
   list: NotesListItem;
   changeList: (list: NotesListItem) => void;
+  deleteList: (id: number) => void;
+  editList: (list: NotesListItem) => void;
 }
 
-export const ListCardItem = ({list, changeList}: Props) => {
+export const ListCardItem = ({
+  list,
+  changeList,
+  deleteList,
+  editList,
+}: Props) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const {colors} = useTheme();
 
-  // const addList = () => {
-  //   const listItem: NotesListItem = {
-  //     ...list,
-  //     items: [
-  //       ...list.items,
-  //       {id: Date.now(), isChecked: false, text: '', children: []},
-  //     ],
-  //   };
-  //   changeList(listItem);
-  // };
+  const getMoreIcon = (el: NotesListItem) => {
+    return (
+      <View style={styles.buttons}>
+        <MaterialIcons
+          name={isExpanded ? 'expand-less' : 'expand-more'}
+          color={colors.greyColor}
+          size={26}
+          onPress={() => setIsExpanded(!isExpanded)}
+          style={{}}
+        />
+        <ListMenu
+          editList={() => editList(list)}
+          deleteList={id => deleteList(id)}
+          listId={el.id}
+        />
+      </View>
+    );
+  };
 
-  const addChildList = (val: NotesListItemChildren) => {
+  const saveChildList = (val: NotesListItemChildren) => {
     const listItem: NotesListItem = {
       ...list,
       items: [
@@ -40,38 +55,23 @@ export const ListCardItem = ({list, changeList}: Props) => {
     changeList(listItem);
   };
 
-  const getMoreIcon = (el: NotesListItem) => {
-    return (
-      <View style={styles.buttons}>
-        <MaterialIcons
-          name={isExpanded ? 'expand-more' : 'expand-less'}
-          color={colors.greyColor}
-          size={26}
-          onPress={() => setIsExpanded(!isExpanded)}
-          style={{}}
-        />
-        <ListMenu
-          editList={id => {
-            console.log(id);
-          }}
-          deleteList={id => {
-            console.log(id);
-          }}
-          listId={el.id}
-        />
-      </View>
-    );
-  };
-
   const getLeftIcon = (props: any) => {
     return <Avatar.Icon {...props} icon="clipboard-list" />;
   };
 
+  const isChecked = useMemo(() => {
+    return !!list.items.length && list.items.every(el => el.isChecked);
+  }, [list]);
+
   return (
-    <View style={styles.item}>
+    <View>
       <Card style={[{backgroundColor: colors.whiteColor}]}>
         <Card.Title
           title={list.title}
+          titleStyle={[
+            isChecked && styles.checkedText,
+            {color: isChecked ? colors.greyColor : colors.text},
+          ]}
           left={getLeftIcon}
           right={() => getMoreIcon(list)}
         />
@@ -83,13 +83,12 @@ export const ListCardItem = ({list, changeList}: Props) => {
           </Text>
           {isExpanded ? (
             <>
-              {/* <Divider /> */}
               {list.items.map(child => {
                 return (
                   <ListCardItemCildren
                     key={child.id}
                     listChild={child}
-                    addChildList={addChildList}
+                    saveChildList={saveChildList}
                   />
                 );
               })}
@@ -104,13 +103,13 @@ export const ListCardItem = ({list, changeList}: Props) => {
 };
 
 const styles = StyleSheet.create({
-  item: {
-    // margin: 5,
-  },
   buttons: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  checkedText: {
+    textDecorationLine: 'line-through',
   },
 });

@@ -1,5 +1,5 @@
 import {useTheme} from '@/assets/config/colors';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-
 interface Props {
   isChecked: boolean;
   label: string;
@@ -20,12 +19,16 @@ export const EditableText = ({isChecked, label, saveText, style}: Props) => {
   const {colors} = useTheme();
 
   const [isEditing, setIsEditing] = useState(false);
-  const [text, setText] = useState(label ? label : '');
+  const [text, setText] = useState('');
 
   const handleSave = () => {
     saveText(text);
     setIsEditing(false);
   };
+
+  useEffect(() => {
+    setText(label);
+  }, [label]);
 
   return (
     <View style={styles.container}>
@@ -34,10 +37,10 @@ export const EditableText = ({isChecked, label, saveText, style}: Props) => {
           style={[
             styles.input,
             isChecked && styles.checkedText,
+            {color: colors.text},
             {
               ...style,
             },
-            {color: colors.text},
           ]}
           value={text}
           onChangeText={setText}
@@ -55,10 +58,10 @@ export const EditableText = ({isChecked, label, saveText, style}: Props) => {
               style={[
                 styles.text,
                 isChecked && styles.checkedText,
+                {color: colors.text},
                 {
                   ...style,
                 },
-                {color: colors.text},
               ]}>
               {text || 'Введите текст'}
             </Text>
@@ -89,6 +92,7 @@ const styles = StyleSheet.create({
     textDecorationLine: 'line-through',
   },
   input: {
+    marginLeft: 8,
     fontSize: 16,
     flex: 1,
     padding: 0,

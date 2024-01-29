@@ -1,6 +1,6 @@
 import {NoteStoreServiceContract} from '@/infrastructure/storeLayer/services/contracts';
 import {StoreRepositoryContract} from '@/infrastructure/storeLayer/repository/contracts';
-import {NotesFolderItem, NotesItems} from '@/core/interfaces';
+import {NotesFolderItem, NotesItems, NotesListItem} from '@/core/interfaces';
 
 export class NoteStoreService implements NoteStoreServiceContract {
   constructor(private readonly storeRepository: StoreRepositoryContract) {}
@@ -31,5 +31,21 @@ export class NoteStoreService implements NoteStoreServiceContract {
 
   public updateFolder(folder: NotesFolderItem): void {
     this.storeRepository.set('folders', 'updateFolder', folder);
+  }
+
+  public setList(list: NotesListItem): void {
+    this.storeRepository.set('list', 'setList', list);
+  }
+
+  public getListCollection(): NotesListItem[] {
+    return this.storeRepository.get('list', 'list');
+  }
+
+  public setListCollection(lists: NotesListItem[]): void {
+    this.storeRepository.set('list', 'setLists', lists);
+  }
+
+  public updateList(list: NotesListItem): void {
+    this.storeRepository.set('list', 'updateList', list);
   }
 }

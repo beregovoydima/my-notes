@@ -18,9 +18,9 @@ export const NotesItem = ({notes}: Props) => {
   const navigation: ScreenNavigationProp = useNavigation();
 
   const saveNotesInStorage = async () => {
-    const response = notesService.getCollectionNote();
+    const response = notesService.storeGetCollectionNote();
 
-    await notesService.setNotesinStorage(response);
+    await notesService.storageSetNotes(response);
   };
 
   const stripHtmlTags = (htmlString: string) => {
@@ -38,7 +38,7 @@ export const NotesItem = ({notes}: Props) => {
     if (findNote) {
       saveNotesInStorage();
 
-      notesService.setNotesInStore([...notes.filter(el => el.id !== id)]);
+      notesService.storeSetNotes([...notes.filter(el => el.id !== id)]);
     }
   };
 

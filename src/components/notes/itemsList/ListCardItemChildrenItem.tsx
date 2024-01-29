@@ -1,36 +1,40 @@
-/* eslint-disable react-native/no-inline-styles */
 import {useTheme} from '@/assets/config/colors';
-import {EditableText} from '@/components/ui/list/EditableText';
 import {NotesListItemChildrenItem} from '@/core/interfaces';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Checkbox, IconButton} from 'react-native-paper';
+import {Checkbox, Text} from 'react-native-paper';
 
 interface Props {
   children: NotesListItemChildrenItem;
+  saveChildren: (children: NotesListItemChildrenItem) => void;
 }
 
-export const ListCardItemCildrenItem = ({children}: Props) => {
+export const ListCardItemCildrenItem = ({children, saveChildren}: Props) => {
   const {colors} = useTheme();
+
+  const checkList = () => {
+    const child: NotesListItemChildrenItem = {
+      ...children,
+      isChecked: !children.isChecked,
+    };
+    saveChildren(child);
+  };
 
   return (
     <View style={styles.childContent}>
-      <Checkbox status={children.isChecked ? 'checked' : 'unchecked'} />
-      <EditableText
-        style={{fontSize: 16}}
-        label={children.text}
-        isChecked={children.isChecked}
-        saveText={() => {}}
-        // saveText={(val, id) => saveTitle(val, id)}
+      <Checkbox
+        status={children.isChecked ? 'checked' : 'unchecked'}
+        onPress={checkList}
       />
-      <View style={styles.buttons}>
-        <IconButton
-          icon="delete"
-          iconColor={colors.greyColor}
-          size={22}
-          style={styles.btn}
-        />
-      </View>
+      <Text
+        variant="bodyLarge"
+        numberOfLines={1}
+        style={[
+          children.isChecked && styles.checkedText,
+          {color: children.isChecked ? colors.greyColor : colors.text},
+        ]}>
+        {children.text}
+      </Text>
     </View>
   );
 };
@@ -40,25 +44,16 @@ const styles = StyleSheet.create({
     display: 'flex',
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     height: 50,
     marginLeft: 12,
     marginRight: 8,
   },
-  textContainer: {
-    marginLeft: 8,
-    textAlign: 'center',
-    display: 'flex',
-    justifyContent: 'center',
-  },
-  buttons: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   btn: {
     margin: 0,
+  },
+  checkedText: {
+    textDecorationLine: 'line-through',
   },
 });

@@ -39,15 +39,15 @@ export const FoldersItem = ({
   };
 
   const saveFoldersInStorage = async () => {
-    const response = notesService.getFoldersCollection();
+    const response = notesService.storeGetFoldersCollection();
 
-    await notesService.setFoldersInStorage(response);
+    await notesService.storageSetFolders(response);
   };
 
   const saveFolder = async (val: string, id?: number) => {
     if (val) {
       if (id) {
-        notesService.setFolders([
+        notesService.storeSetFolders([
           ...folders.map(el => {
             return el.id === editFolderData?.id
               ? {...el, updated: moment().format(), label: val, name: val}
@@ -55,7 +55,7 @@ export const FoldersItem = ({
           }),
         ]);
       } else {
-        notesService.setFolders([
+        notesService.storeSetFolders([
           ...folders,
           {
             id: Date.now(),
@@ -76,7 +76,7 @@ export const FoldersItem = ({
   const deleteFolder = (id: number) => {
     const isDeleteFolder = folders.find(el => el.id === id)?.isDeletable;
     if (isDeleteFolder) {
-      notesService.setFolders([...folders.filter(el => el.id !== id)]);
+      notesService.storeSetFolders([...folders.filter(el => el.id !== id)]);
       saveFoldersInStorage();
     }
   };

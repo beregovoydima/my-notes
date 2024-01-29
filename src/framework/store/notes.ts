@@ -1,4 +1,3 @@
-// counterSlice.js
 import {NotesItems} from '@/core/interfaces';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 

@@ -2,7 +2,7 @@ import React from 'react';
 import SimpleIcon from 'react-native-vector-icons/SimpleLineIcons';
 import {Text} from 'react-native-paper';
 import {useTheme} from '@/assets/config/colors';
-import {NotesPage} from '@/pages/notes/NotesPage';
+import {NotesPage} from '@/components/pages/notes/NotesPage';
 import {StyleSheet} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {ParamListBase, RouteProp} from '@react-navigation/native';

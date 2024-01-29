@@ -1,5 +1,6 @@
 import {ListModalItem} from '@/components/notes/itemsList/ListModalItem';
 import {NotesListItem} from '@/core/interfaces';
+import {notesService} from '@/core/services';
 import moment from 'moment';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, ScrollView} from 'react-native';
@@ -8,16 +9,10 @@ import {Modal, Portal, Text, Button} from 'react-native-paper';
 interface Props {
   visible: boolean;
   hideModal: () => void;
-  saveList: (val: string, id?: number) => void;
-  editListData?: NotesListItem;
+  editListData?: NotesListItem | null;
 }
 
-export const ListModal = ({
-  visible,
-  hideModal,
-  // saveList,
-  editListData,
-}: Props) => {
+export const ListModal = ({visible, hideModal, editListData}: Props) => {
   const [list, setList] = useState<NotesListItem>({
     id: Date.now(),
     title: '',
@@ -36,12 +31,22 @@ export const ListModal = ({
     setList({...val});
   };
 
-  const save = () => {
-    // if (editListData) {
-    //   saveList(text, editListData.id);
-    // } else {
-    //   saveList(text);
-    // }
+  const save = async () => {
+    if (editListData) {
+      const listCollection = [...notesService.storeGetListCollection()].map(
+        el => {
+          return el.id === list.id ? {...list, updated: moment().format()} : el;
+        },
+      );
+      await notesService.storageSetLists(listCollection);
+      notesService.storeSetListCollection(listCollection);
+    } else {
+      await notesService.storageSetLists([
+        ...notesService.storeGetListCollection(),
+        list,
+      ]);
+      notesService.storeAddList(list);
+    }
     hideModal();
   };
 

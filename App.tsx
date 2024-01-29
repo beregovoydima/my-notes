@@ -5,7 +5,7 @@ import {lightTheme} from './src/assets/config/colors';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Appearance, StyleSheet} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import {NoteEditPage} from './src/pages/notes/NoteEditPage';
+import {NoteEditPage} from './src/components/pages/notes/NoteEditPage';
 import {Provider} from 'react-redux';
 import store from './src/framework/store/store';
 import {NavBar} from './src/components/navigation/Navbar';

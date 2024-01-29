@@ -1,4 +1,4 @@
-import {NotesFolderItem, NotesItems} from '@/core/interfaces';
+import {NotesFolderItem, NotesItems, NotesListItem} from '@/core/interfaces';
 
 export interface NoteStoreServiceContract {
   setNotesCollection(notes: NotesItems[]): void;
@@ -8,4 +8,8 @@ export interface NoteStoreServiceContract {
   setFoldersCollection(folders: NotesFolderItem[]): void;
   setFolder(folder: NotesFolderItem): void;
   updateFolder(folder: NotesFolderItem): void;
+  setList(list: NotesListItem): void;
+  getListCollection(): NotesListItem[];
+  setListCollection(lists: NotesListItem[]): void;
+  updateList(list: NotesListItem): void;
 }

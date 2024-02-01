@@ -4,9 +4,10 @@ export type NotesPageType = 'notes' | 'folders' | 'list';
 
 export type NoteType = 'note' | 'list';
 
+export type NotesSortType = 'created' | 'updated' | 'color' | 'title';
 export interface NotesItems {
   id: number;
-  created: Date | string | null;
+  created: Date | string;
   updated: Date | string | null;
   type: NoteType; // 'note, list'
   color: string | null; // need types

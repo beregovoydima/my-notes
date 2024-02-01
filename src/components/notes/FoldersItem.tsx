@@ -1,14 +1,12 @@
-import {useTheme} from '@/assets/config/colors';
-import {NotesFolderItem} from '@/core/interfaces';
-import React, {useEffect, useMemo, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
-import {Avatar, Card, Text} from 'react-native-paper';
-import {FoldersMenu} from '../ui/menu/FoldersMenu';
+import React, {useEffect, useState} from 'react';
+import {FlatList} from 'react-native';
 import {notesService} from '@/core/services';
 import {FolderModal} from '@/components/modals/FolderModal';
 import moment from 'moment';
 import {RootState} from '@/framework/store/store';
 import {useSelector} from 'react-redux';
+import {NotesFolderItem} from '@/core/interfaces';
+import {FolderCard} from './card/FolderCard';
 
 interface Props {
   isModalVisible: boolean;
@@ -22,16 +20,9 @@ export const FoldersItem = ({
   setVisibleFolderModal,
 }: Props) => {
   const folders = useSelector((state: RootState) => state.folders.folders);
-
-  const {colors} = useTheme();
-
   const [editFolderData, setEditFolder] = useState<NotesFolderItem | null>(
     null,
   );
-
-  const getLeftIcon = (props: any) => {
-    return <Avatar.Icon {...props} icon="folder" />;
-  };
 
   const hideFollderModal = () => {
     setEditFolder(null);
@@ -40,7 +31,6 @@ export const FoldersItem = ({
 
   const saveFoldersInStorage = async () => {
     const response = notesService.storeGetFoldersCollection();
-
     await notesService.storageSetFolders(response);
   };
 
@@ -81,30 +71,21 @@ export const FoldersItem = ({
     }
   };
 
-  const sortedFolders = useMemo(() => {
-    return [...folders].sort((a, b) =>
-      moment(b.updated ? b.updated : b.created) >
-      moment(a.updated ? a.updated : a.created)
-        ? 1
-        : -1,
+  const getFolderCard = (item: NotesFolderItem) => {
+    return (
+      <FolderCard
+        item={item}
+        deleteFolder={deleteFolder}
+        setEditFolder={setEditFolder}
+      />
     );
-  }, [folders]);
+  };
 
   useEffect(() => {
     if (editFolderData) {
       setVisibleFolderModal();
     }
   }, [editFolderData, setVisibleFolderModal]);
-
-  const getMoreIcon = (folder: NotesFolderItem) => {
-    return (
-      <FoldersMenu
-        editFolder={() => setEditFolder(folder)}
-        folder={folder}
-        deleteFolder={() => deleteFolder(folder.id)}
-      />
-    );
-  };
 
   return (
     <>
@@ -115,37 +96,12 @@ export const FoldersItem = ({
         editFolderData={editFolderData}
       />
 
-      {sortedFolders.map(el => {
-        return (
-          <View key={el.id} style={[styles.item]}>
-            <Card
-              style={[
-                {
-                  backgroundColor: colors.whiteColor,
-                },
-              ]}>
-              <Card.Title
-                title={el.label}
-                left={getLeftIcon}
-                right={() => getMoreIcon(el)}
-              />
-              <Card.Content>
-                <Text variant="labelSmall" style={{color: colors.greyColor}}>
-                  {moment(el.updated ? el.updated : el.created).format(
-                    'YYYY-MM-DD HH:mm',
-                  )}
-                </Text>
-              </Card.Content>
-            </Card>
-          </View>
-        );
-      })}
+      <FlatList
+        data={folders}
+        renderItem={({item}) => getFolderCard(item)}
+        keyExtractor={item => item.id.toString()}
+        ListEmptyComponent={<></>}
+      />
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  item: {
-    margin: 5,
-  },
-});

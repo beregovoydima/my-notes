@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, FlatList} from 'react-native';
 import {NotesListItem} from '@/core/interfaces';
-import {ListCardItem} from './itemsList/ListCardItem';
+import {ListCard} from './card/ListCard';
 import {ListModal} from '../modals/list/ListModal';
 import {useSelector} from 'react-redux';
 import {notesService} from '@/core/services';
@@ -61,6 +61,19 @@ export const ListItem = ({
     getAllList();
   }, []);
 
+  const renderItem = ({item}: {item: NotesListItem}) => {
+    return (
+      <View style={styles.container}>
+        <ListCard
+          list={item}
+          changeList={val => changeList(val)}
+          deleteList={deleteList}
+          editList={editList}
+        />
+      </View>
+    );
+  };
+
   return (
     <>
       <>
@@ -75,18 +88,12 @@ export const ListItem = ({
         )}
       </>
 
-      {allList.map(el => {
-        return (
-          <View key={el.id} style={styles.container}>
-            <ListCardItem
-              list={el}
-              changeList={val => changeList(val)}
-              deleteList={deleteList}
-              editList={editList}
-            />
-          </View>
-        );
-      })}
+      <FlatList
+        data={allList}
+        keyExtractor={el => el.id.toString()}
+        renderItem={renderItem}
+        ListEmptyComponent={<></>}
+      />
     </>
   );
 };

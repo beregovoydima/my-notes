@@ -25,9 +25,9 @@ export const FolderModal = ({
 
   const save = () => {
     if (editFolderData) {
-      saveFolder(text, editFolderData.id);
+      saveFolder(text.trim(), editFolderData.id);
     } else {
-      saveFolder(text);
+      saveFolder(text.trim());
     }
     setText('');
     hideModal();

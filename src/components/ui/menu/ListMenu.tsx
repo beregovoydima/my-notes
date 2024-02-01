@@ -30,7 +30,7 @@ export const ListMenu = ({editList, deleteList, listId}: Props) => {
       <Menu
         visible={visible}
         onDismiss={closeMenu}
-        contentStyle={[{backgroundColor: colors.background}, styles.content]}
+        contentStyle={[{backgroundColor: colors.whiteColor}, styles.content]}
         anchor={
           <IconButton
             style={styles.icon}

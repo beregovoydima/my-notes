@@ -2,11 +2,11 @@ import {useTheme} from '@/assets/config/colors';
 import {ListMenu} from '@/components/ui/menu/ListMenu';
 import {NotesListItem, NotesListItemChildren} from '@/core/interfaces';
 import React, {useMemo, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
-import {Avatar, Card, Text} from 'react-native-paper';
+import {FlatList, StyleSheet, View} from 'react-native';
+import {Avatar, Card, Icon, Text} from 'react-native-paper';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import moment from 'moment';
-import {ListCardItemCildren} from './ListCardItemChildren';
+import {ListCardItemCildren} from '../list/ListCardItemChildren';
 
 interface Props {
   list: NotesListItem;
@@ -15,12 +15,7 @@ interface Props {
   editList: (list: NotesListItem) => void;
 }
 
-export const ListCardItem = ({
-  list,
-  changeList,
-  deleteList,
-  editList,
-}: Props) => {
+export const ListCard = ({list, changeList, deleteList, editList}: Props) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const {colors} = useTheme();
 
@@ -59,6 +54,15 @@ export const ListCardItem = ({
     return <Avatar.Icon {...props} icon="clipboard-list" />;
   };
 
+  const renderItem = ({item}: {item: NotesListItemChildren}) => {
+    return (
+      <ListCardItemCildren
+        key={item.id}
+        listChild={item}
+        saveChildList={saveChildList}
+      />
+    );
+  };
   const isChecked = useMemo(() => {
     return !!list.items.length && list.items.every(el => el.isChecked);
   }, [list]);
@@ -76,23 +80,35 @@ export const ListCardItem = ({
           right={() => getMoreIcon(list)}
         />
         <Card.Content>
-          <Text variant="labelSmall" style={{color: colors.greyColor}}>
-            {moment(list.updated ? list.updated : list.created).format(
-              'YYYY-MM-DD HH:mm',
+          <View style={styles.footer}>
+            {list.updated ? (
+              <Icon
+                source="circle-edit-outline"
+                size={12}
+                color={colors.greyColor}
+              />
+            ) : (
+              <></>
             )}
-          </Text>
+            <Text
+              variant="labelSmall"
+              // eslint-disable-next-line react-native/no-inline-styles
+              style={{
+                color: colors.greyColor,
+                marginLeft: list.updated ? 4 : 0,
+              }}>
+              {moment(list.updated ? list.updated : list.created).format(
+                'YYYY-MM-DD HH:mm',
+              )}
+            </Text>
+          </View>
           {isExpanded ? (
-            <>
-              {list.items.map(child => {
-                return (
-                  <ListCardItemCildren
-                    key={child.id}
-                    listChild={child}
-                    saveChildList={saveChildList}
-                  />
-                );
-              })}
-            </>
+            <FlatList
+              data={list.items}
+              keyExtractor={el => el.id.toString()}
+              renderItem={renderItem}
+              ListEmptyComponent={<></>}
+            />
           ) : (
             <></>
           )}
@@ -111,5 +127,10 @@ const styles = StyleSheet.create({
   },
   checkedText: {
     textDecorationLine: 'line-through',
+  },
+  footer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });

@@ -1,4 +1,4 @@
-import {ListModalItem} from '@/components/notes/itemsList/ListModalItem';
+import {ListModalItem} from '@/components/notes/list/ListModalItem';
 import {NotesListItem} from '@/core/interfaces';
 import {notesService} from '@/core/services';
 import moment from 'moment';
@@ -35,15 +35,30 @@ export const ListModal = ({visible, hideModal, editListData}: Props) => {
     if (editListData) {
       const listCollection = [...notesService.storeGetListCollection()].map(
         el => {
-          return el.id === list.id ? {...list, updated: moment().format()} : el;
+          return el.id === list.id
+            ? {
+                ...list,
+                title: list.title
+                  ? list.title
+                  : moment().format('YYYY-MM-DD HH:mm'),
+                updated: moment().format(),
+              }
+            : el;
         },
       );
       await notesService.storageSetLists(listCollection);
       notesService.storeSetListCollection(listCollection);
     } else {
+      console.log({
+        items: list.items.map(el => el.children.filter(val => val.text !== '')),
+      });
+
       await notesService.storageSetLists([
         ...notesService.storeGetListCollection(),
-        list,
+        {
+          ...list,
+          title: list.title ? list.title : moment().format('YYYY-MM-DD HH:mm'),
+        },
       ]);
       notesService.storeAddList(list);
     }

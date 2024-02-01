@@ -31,7 +31,7 @@ export const FoldersMenu = ({editFolder, deleteFolder, folder}: Props) => {
       <Menu
         visible={visible}
         onDismiss={closeMenu}
-        contentStyle={[{backgroundColor: colors.background}, styles.content]}
+        contentStyle={[{backgroundColor: colors.whiteColor}, styles.content]}
         anchor={
           <IconButton size={24} icon="dots-vertical" onPress={openMenu} />
         }>

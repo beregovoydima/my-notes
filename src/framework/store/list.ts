@@ -16,7 +16,7 @@ const notesSlice = createSlice({
     setLists: (state, action: PayloadAction<NotesListItem[]>) => {
       state.list = [...action.payload];
     },
-    removeListById: (state, action: PayloadAction<number>) => {
+    removeListById: (state, action: PayloadAction<string>) => {
       state.list = [...state.list.filter(el => el.id !== action.payload)];
     },
     setList: (state, action: PayloadAction<NotesListItem>) => {
@@ -25,6 +25,13 @@ const notesSlice = createSlice({
     updateList: (state, action: PayloadAction<NotesListItem>) => {
       state.list = state.list.map(list =>
         list.id === action.payload.id ? {...action.payload} : list,
+      );
+    },
+    updateListField: (state, action: PayloadAction<NotesListItem>) => {
+      const {items, id} = action.payload;
+
+      state.list = state.list.map(list =>
+        list.id === id ? {...list, items: [...items]} : list,
       );
     },
   },

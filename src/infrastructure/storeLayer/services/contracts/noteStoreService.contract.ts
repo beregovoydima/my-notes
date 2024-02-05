@@ -12,4 +12,5 @@ export interface NoteStoreServiceContract {
   getListCollection(): NotesListItem[];
   setListCollection(lists: NotesListItem[]): void;
   updateList(list: NotesListItem): void;
+  updateListField(items: NotesListItem): void;
 }

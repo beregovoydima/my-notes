@@ -5,6 +5,7 @@ import moment from 'moment';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, ScrollView} from 'react-native';
 import {Modal, Portal, Text, Button} from 'react-native-paper';
+import uuid from 'react-native-uuid';
 
 interface Props {
   visible: boolean;
@@ -14,7 +15,7 @@ interface Props {
 
 export const ListModal = ({visible, hideModal, editListData}: Props) => {
   const [list, setList] = useState<NotesListItem>({
-    id: Date.now(),
+    id: uuid.v4().toString(),
     title: '',
     type: 'list',
     folder: null,
@@ -23,6 +24,7 @@ export const ListModal = ({visible, hideModal, editListData}: Props) => {
     updated: null,
     items: [],
   });
+
   const closeModal = () => {
     hideModal();
   };
@@ -31,38 +33,58 @@ export const ListModal = ({visible, hideModal, editListData}: Props) => {
     setList({...val});
   };
 
-  const save = async () => {
+  const save = () => {
+    const a = Date.now();
     if (editListData) {
       const listCollection = [...notesService.storeGetListCollection()].map(
         el => {
-          return el.id === list.id
-            ? {
-                ...list,
-                title: list.title
-                  ? list.title
-                  : moment().format('YYYY-MM-DD HH:mm'),
-                updated: moment().format(),
-              }
-            : el;
+          if (el.id === list.id) {
+            const filterEmptyItems = list.items
+              .map(item => ({
+                ...item,
+                children: item.children.filter(child => child.text),
+              }))
+              .filter(item => {
+                return !!item.children.length || item.text;
+              });
+
+            return {
+              ...list,
+              title: list.title ? list.title : new Date().toDateString(),
+              items: filterEmptyItems,
+              updated: moment().format(),
+            };
+          }
+
+          return el;
         },
       );
-      await notesService.storageSetLists(listCollection);
+      notesService.storageSetLists(listCollection);
       notesService.storeSetListCollection(listCollection);
     } else {
-      console.log({
-        items: list.items.map(el => el.children.filter(val => val.text !== '')),
-      });
+      const filterEmptyItems = list.items
+        .map(item => ({
+          ...item,
+          children: item.children.filter(child => child.text),
+        }))
+        .filter(item => {
+          return !!item.children.length || item.text;
+        });
 
-      await notesService.storageSetLists([
-        ...notesService.storeGetListCollection(),
+      const lists = notesService.storeGetListCollection();
+      notesService.storageSetLists([
+        ...lists,
         {
           ...list,
-          title: list.title ? list.title : moment().format('YYYY-MM-DD HH:mm'),
+          title: list.title ? list.title : new Date().toDateString(),
+          items: filterEmptyItems,
         },
       ]);
       notesService.storeAddList(list);
     }
+
     hideModal();
+    console.log(Date.now() - a);
   };
 
   useEffect(() => {

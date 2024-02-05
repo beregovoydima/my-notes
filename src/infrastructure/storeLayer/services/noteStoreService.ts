@@ -5,6 +5,10 @@ import {NotesFolderItem, NotesItems, NotesListItem} from '@/core/interfaces';
 export class NoteStoreService implements NoteStoreServiceContract {
   constructor(private readonly storeRepository: StoreRepositoryContract) {}
 
+  public updateListField(items: NotesListItem): void {
+    this.storeRepository.set('list', 'updateListField', items);
+  }
+
   public setNotesCollection(notes: NotesItems[]): void {
     this.storeRepository.set('notes', 'setNotes', notes);
   }

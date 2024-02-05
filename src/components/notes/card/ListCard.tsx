@@ -1,34 +1,36 @@
 import {useTheme} from '@/assets/config/colors';
 import {ListMenu} from '@/components/ui/menu/ListMenu';
 import {NotesListItem, NotesListItemChildren} from '@/core/interfaces';
-import React, {useMemo, useState} from 'react';
+import React, {memo, useCallback, useMemo, useState} from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
 import {Avatar, Card, Icon, Text} from 'react-native-paper';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import moment from 'moment';
 import {ListCardItemCildren} from '../list/ListCardItemChildren';
-
+import {notesService} from '@/core/services';
 interface Props {
   list: NotesListItem;
-  changeList: (list: NotesListItem) => void;
-  deleteList: (id: number) => void;
+  deleteList: (id: string) => void;
   editList: (list: NotesListItem) => void;
 }
 
-export const ListCard = ({list, changeList, deleteList, editList}: Props) => {
+export const ListCard = memo(({list, deleteList, editList}: Props) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const {colors} = useTheme();
 
   const getMoreIcon = (el: NotesListItem) => {
     return (
       <View style={styles.buttons}>
-        <MaterialIcons
-          name={isExpanded ? 'expand-less' : 'expand-more'}
-          color={colors.greyColor}
-          size={26}
-          onPress={() => setIsExpanded(!isExpanded)}
-          style={{}}
-        />
+        {list.items.length ? (
+          <MaterialIcons
+            name={isExpanded ? 'expand-less' : 'expand-more'}
+            color={colors.greyColor}
+            size={26}
+            onPress={() => setIsExpanded(!isExpanded)}
+            style={{}}
+          />
+        ) : null}
+
         <ListMenu
           editList={() => editList(list)}
           deleteList={id => deleteList(id)}
@@ -38,37 +40,44 @@ export const ListCard = ({list, changeList, deleteList, editList}: Props) => {
     );
   };
 
-  const saveChildList = (val: NotesListItemChildren) => {
-    const listItem: NotesListItem = {
-      ...list,
-      items: [
-        ...list.items.map(el => {
-          return el.id === val.id ? val : el;
-        }),
-      ],
-    };
-    changeList(listItem);
-  };
-
   const getLeftIcon = (props: any) => {
     return <Avatar.Icon {...props} icon="clipboard-list" />;
   };
 
-  const renderItem = ({item}: {item: NotesListItemChildren}) => {
-    return (
-      <ListCardItemCildren
-        key={item.id}
-        listChild={item}
-        saveChildList={saveChildList}
-      />
-    );
+  const changeList = (val: NotesListItem) => {
+    notesService.updateStoreListItems({...val, updated: moment().format()});
+    notesService.storageSetLists(notesService.storeGetListCollection());
   };
+
+  const renderItem = useCallback(
+    ({item}: {item: NotesListItemChildren}) => {
+      const saveChildList = (val: NotesListItemChildren) => {
+        const listItem: NotesListItem = {
+          ...list,
+          items: [
+            ...list.items.map(el => {
+              return el.id === val.id ? val : el;
+            }),
+          ],
+        };
+        changeList(listItem);
+      };
+      return (
+        <ListCardItemCildren
+          key={item.id}
+          listChild={item}
+          saveChildList={saveChildList}
+        />
+      );
+    },
+    [list],
+  );
   const isChecked = useMemo(() => {
     return !!list.items.length && list.items.every(el => el.isChecked);
   }, [list]);
 
   return (
-    <View>
+    <View style={styles.container}>
       <Card style={[{backgroundColor: colors.whiteColor}]}>
         <Card.Title
           title={list.title}
@@ -87,9 +96,7 @@ export const ListCard = ({list, changeList, deleteList, editList}: Props) => {
                 size={12}
                 color={colors.greyColor}
               />
-            ) : (
-              <></>
-            )}
+            ) : null}
             <Text
               variant="labelSmall"
               // eslint-disable-next-line react-native/no-inline-styles
@@ -105,20 +112,21 @@ export const ListCard = ({list, changeList, deleteList, editList}: Props) => {
           {isExpanded ? (
             <FlatList
               data={list.items}
-              keyExtractor={el => el.id.toString()}
+              keyExtractor={el => el.id}
               renderItem={renderItem}
               ListEmptyComponent={<></>}
             />
-          ) : (
-            <></>
-          )}
+          ) : null}
         </Card.Content>
       </Card>
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
+  container: {
+    margin: 5,
+  },
   buttons: {
     display: 'flex',
     flexDirection: 'row',

@@ -19,7 +19,6 @@ export const FabButton = ({
 }: Props) => {
   const [state, setState] = useState({open: false});
   const navigation: ScreenNavigationProp = useNavigation();
-
   const onStateChange = ({open}: {open: boolean}) => setState({open});
 
   const {open} = state;

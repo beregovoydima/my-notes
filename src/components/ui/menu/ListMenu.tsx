@@ -4,9 +4,9 @@ import {StyleSheet, View} from 'react-native';
 import {Divider, IconButton, Menu} from 'react-native-paper';
 
 interface Props {
-  editList: (id: number) => void;
-  deleteList: (id: number) => void;
-  listId: number;
+  editList: (id: string) => void;
+  deleteList: (id: string) => void;
+  listId: string;
 }
 
 export const ListMenu = ({editList, deleteList, listId}: Props) => {

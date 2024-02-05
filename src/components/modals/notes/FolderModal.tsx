@@ -6,7 +6,7 @@ import {Modal, Portal, Text, TextInput, Button} from 'react-native-paper';
 interface Props {
   visible: boolean;
   hideModal: () => void;
-  saveFolder: (val: string, id?: number) => void;
+  saveFolder: (val: string, id?: string) => void;
   editFolderData: NotesFolderItem | null;
 }
 

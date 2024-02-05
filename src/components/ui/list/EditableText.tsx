@@ -86,6 +86,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   text: {
+    textAlignVertical: 'center',
     fontSize: 16,
   },
   checkedText: {

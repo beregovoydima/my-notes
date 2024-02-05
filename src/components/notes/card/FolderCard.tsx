@@ -8,7 +8,7 @@ import {Avatar, Card, Icon, Text} from 'react-native-paper';
 
 interface Props {
   item: NotesFolderItem;
-  deleteFolder: (id: number) => void;
+  deleteFolder: (id: string) => void;
   setEditFolder: (folder: NotesFolderItem) => void;
 }
 
@@ -51,9 +51,7 @@ export const FolderCard = React.memo(
                   size={12}
                   color={colors.greyColor}
                 />
-              ) : (
-                <></>
-              )}
+              ) : null}
               <Text
                 variant="labelSmall"
                 // eslint-disable-next-line react-native/no-inline-styles

@@ -11,6 +11,7 @@ import {StyleSheet, View} from 'react-native';
 import {Divider, IconButton} from 'react-native-paper';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {ListModalItemCildrenItem} from './ListModalItemChildrenItem';
+import uuid from 'react-native-uuid';
 
 interface Props {
   listChild: NotesListItemChildren;
@@ -42,7 +43,7 @@ export const ListModalItemCildren = React.memo(
         ...listChild,
         children: [
           ...listChild.children,
-          {id: Date.now(), text: '', isChecked: false},
+          {id: uuid.v4().toString(), text: '', isChecked: false},
         ],
       };
       saveChildList(child);

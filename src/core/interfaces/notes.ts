@@ -6,7 +6,7 @@ export type NoteType = 'note' | 'list';
 
 export type NotesSortType = 'created' | 'updated' | 'color' | 'title';
 export interface NotesItems {
-  id: number;
+  id: string;
   created: Date | string;
   updated: Date | string | null;
   type: NoteType; // 'note, list'
@@ -14,13 +14,18 @@ export interface NotesItems {
   folder: string | null;
   title: string; //string
   label: string;
+  deleted?: NotesItemsDeleted;
   files: [];
   fontWeight: FontWeightType; // font weight
   fontSize: FontWeightSize; //font Size
 }
 
+export interface NotesItemsDeleted {
+  deletedTime: string | Date;
+}
+
 export interface NotesFolderItem {
-  id: number;
+  id: string;
   name: string;
   label: string;
   isDeletable: boolean;
@@ -29,7 +34,7 @@ export interface NotesFolderItem {
 }
 
 export interface NotesListItem {
-  id: number;
+  id: string;
   type: NoteType;
   title: string;
   color: string | null; // need types
@@ -40,14 +45,14 @@ export interface NotesListItem {
 }
 
 export interface NotesListItemChildren {
-  id: number;
+  id: string;
   text: string;
   isChecked: boolean;
   children: NotesListItemChildrenItem[];
 }
 
 export interface NotesListItemChildrenItem {
-  id: number;
+  id: string;
   text: string;
   isChecked: boolean;
 }

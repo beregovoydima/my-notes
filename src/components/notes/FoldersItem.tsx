@@ -1,12 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {FlatList} from 'react-native';
 import {notesService} from '@/core/services';
-import {FolderModal} from '@/components/modals/FolderModal';
+import {FolderModal} from '@/components/modals/notes/FolderModal';
 import moment from 'moment';
 import {RootState} from '@/framework/store/store';
 import {useSelector} from 'react-redux';
 import {NotesFolderItem} from '@/core/interfaces';
 import {FolderCard} from './card/FolderCard';
+import uuid from 'react-native-uuid';
 
 interface Props {
   isModalVisible: boolean;
@@ -34,7 +35,7 @@ export const FoldersItem = ({
     await notesService.storageSetFolders(response);
   };
 
-  const saveFolder = async (val: string, id?: number) => {
+  const saveFolder = async (val: string, id?: string) => {
     if (val) {
       if (id) {
         notesService.storeSetFolders([
@@ -48,7 +49,7 @@ export const FoldersItem = ({
         notesService.storeSetFolders([
           ...folders,
           {
-            id: Date.now(),
+            id: uuid.v4().toString(),
             label: val,
             name: val,
             isDeletable: true,
@@ -63,7 +64,7 @@ export const FoldersItem = ({
     }
   };
 
-  const deleteFolder = (id: number) => {
+  const deleteFolder = (id: string) => {
     const isDeleteFolder = folders.find(el => el.id === id)?.isDeletable;
     if (isDeleteFolder) {
       notesService.storeSetFolders([...folders.filter(el => el.id !== id)]);
@@ -99,7 +100,7 @@ export const FoldersItem = ({
       <FlatList
         data={folders}
         renderItem={({item}) => getFolderCard(item)}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={item => item.id}
         ListEmptyComponent={<></>}
       />
     </>

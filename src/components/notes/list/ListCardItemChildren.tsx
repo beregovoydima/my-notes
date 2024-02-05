@@ -4,7 +4,7 @@ import {
   NotesListItemChildren,
   NotesListItemChildrenItem,
 } from '@/core/interfaces';
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Divider, IconButton, Text} from 'react-native-paper';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -15,85 +15,80 @@ interface Props {
   saveChildList: (val: NotesListItemChildren) => void;
 }
 
-export const ListCardItemCildren = React.memo(
-  ({listChild, saveChildList}: Props) => {
-    const {colors} = useTheme();
+export const ListCardItemCildren = ({listChild, saveChildList}: Props) => {
+  const {colors} = useTheme();
 
-    const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
 
-    const getExpandIcon = () => {
-      if (isExpanded) {
-        return (
-          <MaterialIcons
-            name="expand-less"
-            size={26}
-            color={colors.greyColor}
-          />
-        );
-      }
+  const getExpandIcon = useMemo(() => {
+    if (isExpanded) {
       return (
-        <MaterialIcons name="expand-more" size={26} color={colors.greyColor} />
+        <MaterialIcons name="expand-less" size={26} color={colors.greyColor} />
       );
-    };
-
-    const checkList = (isAllChecked: boolean) => {
-      saveChildList({
-        ...listChild,
-        isChecked: !isAllChecked,
-        children: listChild.children.map(el => {
-          return {...el, isChecked: !isAllChecked};
-        }),
-      });
-    };
-
-    const saveChildren = (val: NotesListItemChildrenItem) => {
-      const childrenItems = listChild.children.map(el =>
-        el.id === val.id ? val : el,
-      );
-      const child: NotesListItemChildren = {
-        ...listChild,
-        isChecked: childrenItems.every(el => el.isChecked),
-        children: childrenItems,
-      };
-      saveChildList(child);
-    };
-
+    }
     return (
-      <View style={styles.container}>
-        <View style={styles.childContent}>
-          <CheckBoxListTitle
-            list={listChild}
-            checkList={val => {
-              checkList(val);
-            }}
-          />
-          <Text
-            variant="bodyLarge"
-            numberOfLines={1}
-            style={[
-              styles.text,
-              listChild.isChecked && styles.checkedText,
-              {color: listChild.isChecked ? colors.greyColor : colors.text},
-            ]}>
-            {listChild.text}
-          </Text>
-          <View style={styles.buttons}>
-            {listChild.children.length ? (
-              <IconButton
-                icon={() => getExpandIcon()}
-                iconColor={colors.primary}
-                size={22}
-                onPress={() => setIsExpanded(!isExpanded)}
-                style={styles.btn}
-              />
-            ) : (
-              <></>
-            )}
-          </View>
-        </View>
+      <MaterialIcons name="expand-more" size={26} color={colors.greyColor} />
+    );
+  }, [isExpanded, colors.greyColor]);
 
-        {isExpanded ? (
-          listChild.children.map(el => {
+  const checkList = (isAllChecked: boolean) => {
+    saveChildList({
+      ...listChild,
+      isChecked: !isAllChecked,
+      children: listChild.children.map(el => {
+        return {...el, isChecked: !isAllChecked};
+      }),
+    });
+  };
+
+  const saveChildren = (val: NotesListItemChildrenItem) => {
+    const childrenItems = listChild.children.map(el =>
+      el.id === val.id ? val : el,
+    );
+    const child: NotesListItemChildren = {
+      ...listChild,
+      isChecked: childrenItems.every(el => el.isChecked),
+      children: childrenItems,
+    };
+    saveChildList(child);
+  };
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.childContent}>
+        <CheckBoxListTitle
+          list={listChild}
+          checkList={val => {
+            checkList(val);
+          }}
+        />
+        <Text
+          variant="bodyLarge"
+          numberOfLines={1}
+          style={[
+            styles.text,
+            listChild.isChecked && styles.checkedText,
+            {color: listChild.isChecked ? colors.greyColor : colors.text},
+          ]}>
+          {listChild.text}
+        </Text>
+        <View style={styles.buttons}>
+          {listChild.children.length ? (
+            <IconButton
+              icon={() => getExpandIcon}
+              iconColor={colors.primary}
+              size={22}
+              onPress={() => setIsExpanded(!isExpanded)}
+              style={styles.btn}
+            />
+          ) : (
+            <></>
+          )}
+        </View>
+      </View>
+
+      {isExpanded
+        ? listChild.children.map(el => {
             return (
               <ListCardItemCildrenItem
                 key={el.id}
@@ -102,14 +97,11 @@ export const ListCardItemCildren = React.memo(
               />
             );
           })
-        ) : (
-          <></>
-        )}
-        <Divider />
-      </View>
-    );
-  },
-);
+        : null}
+      <Divider />
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {

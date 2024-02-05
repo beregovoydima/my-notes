@@ -7,6 +7,7 @@ import {StyleSheet, View} from 'react-native';
 import {Button, Divider} from 'react-native-paper';
 import moment from 'moment';
 import {ListModalItemCildren} from './ListModalItemChildren';
+import uuid from 'react-native-uuid';
 
 interface Props {
   list: NotesListItem;
@@ -26,7 +27,7 @@ export const ListModalItem = ({list, changeList}: Props) => {
       ...list,
       items: [
         ...list.items,
-        {id: Date.now(), isChecked: false, text: '', children: []},
+        {id: uuid.v4().toString(), isChecked: false, text: '', children: []},
       ],
     };
     changeList(listItem);

@@ -15,7 +15,7 @@ export const NoteCard = React.memo(
   }: {
     item: NotesItems;
     index: number;
-    deleteNote: (id: number) => void;
+    deleteNote: (id: string) => void;
   }) => {
     const {colors} = useTheme();
     const navigation: ScreenNavigationProp = useNavigation();
@@ -29,7 +29,7 @@ export const NoteCard = React.memo(
       return <Avatar.Icon {...props} icon="note" />;
     };
 
-    const editNote = (id: number) => {
+    const editNote = (id: string) => {
       navigation.navigate('NoteEdit', {noteId: id});
     };
 

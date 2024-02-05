@@ -2,7 +2,7 @@ import {ParamListBase, RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
 export type RootStackParamList = {
-  NoteEdit: {noteId?: null | number};
+  NoteEdit: {noteId?: null | string};
   Notes: undefined;
   Calendar: undefined;
   Tasks: undefined;

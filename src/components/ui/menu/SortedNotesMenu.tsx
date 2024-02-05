@@ -5,10 +5,11 @@ import {StyleSheet} from 'react-native';
 import {Divider, IconButton, Menu} from 'react-native-paper';
 
 interface Props {
+  sortType: NotesSortType;
   changeSort: (sort: NotesSortType) => void;
 }
 
-export const SortedNotesMenu = ({changeSort}: Props) => {
+export const SortedNotesMenu = ({changeSort, sortType}: Props) => {
   const {colors} = useTheme();
   const [visible, setVisible] = useState(false);
 
@@ -20,21 +21,52 @@ export const SortedNotesMenu = ({changeSort}: Props) => {
     setVisible(false);
   };
 
+  const icons = {
+    created: 'sort-clock-ascending-outline',
+    updated: 'sort-clock-ascending',
+    color: 'sort-bool-ascending',
+    title: 'sort-alphabetical-ascending',
+  };
+
+  const getIconButton = () => {
+    return (
+      <IconButton
+        icon={icons[sortType]}
+        style={styles.anchor}
+        onPress={openMenu}
+      />
+    );
+  };
+
   return (
     <Menu
       visible={visible}
       onDismiss={closeMenu}
       contentStyle={[{backgroundColor: colors.whiteColor}, styles.content]}
-      anchor={
-        <IconButton icon="sort" style={styles.anchor} onPress={openMenu} />
-      }>
-      <Menu.Item onPress={() => change('created')} title="По дате создания" />
+      anchor={getIconButton()}>
+      <Menu.Item
+        leadingIcon="sort-clock-ascending-outline"
+        onPress={() => change('created')}
+        title="По дате создания"
+      />
       <Divider />
-      <Menu.Item onPress={() => change('updated')} title="По дате изменения" />
+      <Menu.Item
+        leadingIcon="sort-clock-ascending"
+        onPress={() => change('updated')}
+        title="По дате изменения"
+      />
       <Divider />
-      <Menu.Item onPress={() => change('color')} title="По цвету" />
+      <Menu.Item
+        leadingIcon="sort-bool-ascending"
+        onPress={() => change('color')}
+        title="По цвету"
+      />
       <Divider />
-      <Menu.Item onPress={() => change('title')} title="По названию" />
+      <Menu.Item
+        leadingIcon="sort-alphabetical-ascending"
+        onPress={() => change('title')}
+        title="По названию"
+      />
       <Divider />
       <Menu.Item onPress={() => {}} title="To do" />
     </Menu>

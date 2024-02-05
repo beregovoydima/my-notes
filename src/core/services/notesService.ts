@@ -9,14 +9,18 @@ export class NotesService implements NotesServiceContract {
     private readonly notesStoreService: NoteStoreServiceContract,
   ) {}
 
-  public async storeSetNote(note: NotesItems): Promise<void> {
+  public updateStoreListItems(items: NotesListItem): void {
+    this.notesStoreService.updateListField(items);
+  }
+
+  public async storeAddNote(note: NotesItems): Promise<void> {
     const notes = this.notesStoreService.getNotesCollection();
     this.storeSetNotes([...notes, note]);
     return await this.asyncStorageNotesService.setNotes([...notes, note]);
   }
 
   public async storageSetNotes(notes: NotesItems[]): Promise<void> {
-    return await this.asyncStorageNotesService.setNotes([...notes]);
+    return await this.asyncStorageNotesService.setNotes(notes);
   }
 
   public storeSetNotes(notes: NotesItems[]): void {
@@ -33,6 +37,14 @@ export class NotesService implements NotesServiceContract {
 
   public storeGetCollectionNote(): NotesItems[] {
     return this.notesStoreService.getNotesCollection();
+  }
+
+  public async updateNote(note: NotesItems): Promise<void> {
+    const notes = this.notesStoreService.getNotesCollection();
+    const updatedNotes = notes.map(el => (el.id === note.id ? note : el));
+    this.storeSetNotes(updatedNotes);
+
+    return await this.asyncStorageNotesService.setNotes(updatedNotes);
   }
 
   public async storageSetFolders(folders: NotesFolderItem[]): Promise<void> {
@@ -84,7 +96,7 @@ export class NotesService implements NotesServiceContract {
   }
 
   public async storageSetLists(lists: NotesListItem[]): Promise<void> {
-    this.asyncStorageNotesService.setLists(lists);
+    await this.asyncStorageNotesService.setLists(lists);
   }
 
   public async storageGetListCollection(): Promise<NotesListItem[] | null> {

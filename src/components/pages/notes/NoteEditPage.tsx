@@ -1,6 +1,12 @@
-import {NoteEditScreenRouteProp, NotesItems} from '@/core/interfaces';
+import {EditableText} from '@/components/ui/list/EditableText';
+import {
+  NoteEditScreenRouteProp,
+  NotesItems,
+  ScreenNavigationProp,
+} from '@/core/interfaces';
 import {notesService} from '@/core/services';
 import {useNavigation} from '@react-navigation/native';
+// import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
@@ -11,8 +17,9 @@ import {
   ScrollView,
   StyleSheet,
   View,
+  BackHandler,
 } from 'react-native';
-import {Button, TextInput} from 'react-native-paper';
+import {Button} from 'react-native-paper';
 import {
   actions,
   FONT_SIZE,
@@ -21,17 +28,14 @@ import {
   RichToolbar,
 } from 'react-native-pell-rich-editor';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import uuid from 'react-native-uuid';
 
 export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
-  const handleHead = (icon: IconRecord) => {
-    return <Text style={{color: icon.tintColor}}>H12</Text>;
-  };
+  const navigation: ScreenNavigationProp = useNavigation();
 
-  const [isEdit, setIsEdit] = useState(false);
-  console.log(1, route.params?.noteId);
-
+  const [text, setDescription] = useState<string>('');
   const [note, setNote] = useState<NotesItems>({
-    id: Date.now(),
+    id: uuid.v4().toString(),
     type: 'note', // 'note, list'
     created: moment().format(),
     updated: null,
@@ -42,39 +46,55 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
     files: [],
     fontWeight: 400, // font weight
     fontSize: 16, //font Size
-    checked: false,
-    children: [],
   });
-
-  const [text, setDescription] = useState<string>('');
-  const [title, setTitle] = useState('');
-
-  const richTextRef = React.useRef<RichEditor | null>(null);
+  const richTextRef = useRef<RichEditor | null>(null);
 
   const handleFontSize = useCallback(() => {
     // 1=  10px, 2 = 13px, 3 = 16px, 4 = 18px, 5 = 24px, 6 = 32px, 7 = 48px;
     let size = [1, 2, 3, 4, 5, 6, 7];
-    richTextRef.current?.setFontSize(size[4] as FONT_SIZE);
+    richTextRef.current?.setFontSize(size[7] as FONT_SIZE);
   }, []);
 
   useEffect(() => {
-    const response = notesService.getCollectionNote();
+    const response = notesService.storeGetCollectionNote();
     if (response.length && route.params?.noteId) {
       const findNote = response.find(el => el.id === route.params.noteId);
-      setNote(prevNote => ({
-        ...prevNote,
-        label: findNote?.label || '',
-        title: findNote?.title || '',
-      }));
+      if (findNote) {
+        setNote({...findNote});
+        setDescription(findNote.label);
+      }
     }
   }, [route.params.noteId]);
 
   const handleSave = async () => {
-    note.label = text;
-    note.id = Date.now();
-
-    await notesService.setNote(note);
+    if (route.params.noteId) {
+      await notesService.updateNote({...note, label: text});
+    } else {
+      await notesService.storeAddNote({...note, label: text});
+    }
+    navigation.navigate('Notes');
   };
+
+  const backSave = useCallback(() => {
+    if (route.params.noteId) {
+      notesService.updateNote({...note, label: text});
+    } else {
+      notesService.storeAddNote({...note, label: text});
+    }
+
+    return false;
+  }, [note, route.params.noteId, text]);
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backSave,
+    );
+
+    return () => {
+      backHandler.remove();
+    };
+  }, [backSave, note]);
 
   const getIcon = (icon: IconRecord) => {
     return <Icon name="folder" size={icon.iconSize} color={icon.tintColor} />;
@@ -88,40 +108,26 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
   //   );
   // }, []);
 
-  const changeDescription = (description: string) => {
-    setDescription(description);
+  const handleHead = (icon: IconRecord) => {
+    return <Text style={{color: icon.tintColor}}>H12</Text>;
   };
 
-  const textInput = useRef(null);
+  const changeDescription = (description: string) => {
+    console.log('qweqw');
 
-  useEffect(() => {
-    if (isEdit) {
-      // Фокусируемся на текстовом поле при входе в режим редактирования
-      textInput.current?.focus();
-    }
-  }, [isEdit]);
-
-  const editMode = () => {
-    setIsEdit(true);
+    setDescription(description);
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.container}>
         <View>
-          {isEdit ? (
-            <TextInput
-              ref={textInput}
-              label="Title"
-              value={title}
-              onEndEditing={() => setIsEdit(false)}
-              onChangeText={e => setTitle(e)}
-            />
-          ) : (
-            <Text style={styles.title} onPress={() => editMode()}>
-              {title ? title : 'Заголовок'}
-            </Text>
-          )}
+          <EditableText
+            label={note.title}
+            isChecked={false}
+            saveText={e => setNote({...note, title: e})}
+            style={styles.title}
+          />
         </View>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
@@ -148,8 +154,8 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
           actions.setStrikethrough,
           actions.setUnderline,
           actions.removeFormat,
-          actions.checkboxList,
           actions.setTitlePlaceholder,
+          actions.setEditorHeight,
         ]}
         iconMap={{
           [actions.heading1]: handleHead,
@@ -166,8 +172,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  title: {
-    color: 'black',
-    fontSize: 30,
-  },
+  title: {height: 60, fontSize: 20},
 });

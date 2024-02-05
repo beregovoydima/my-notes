@@ -69,6 +69,9 @@ export const lightColors = {
   whiteColor: '#ffffff',
   greyColor: '#6D7693',
   lineGreyColor: '#d9dde0',
+  blueColor: '#2a6b77',
+  orangeColor: '#d68f00',
+  redColor: '#bf2f13',
   // primaryContainer: '#d9dde0',
   // secondaryContainer: '#ecf0f1', //background top active button tabs
 };
@@ -85,6 +88,9 @@ export const darkColors = {
   whiteColor: '#ffffff',
   greyColor: '#6D7693',
   lineGreyColor: '#d9dde0',
+  blueColor: '#2a6b77',
+  orangeColor: '#d68f00',
+  redColor: '#bf2f13',
   // primaryContainer: '#d9dde0',
   // secondaryContainer: 'red',
 };

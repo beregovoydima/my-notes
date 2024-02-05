@@ -1,105 +1,65 @@
-import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, FlatList} from 'react-native';
-import {NotesListItem} from '@/core/interfaces';
+import React, {memo, useCallback, useMemo} from 'react';
+import {FlatList} from 'react-native';
+import {NotesListItem, NotesSortType} from '@/core/interfaces';
 import {ListCard} from './card/ListCard';
-import {ListModal} from '../modals/list/ListModal';
-import {useSelector} from 'react-redux';
 import {notesService} from '@/core/services';
-import moment from 'moment';
-
+import {useSelector} from 'react-redux';
 interface Props {
-  listModalVisible: boolean;
-  hideListModal: () => void;
-  openListModal: () => void;
+  sortedType: NotesSortType;
+  editList: (list: NotesListItem) => void;
 }
 
-export const ListItem = ({
-  listModalVisible,
-  hideListModal,
-  openListModal,
-}: Props) => {
+export const ListItem = memo(({sortedType, editList}: Props) => {
   const allList = useSelector(() => notesService.storeGetListCollection());
-  const [editListData, setEditListData] = useState<NotesListItem | null>(null);
 
-  const changeList = async (val: NotesListItem) => {
-    notesService.storeSetListCollection([
-      ...allList.map(el =>
-        el.id === val.id ? {...val, updated: moment().format()} : el,
-      ),
-    ]);
-    await notesService.storageSetLists(notesService.storeGetListCollection());
-  };
-
-  const getAllList = async () => {
-    const response = await notesService.storageGetListCollection();
-
-    if (response) {
-      notesService.storeSetListCollection(response);
+  const sortedList = useMemo(() => {
+    if (sortedType === 'created') {
+      return [...allList].sort((a, b) => {
+        return new Date(a.created) < new Date(b.created) ? 1 : -1;
+      });
     }
-  };
 
-  const deleteList = async (id: number) => {
+    if (sortedType === 'updated') {
+      return [...allList].sort((a, b) => {
+        return new Date(a.updated ? a.updated : a.created) <
+          new Date(b.updated ? b.updated : b.created)
+          ? 1
+          : -1;
+      });
+    }
+
+    if (sortedType === 'title') {
+      return [...allList].sort((a, b) => a.title.localeCompare(b.title));
+    }
+
+    return allList;
+  }, [allList, sortedType]);
+
+  const deleteList = async (id: string) => {
     const filterListCollection = [
       ...notesService.storeGetListCollection(),
     ].filter(el => el.id !== id);
 
-    await notesService.storageSetLists(filterListCollection);
+    notesService.storageSetLists(filterListCollection);
     notesService.storeSetListCollection(filterListCollection);
   };
 
-  const editList = (list: NotesListItem) => {
-    setEditListData(list);
-    openListModal();
-  };
-
-  const hideModal = () => {
-    hideListModal();
-    setEditListData(null);
-  };
-
-  useEffect(() => {
-    getAllList();
-  }, []);
-
-  const renderItem = ({item}: {item: NotesListItem}) => {
-    return (
-      <View style={styles.container}>
-        <ListCard
-          list={item}
-          changeList={val => changeList(val)}
-          deleteList={deleteList}
-          editList={editList}
-        />
-      </View>
-    );
-  };
+  const renderItem = useCallback(
+    ({item}: {item: NotesListItem}) => {
+      return (
+        <ListCard list={item} deleteList={deleteList} editList={editList} />
+      );
+    },
+    [editList],
+  );
 
   return (
-    <>
-      <>
-        {listModalVisible ? (
-          <ListModal
-            editListData={editListData}
-            hideModal={() => hideModal()}
-            visible={listModalVisible}
-          />
-        ) : (
-          <></>
-        )}
-      </>
-
-      <FlatList
-        data={allList}
-        keyExtractor={el => el.id.toString()}
-        renderItem={renderItem}
-        ListEmptyComponent={<></>}
-      />
-    </>
+    <FlatList
+      data={sortedList}
+      keyExtractor={el => el.id}
+      renderItem={renderItem}
+      windowSize={15}
+      ListEmptyComponent={<></>}
+    />
   );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    margin: 5,
-  },
 });

@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {FlatList} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
+import {FlatList, Text} from 'react-native';
 import {notesService} from '@/core/services';
 import {FolderModal} from '@/components/modals/notes/FolderModal';
 import moment from 'moment';
@@ -30,12 +30,12 @@ export const FoldersItem = ({
     hideModal();
   };
 
-  const saveFoldersInStorage = async () => {
+  const saveFoldersInStorage = () => {
     const response = notesService.storeGetFoldersCollection();
-    await notesService.storageSetFolders(response);
+    notesService.storageSetFolders(response);
   };
 
-  const saveFolder = async (val: string, id?: string) => {
+  const saveFolder = (val: string, id?: string) => {
     if (val) {
       if (id) {
         notesService.storeSetFolders([
@@ -59,28 +59,31 @@ export const FoldersItem = ({
         ]);
       }
 
-      await saveFoldersInStorage();
+      saveFoldersInStorage();
       setEditFolder(null);
     }
   };
 
-  const deleteFolder = (id: string) => {
-    const isDeleteFolder = folders.find(el => el.id === id)?.isDeletable;
-    if (isDeleteFolder) {
-      notesService.storeSetFolders([...folders.filter(el => el.id !== id)]);
-      saveFoldersInStorage();
-    }
-  };
+  const getFolderCard = useCallback(
+    (item: NotesFolderItem) => {
+      const deleteFolder = (id: string) => {
+        const isDeleteFolder = folders.find(el => el.id === id)?.isDeletable;
+        if (isDeleteFolder) {
+          notesService.storeSetFolders([...folders.filter(el => el.id !== id)]);
+          saveFoldersInStorage();
+        }
+      };
 
-  const getFolderCard = (item: NotesFolderItem) => {
-    return (
-      <FolderCard
-        item={item}
-        deleteFolder={deleteFolder}
-        setEditFolder={setEditFolder}
-      />
-    );
-  };
+      return (
+        <FolderCard
+          item={item}
+          deleteFolder={deleteFolder}
+          setEditFolder={setEditFolder}
+        />
+      );
+    },
+    [folders],
+  );
 
   useEffect(() => {
     if (editFolderData) {
@@ -101,7 +104,7 @@ export const FoldersItem = ({
         data={folders}
         renderItem={({item}) => getFolderCard(item)}
         keyExtractor={item => item.id}
-        ListEmptyComponent={<></>}
+        ListEmptyComponent={<Text>Список заметок пуст.</Text>}
       />
     </>
   );

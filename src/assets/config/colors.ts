@@ -60,7 +60,7 @@ import {useTheme as _useTheme} from 'react-native-paper';
 export const lightColors = {
   primary: '#6B52AE', // Основной фиолетовый
   accent: '#8f5db7',
-  success: '#2ecc71', // Зеленый
+  success: '#26A69A', // Зеленый
   warning: '#f39c12', // Оранжевый
   info: '#3498db', // Синий (дополнительный)
   background: '#f7f8fa', // Светлый серый
@@ -79,7 +79,7 @@ export const lightColors = {
 export const darkColors = {
   primary: '#6B52AE', // Основной фиолетовый
   accent: '#8f5db7',
-  success: '#2ecc71', // Зеленый
+  success: '#26A69A', // Зеленый
   warning: '#f39c12', // Оранжевый
   info: '#3498db', // #f7f8fa#2c3e50', // Темно-синий
   background: '#f7f8fa', // Светлый серый

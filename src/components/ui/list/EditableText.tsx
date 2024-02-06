@@ -13,9 +13,16 @@ interface Props {
   label: string;
   saveText: (val: string) => void;
   style?: TextStyle;
+  customText?: string;
 }
 
-export const EditableText = ({isChecked, label, saveText, style}: Props) => {
+export const EditableText = ({
+  isChecked,
+  label,
+  saveText,
+  style,
+  customText,
+}: Props) => {
   const {colors} = useTheme();
 
   const [isEditing, setIsEditing] = useState(false);
@@ -24,6 +31,11 @@ export const EditableText = ({isChecked, label, saveText, style}: Props) => {
   const handleSave = () => {
     saveText(text);
     setIsEditing(false);
+  };
+
+  const changeText = (e: string) => {
+    setText(e);
+    saveText(e);
   };
 
   useEffect(() => {
@@ -43,7 +55,7 @@ export const EditableText = ({isChecked, label, saveText, style}: Props) => {
             },
           ]}
           value={text}
-          onChangeText={setText}
+          onChangeText={changeText}
           onBlur={handleSave}
           autoFocus
           selectionColor={colors.primary}
@@ -54,16 +66,16 @@ export const EditableText = ({isChecked, label, saveText, style}: Props) => {
           onPress={() => setIsEditing(true)}>
           <View>
             <Text
-              numberOfLines={1}
+              numberOfLines={2}
               style={[
                 styles.text,
-                isChecked && styles.checkedText,
+                isChecked && !!text && styles.checkedText,
                 {color: colors.text},
                 {
                   ...style,
                 },
               ]}>
-              {text || 'Введите текст'}
+              {text || customText || 'Введите текст'}
             </Text>
           </View>
         </TouchableOpacity>
@@ -86,6 +98,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   text: {
+    minHeight: 60,
     textAlignVertical: 'center',
     fontSize: 16,
   },
@@ -93,6 +106,7 @@ const styles = StyleSheet.create({
     textDecorationLine: 'line-through',
   },
   input: {
+    minHeight: 60,
     marginLeft: 8,
     fontSize: 16,
     flex: 1,

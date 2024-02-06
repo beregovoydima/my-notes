@@ -17,10 +17,11 @@ interface Props {
   listChild: NotesListItemChildren;
   saveChildList: (val: NotesListItemChildren) => void;
   deleteListItem: (val: NotesListItemChildren) => void;
+  color?: string;
 }
 
 export const ListModalItemCildren = React.memo(
-  ({listChild, saveChildList, deleteListItem}: Props) => {
+  ({listChild, saveChildList, deleteListItem, color}: Props) => {
     const {colors} = useTheme();
 
     const [isExpanded, setIsExpanded] = useState(false);
@@ -91,7 +92,11 @@ export const ListModalItemCildren = React.memo(
     return (
       <View style={styles.container}>
         <View style={styles.childContent}>
-          <CheckBoxListTitle list={listChild} checkList={checkList} />
+          <CheckBoxListTitle
+            list={listChild}
+            color={color}
+            checkList={checkList}
+          />
           <EditableText
             style={{color: colors.text, fontSize: 16}}
             label={listChild.text}
@@ -102,7 +107,7 @@ export const ListModalItemCildren = React.memo(
             {listChild.children.length ? (
               <IconButton
                 icon={() => getExpandIcon()}
-                iconColor={colors.primary}
+                iconColor={color ? color : colors.primary}
                 size={22}
                 onPress={() => toggleExpansion()}
                 style={styles.btn}
@@ -134,6 +139,7 @@ export const ListModalItemCildren = React.memo(
               <ListModalItemCildrenItem
                 key={el.id}
                 children={el}
+                color={color}
                 saveChildren={saveChildren}
                 deleteChildren={deleteChildren}
               />

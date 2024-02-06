@@ -1,6 +1,6 @@
 import {useTheme} from '@/assets/config/colors';
 import {NotesSortType} from '@/core/interfaces';
-import React, {useState} from 'react';
+import React, {memo, useState} from 'react';
 import {StyleSheet} from 'react-native';
 import {Divider, IconButton, Menu} from 'react-native-paper';
 
@@ -9,7 +9,7 @@ interface Props {
   changeSort: (sort: NotesSortType) => void;
 }
 
-export const SortedNotesMenu = ({changeSort, sortType}: Props) => {
+export const SortedNotesMenu = memo(({changeSort, sortType}: Props) => {
   const {colors} = useTheme();
   const [visible, setVisible] = useState(false);
 
@@ -71,7 +71,7 @@ export const SortedNotesMenu = ({changeSort, sortType}: Props) => {
       <Menu.Item onPress={() => {}} title="To do" />
     </Menu>
   );
-};
+});
 
 const styles = StyleSheet.create({
   content: {

@@ -1,6 +1,6 @@
 import {lightColors, useTheme} from '@/assets/config/colors';
 import {ScreenNavigationProp} from '@/core/interfaces';
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import React, {useState} from 'react';
 import {StyleSheet} from 'react-native';
 import {FAB, Portal} from 'react-native-paper';
@@ -8,20 +8,16 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface Props {
   showFolderModal: () => void;
-  showListModal: () => void;
-  fabVisible: boolean;
 }
 
-export const FabButton = ({
-  showFolderModal,
-  showListModal,
-  fabVisible,
-}: Props) => {
+export const FabButton = ({showFolderModal}: Props) => {
   const [state, setState] = useState({open: false});
+  const [fabVisible] = useState(true);
   const navigation: ScreenNavigationProp = useNavigation();
   const onStateChange = ({open}: {open: boolean}) => setState({open});
 
   const {open} = state;
+  const isFocused = useIsFocused();
 
   const {colors} = useTheme();
 
@@ -33,7 +29,7 @@ export const FabButton = ({
     <Portal>
       <FAB.Group
         open={open}
-        visible={fabVisible && navigation.isFocused()}
+        visible={fabVisible && isFocused}
         icon={open ? 'close' : 'plus'}
         backdropColor={colors.background}
         variant="secondary"
@@ -51,7 +47,7 @@ export const FabButton = ({
             icon: ({size}) => getIcon(size, 'clipboard-list'),
             label: 'Создать список',
             labelTextColor: colors.text,
-            onPress: () => showListModal(),
+            onPress: () => navigation.navigate('ListEdit', {listId: null}),
           },
           {
             icon: ({size}) => getIcon(size, 'folder'),

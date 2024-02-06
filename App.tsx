@@ -6,6 +6,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Appearance, StyleSheet} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {NoteEditPage} from './src/components/pages/notes/NoteEditPage';
+import {ListEditPage} from './src/components/pages/notes/ListEditPage';
 import {Provider} from 'react-redux';
 import store from './src/framework/store/store';
 import {NavBar} from './src/components/navigation/Navbar';
@@ -55,6 +56,11 @@ function App() {
               <Stack.Screen
                 name="NoteEdit"
                 component={NoteEditPage}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="ListEdit"
+                component={ListEditPage}
                 options={{headerShown: false}}
               />
             </Stack.Navigator>

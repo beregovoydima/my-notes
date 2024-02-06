@@ -1,13 +1,11 @@
 /* eslint-disable react-native/no-inline-styles */
 import {useTheme} from '@/assets/config/colors';
-import {EditableText} from '@/components/ui/list/EditableText';
 import {NotesListItem, NotesListItemChildren} from '@/core/interfaces';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Button, Divider} from 'react-native-paper';
-import moment from 'moment';
 import {ListModalItemCildren} from './ListModalItemChildren';
-import uuid from 'react-native-uuid';
+import {getUuid} from '@/core/utils';
 
 interface Props {
   list: NotesListItem;
@@ -17,17 +15,12 @@ interface Props {
 export const ListModalItem = ({list, changeList}: Props) => {
   const {colors} = useTheme();
 
-  const saveTitleText = (text: string) => {
-    const listItem = {...list, title: text, updated: moment().format()};
-    changeList(listItem);
-  };
-
   const addList = () => {
     const listItem: NotesListItem = {
       ...list,
       items: [
         ...list.items,
-        {id: uuid.v4().toString(), isChecked: false, text: '', children: []},
+        {id: getUuid(), isChecked: false, text: '', children: []},
       ],
     };
     changeList(listItem);
@@ -55,30 +48,24 @@ export const ListModalItem = ({list, changeList}: Props) => {
 
   return (
     <View style={[styles.card, {backgroundColor: colors.whiteColor}]}>
-      <View style={styles.content}>
-        <EditableText
-          style={{fontSize: 20, fontWeight: '500'}}
-          label={list.title}
-          isChecked={
-            !!list.items.length && list.items.every(el => el.isChecked)
-          }
-          saveText={val => saveTitleText(val)}
-        />
-      </View>
-
       <Divider />
       {list.items.map(child => {
         return (
           <ListModalItemCildren
             key={child.id}
             listChild={child}
+            color={list.color ? list.color : undefined}
             saveChildList={saveChildList}
             deleteListItem={deleteListItem}
           />
         );
       })}
       <Divider />
-      <Button icon="plus" onPress={() => addList()}>
+      <Button
+        style={{margin: 10}}
+        textColor={list.color ? list.color : colors.primary}
+        icon="plus"
+        onPress={() => addList()}>
         Добавить
       </Button>
     </View>

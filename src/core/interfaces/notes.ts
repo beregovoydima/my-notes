@@ -11,7 +11,7 @@ export interface NotesItems {
   updated: Date | string | null;
   type: NoteType; // 'note, list'
   color: string | null; // need types
-  folder: string | null;
+  folder: NotesFolderItemKey | null;
   title: string; //string
   label: string;
   deleted?: NotesItemsDeleted;
@@ -38,10 +38,15 @@ export interface NotesListItem {
   type: NoteType;
   title: string;
   color: string | null; // need types
-  folder: string | null;
+  folder: NotesFolderItemKey | null;
   created: Date | string;
   updated: Date | string | null;
   items: NotesListItemChildren[];
+}
+
+export interface NotesFolderItemKey {
+  name: string;
+  id: string;
 }
 
 export interface NotesListItemChildren {

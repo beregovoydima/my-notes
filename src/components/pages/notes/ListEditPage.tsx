@@ -1,0 +1,290 @@
+import {EditableText} from '@/components/ui/list/EditableText';
+import {
+  ListEditScreenRouteProp,
+  NotesFolderItem,
+  NotesListItem,
+  ScreenNavigationProp,
+  // ScreenNavigationProp,
+} from '@/core/interfaces';
+import {notesService} from '@/core/services';
+// import {useNavigation} from '@react-navigation/native';
+// import {useNavigation} from '@react-navigation/native';
+import moment from 'moment';
+import React, {useCallback, useEffect, useState} from 'react';
+import {
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  View,
+  BackHandler,
+} from 'react-native';
+import {Button, Chip, Divider} from 'react-native-paper';
+// import {Button} from 'react-native-paper';
+import {useTheme} from '@/assets/config/colors';
+import {ListModalItem} from '@/components/notes/list/ListModalItem';
+import {useNavigation} from '@react-navigation/native';
+import {getUuid, hex2rgba} from '@/core/utils';
+import {useSelector} from 'react-redux';
+
+export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
+  // const navigation: ScreenNavigationProp = useNavigation();
+
+  const {colors} = useTheme();
+  const navigation: ScreenNavigationProp = useNavigation();
+  const [list, setList] = useState<NotesListItem>({
+    id: getUuid(),
+    title: '',
+    type: 'list',
+    folder: null,
+    color: '',
+    created: moment().format(),
+    updated: null,
+    items: [],
+  });
+  const folders = useSelector(() => notesService.storeGetFoldersCollection());
+
+  useEffect(() => {
+    const response = notesService.storeGetListCollection();
+    if (response.length && route.params?.listId) {
+      const findList = response.find(el => el.id === route.params.listId);
+      if (findList) {
+        setList({...findList, color: colors.secondary});
+      }
+    }
+  }, [colors.secondary, route.params.listId]);
+
+  // const handleSave = async () => {
+  //   if (route.params.noteId) {
+  //     await notesService.updateNote({...note, label: text});
+  //   } else {
+  //     await notesService.storeAddNote({...note, label: text});
+  //   }
+  //   navigation.navigate('Notes');
+  // };
+
+  const changeList = (val: NotesListItem) => {
+    setList({...val});
+  };
+
+  const saveTitleText = (text: string) => {
+    const listItem = {...list, title: text, updated: moment().format()};
+    changeList(listItem);
+  };
+
+  const save = useCallback(() => {
+    if (route.params.listId) {
+      const listCollection = [...notesService.storeGetListCollection()].map(
+        el => {
+          if (el.id === list.id) {
+            const filterEmptyItems = list.items
+              .map(item => ({
+                ...item,
+                children: item.children.filter(child => child.text),
+              }))
+              .filter(item => {
+                return !!item.children.length || item.text;
+              });
+
+            return {
+              ...list,
+              title: list.title ? list.title : new Date().toDateString(),
+              items: filterEmptyItems,
+              updated: moment().format(),
+            };
+          }
+
+          return el;
+        },
+      );
+      notesService.storageSetLists(listCollection);
+      notesService.storeSetListCollection(listCollection);
+    } else {
+      const filterEmptyItems = list.items
+        .map(item => ({
+          ...item,
+          children: item.children.filter(child => child.text),
+        }))
+        .filter(item => {
+          return !!item.children.length || item.text;
+        });
+
+      const lists = notesService.storeGetListCollection();
+      notesService.storageSetLists([
+        ...lists,
+        {
+          ...list,
+          title: list.title ? list.title : new Date().toDateString(),
+          items: filterEmptyItems,
+        },
+      ]);
+      notesService.storeAddList(list);
+    }
+  }, [list, route.params.listId]);
+
+  const backSave = useCallback(() => {
+    save();
+
+    return false;
+  }, [save]);
+
+  const handleSave = () => {
+    save();
+    navigation.navigate('Notes');
+  };
+
+  const handleFolderSet = (folder: NotesFolderItem) => {
+    if (folder.id === list.folder?.id) {
+      setList({
+        ...list,
+        folder: null,
+      });
+    } else {
+      setList({
+        ...list,
+        folder: {id: folder.id, name: folder.name},
+      });
+    }
+  };
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backSave,
+    );
+
+    return () => {
+      backHandler.remove();
+    };
+  }, [backSave, list]);
+
+  // const changeDescription = (description: string) => {
+  //   setDescription(description);
+  // };
+
+  return (
+    <SafeAreaView
+      style={[styles.container, {backgroundColor: colors.background}]}>
+      <View
+        style={[
+          styles.view,
+          {
+            backgroundColor: hex2rgba(
+              list.color ? list.color : colors.primary,
+              0.04,
+            ),
+          },
+        ]}>
+        {/* <Text variant="titleLarge" style={{}}>
+          {route.params.listId ? 'Редактировать' : 'Создать'}
+        </Text> */}
+        <View
+          style={[
+            styles.content,
+            {
+              backgroundColor: hex2rgba(
+                list.color ? list.color : colors.primary,
+                0.15,
+              ),
+            },
+          ]}>
+          <EditableText
+            style={styles.header}
+            label={list.title}
+            customText="Введите название заметки"
+            isChecked={
+              !!list.items.length && list.items.every(el => el.isChecked)
+            }
+            saveText={val => saveTitleText(val)}
+          />
+          <View
+            style={[
+              {
+                backgroundColor: list.color ? list.color : colors.primary,
+              },
+              styles.colorPicker,
+            ]}
+          />
+        </View>
+        <ScrollView>
+          <ListModalItem list={list} changeList={val => changeList(val)} />
+        </ScrollView>
+        <ScrollView horizontal style={styles.chips}>
+          {folders.map(el => {
+            return (
+              <Chip
+                key={el.id}
+                mode="outlined"
+                selected={el.id === list.folder?.id ? true : false}
+                // eslint-disable-next-line react-native/no-inline-styles
+                style={{marginRight: 4, backgroundColor: colors.whiteColor}}
+                onPress={() => handleFolderSet(el)}>
+                {el.label}
+              </Chip>
+            );
+          })}
+        </ScrollView>
+        <Divider />
+        <View style={[styles.footer, {backgroundColor: colors.whiteColor}]}>
+          <Button
+            mode="contained"
+            style={[styles.button, {backgroundColor: colors.error}]}
+            onPress={() => navigation.navigate('Notes')}>
+            Отмена
+          </Button>
+          <Button
+            mode="contained"
+            style={[styles.button, {backgroundColor: colors.success}]}
+            onPress={() => handleSave()}>
+            Сохранить
+          </Button>
+        </View>
+      </View>
+    </SafeAreaView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    display: 'flex',
+    flex: 1,
+  },
+  view: {
+    display: 'flex',
+    flex: 1,
+  },
+  content: {
+    minHeight: 60,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  colorPicker: {
+    width: 40,
+    height: 40,
+    marginRight: 20,
+  },
+  header: {
+    fontSize: 20,
+    fontWeight: '500',
+  },
+
+  button: {
+    maxWidth: '40%',
+    marginLeft: 20,
+  },
+  chips: {
+    maxHeight: 40,
+    padding: 4,
+  },
+  footer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignContent: 'center',
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 20,
+    paddingRight: 20,
+  },
+});

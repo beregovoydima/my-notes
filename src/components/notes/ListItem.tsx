@@ -1,15 +1,14 @@
 import React, {memo, useCallback, useMemo} from 'react';
-import {FlatList} from 'react-native';
+import {FlatList, Text} from 'react-native';
 import {NotesListItem, NotesSortType} from '@/core/interfaces';
 import {ListCard} from './card/ListCard';
 import {notesService} from '@/core/services';
 import {useSelector} from 'react-redux';
 interface Props {
   sortedType: NotesSortType;
-  editList: (list: NotesListItem) => void;
 }
 
-export const ListItem = memo(({sortedType, editList}: Props) => {
+export const ListItem = memo(({sortedType}: Props) => {
   const allList = useSelector(() => notesService.storeGetListCollection());
 
   const sortedList = useMemo(() => {
@@ -44,14 +43,9 @@ export const ListItem = memo(({sortedType, editList}: Props) => {
     notesService.storeSetListCollection(filterListCollection);
   };
 
-  const renderItem = useCallback(
-    ({item}: {item: NotesListItem}) => {
-      return (
-        <ListCard list={item} deleteList={deleteList} editList={editList} />
-      );
-    },
-    [editList],
-  );
+  const renderItem = useCallback(({item}: {item: NotesListItem}) => {
+    return <ListCard list={item} deleteList={deleteList} />;
+  }, []);
 
   return (
     <FlatList
@@ -59,7 +53,7 @@ export const ListItem = memo(({sortedType, editList}: Props) => {
       keyExtractor={el => el.id}
       renderItem={renderItem}
       windowSize={15}
-      ListEmptyComponent={<></>}
+      ListEmptyComponent={<Text>Список заметок пуст.</Text>}
     />
   );
 });

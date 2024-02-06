@@ -1,6 +1,10 @@
 import {useTheme} from '@/assets/config/colors';
 import {ListMenu} from '@/components/ui/menu/ListMenu';
-import {NotesListItem, NotesListItemChildren} from '@/core/interfaces';
+import {
+  NotesListItem,
+  NotesListItemChildren,
+  ScreenNavigationProp,
+} from '@/core/interfaces';
 import React, {memo, useCallback, useMemo, useState} from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
 import {Avatar, Card, Icon, Text} from 'react-native-paper';
@@ -8,15 +12,25 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import moment from 'moment';
 import {ListCardItemCildren} from '../list/ListCardItemChildren';
 import {notesService} from '@/core/services';
+import {useNavigation} from '@react-navigation/native';
 interface Props {
   list: NotesListItem;
   deleteList: (id: string) => void;
-  editList: (list: NotesListItem) => void;
 }
 
-export const ListCard = memo(({list, deleteList, editList}: Props) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+export const ListCard = memo(({list, deleteList}: Props) => {
   const {colors} = useTheme();
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const navigation: ScreenNavigationProp = useNavigation();
+
+  const getLeftIcon = (props: any) => {
+    return <Avatar.Icon {...props} icon="clipboard-list" />;
+  };
+
+  const editList = (id: string) => {
+    navigation.navigate('ListEdit', {listId: id});
+  };
 
   const getMoreIcon = (el: NotesListItem) => {
     return (
@@ -32,16 +46,12 @@ export const ListCard = memo(({list, deleteList, editList}: Props) => {
         ) : null}
 
         <ListMenu
-          editList={() => editList(list)}
+          editList={() => editList(list.id)}
           deleteList={id => deleteList(id)}
           listId={el.id}
         />
       </View>
     );
-  };
-
-  const getLeftIcon = (props: any) => {
-    return <Avatar.Icon {...props} icon="clipboard-list" />;
   };
 
   const changeList = (val: NotesListItem) => {
@@ -78,7 +88,9 @@ export const ListCard = memo(({list, deleteList, editList}: Props) => {
 
   return (
     <View style={styles.container}>
-      <Card style={[{backgroundColor: colors.whiteColor}]}>
+      <Card
+        style={[{backgroundColor: colors.whiteColor}]}
+        onPress={() => editList(list.id)}>
         <Card.Title
           title={list.title}
           titleStyle={[

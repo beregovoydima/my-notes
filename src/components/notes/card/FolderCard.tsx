@@ -2,7 +2,7 @@ import {useTheme} from '@/assets/config/colors';
 import {FoldersMenu} from '@/components/ui/menu/FoldersMenu';
 import {NotesFolderItem} from '@/core/interfaces';
 import moment from 'moment';
-import React from 'react';
+import React, {useCallback} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Avatar, Card, Icon, Text} from 'react-native-paper';
 
@@ -20,15 +20,18 @@ export const FolderCard = React.memo(
       return <Avatar.Icon {...props} icon="folder" />;
     };
 
-    const getMoreIcon = (folder: NotesFolderItem) => {
-      return (
-        <FoldersMenu
-          editFolder={() => setEditFolder(folder)}
-          folder={folder}
-          deleteFolder={() => deleteFolder(folder.id)}
-        />
-      );
-    };
+    const getMoreIcon = useCallback(
+      (folder: NotesFolderItem) => {
+        return (
+          <FoldersMenu
+            editFolder={() => setEditFolder(folder)}
+            folder={folder}
+            deleteFolder={() => deleteFolder(folder.id)}
+          />
+        );
+      },
+      [deleteFolder, setEditFolder],
+    );
 
     return (
       <View style={[styles.item]}>

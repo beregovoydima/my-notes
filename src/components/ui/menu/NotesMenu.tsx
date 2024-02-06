@@ -1,5 +1,5 @@
 import {useTheme} from '@/assets/config/colors';
-import React, {useState} from 'react';
+import React, {memo, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Divider, IconButton, Menu} from 'react-native-paper';
 
@@ -10,7 +10,7 @@ interface Props {
   index: number;
 }
 
-export const NotesMenu = ({editNote, deleteNote, notes, index}: Props) => {
+export const NotesMenu = memo(({editNote, deleteNote, notes, index}: Props) => {
   const {colors} = useTheme();
   const [visible, setVisible] = useState(false);
 
@@ -48,7 +48,7 @@ export const NotesMenu = ({editNote, deleteNote, notes, index}: Props) => {
       </Menu>
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   content: {

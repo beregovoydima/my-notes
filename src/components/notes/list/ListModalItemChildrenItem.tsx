@@ -10,10 +10,11 @@ interface Props {
   children: NotesListItemChildrenItem;
   saveChildren: (children: NotesListItemChildrenItem) => void;
   deleteChildren: (children: NotesListItemChildrenItem) => void;
+  color?: string;
 }
 
 export const ListModalItemCildrenItem = React.memo(
-  ({children, saveChildren, deleteChildren}: Props) => {
+  ({children, saveChildren, deleteChildren, color}: Props) => {
     const {colors} = useTheme();
 
     const saveTitle = (val: string) => {
@@ -35,6 +36,7 @@ export const ListModalItemCildrenItem = React.memo(
     return (
       <View style={styles.childContent}>
         <Checkbox
+          color={color ? color : colors.primary}
           status={children.isChecked ? 'checked' : 'unchecked'}
           onPress={checkList}
         />

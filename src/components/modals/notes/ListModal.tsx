@@ -34,7 +34,6 @@ export const ListModal = ({visible, hideModal, editListData}: Props) => {
   };
 
   const save = () => {
-    const a = Date.now();
     if (editListData) {
       const listCollection = [...notesService.storeGetListCollection()].map(
         el => {
@@ -84,7 +83,6 @@ export const ListModal = ({visible, hideModal, editListData}: Props) => {
     }
 
     hideModal();
-    console.log(Date.now() - a);
   };
 
   useEffect(() => {

@@ -3,6 +3,7 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
 export type RootStackParamList = {
   NoteEdit: {noteId?: null | string};
+  ListEdit: {listId?: null | string};
   Notes: undefined;
   Calendar: undefined;
   Tasks: undefined;
@@ -21,3 +22,4 @@ export type ExtendedScreenNavigationProp = ScreenNavigationProp & {
 };
 
 export type NoteEditScreenRouteProp = RouteProp<RootStackParamList, 'NoteEdit'>;
+export type ListEditScreenRouteProp = RouteProp<RootStackParamList, 'ListEdit'>;

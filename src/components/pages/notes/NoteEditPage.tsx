@@ -1,6 +1,7 @@
 import {EditableText} from '@/components/ui/list/EditableText';
 import {
   NoteEditScreenRouteProp,
+  NotesFolderItem,
   NotesItems,
   // ScreenNavigationProp,
 } from '@/core/interfaces';
@@ -30,9 +31,10 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Octicons from 'react-native-vector-icons/Octicons';
-import uuid from 'react-native-uuid';
 import {useTheme} from '@/assets/config/colors';
-import {Divider} from 'react-native-paper';
+import {Chip, Divider} from 'react-native-paper';
+import {useSelector} from 'react-redux';
+import {getUuid, hex2rgba} from '@/core/utils';
 
 export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
   // const navigation: ScreenNavigationProp = useNavigation();
@@ -40,7 +42,7 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
   const [text, setDescription] = useState<string>('');
   const [size, setSize] = useState<FONT_SIZE>(4);
   const [note, setNote] = useState<NotesItems>({
-    id: uuid.v4().toString(),
+    id: getUuid(),
     type: 'note', // 'note, list'
     created: moment().format(),
     updated: null,
@@ -53,16 +55,17 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
     fontSize: 16, //font Size
   });
   const richTextRef = useRef<RichEditor | null>(null);
+  const folders = useSelector(() => notesService.storeGetFoldersCollection());
 
   const {colors} = useTheme();
 
   const handleFontSize = () => {
     let activeSize: FONT_SIZE = 4 as FONT_SIZE;
     if (size === 4) {
-      activeSize = 7;
-    } else if (size === 7) {
-      activeSize = 1;
-    } else if (size === 1) {
+      activeSize = 6;
+    } else if (size === 6) {
+      activeSize = 2;
+    } else if (size === 2) {
       activeSize = 4;
     }
 
@@ -155,7 +158,7 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
             },
             styles.text,
           ]}>
-          {size === 1 ? 'S' : size === 4 ? 'M' : 'L'}
+          {size === 2 ? 'S' : size === 4 ? 'M' : 'L'}
         </Text>
       </View>
     );
@@ -205,10 +208,51 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
     setDescription(description);
   };
 
+  const handleFolderSet = (folder: NotesFolderItem) => {
+    if (folder.id === note.folder?.id) {
+      setNote({
+        ...note,
+        folder: null,
+      });
+    } else {
+      setNote({
+        ...note,
+        folder: {id: folder.id, name: folder.name},
+      });
+    }
+  };
+
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.container}>
-        <View>
+    <SafeAreaView
+      style={[
+        styles.container,
+        {
+          backgroundColor: hex2rgba(
+            note.color ? note.color : colors.primary,
+            0.04,
+          ),
+        },
+      ]}>
+      <ScrollView
+        style={[
+          styles.container,
+          {
+            backgroundColor: hex2rgba(
+              note.color ? note.color : colors.primary,
+              0.04,
+            ),
+          },
+        ]}>
+        <View
+          style={[
+            styles.view,
+            {
+              backgroundColor: hex2rgba(
+                note.color ? note.color : colors.primary,
+                0.15,
+              ),
+            },
+          ]}>
           <EditableText
             label={note.title}
             isChecked={false}
@@ -227,6 +271,31 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
             initialContentHTML={note.label}
           />
         </KeyboardAvoidingView>
+      </ScrollView>
+      <ScrollView
+        horizontal
+        style={[
+          styles.chips,
+          {
+            backgroundColor: hex2rgba(
+              note.color ? note.color : colors.primary,
+              0.04,
+            ),
+          },
+        ]}>
+        {folders.map(el => {
+          return (
+            <Chip
+              key={el.id}
+              mode="outlined"
+              selected={el.id === note.folder?.id ? true : false}
+              // eslint-disable-next-line react-native/no-inline-styles
+              style={{marginRight: 4, backgroundColor: colors.whiteColor}}
+              onPress={() => handleFolderSet(el)}>
+              {el.label}
+            </Chip>
+          );
+        })}
       </ScrollView>
 
       <RichToolbar
@@ -267,12 +336,19 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+  },
+  view: {
+    display: 'flex',
+    flex: 1,
   },
   text: {
     marginLeft: 4,
     fontSize: 10,
     width: 8,
+  },
+  chips: {
+    maxHeight: 40,
+    padding: 4,
   },
   icon: {
     display: 'flex',

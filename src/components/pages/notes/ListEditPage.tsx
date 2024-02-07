@@ -17,6 +17,7 @@ import {
   StyleSheet,
   View,
   BackHandler,
+  TouchableOpacity,
 } from 'react-native';
 import {Button, Chip, Divider} from 'react-native-paper';
 // import {Button} from 'react-native-paper';
@@ -25,12 +26,15 @@ import {ListModalItem} from '@/components/notes/list/ListModalItem';
 import {useNavigation} from '@react-navigation/native';
 import {getUuid, hex2rgba} from '@/core/utils';
 import {useSelector} from 'react-redux';
+import {ListMenu} from '@/components/ui/menu/ListMenu';
+import {ColorPicker} from '@/components/modals/ui/ColorPicker';
 
 export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
   // const navigation: ScreenNavigationProp = useNavigation();
 
   const {colors} = useTheme();
   const navigation: ScreenNavigationProp = useNavigation();
+  const [showColorPicker, setShowColorPicker] = useState(false);
   const [list, setList] = useState<NotesListItem>({
     id: getUuid(),
     title: '',
@@ -48,19 +52,10 @@ export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
     if (response.length && route.params?.listId) {
       const findList = response.find(el => el.id === route.params.listId);
       if (findList) {
-        setList({...findList, color: colors.secondary});
+        setList({...findList});
       }
     }
   }, [colors.secondary, route.params.listId]);
-
-  // const handleSave = async () => {
-  //   if (route.params.noteId) {
-  //     await notesService.updateNote({...note, label: text});
-  //   } else {
-  //     await notesService.storeAddNote({...note, label: text});
-  //   }
-  //   navigation.navigate('Notes');
-  // };
 
   const changeList = (val: NotesListItem) => {
     setList({...val});
@@ -146,6 +141,11 @@ export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
     }
   };
 
+  const changeColor = (color: string) => {
+    setList({...list, color: color});
+    setShowColorPicker(false);
+  };
+
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
@@ -164,6 +164,11 @@ export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
   return (
     <SafeAreaView
       style={[styles.container, {backgroundColor: colors.background}]}>
+      <ColorPicker
+        visible={showColorPicker}
+        hideModal={() => setShowColorPicker(false)}
+        changeColor={changeColor}
+      />
       <View
         style={[
           styles.view,
@@ -196,13 +201,25 @@ export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
             }
             saveText={val => saveTitleText(val)}
           />
-          <View
-            style={[
-              {
-                backgroundColor: list.color ? list.color : colors.primary,
-              },
-              styles.colorPicker,
-            ]}
+          <TouchableOpacity onPress={() => setShowColorPicker(true)}>
+            <View
+              style={[
+                {
+                  backgroundColor: list.color ? list.color : colors.primary,
+                },
+                styles.colorPicker,
+              ]}
+            />
+          </TouchableOpacity>
+
+          <ListMenu
+            editList={function (): void {
+              throw new Error('Function not implemented.');
+            }}
+            deleteList={function (): void {
+              throw new Error('Function not implemented.');
+            }}
+            listId={''}
           />
         </View>
         <ScrollView>
@@ -263,6 +280,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     marginRight: 20,
+    marginLeft: 20,
   },
   header: {
     fontSize: 20,

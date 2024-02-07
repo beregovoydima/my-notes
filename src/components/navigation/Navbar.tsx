@@ -5,7 +5,11 @@ import {useTheme} from '@/assets/config/colors';
 import {NotesPage} from '@/components/pages/notes/NotesPage';
 import {StyleSheet} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {ParamListBase, RouteProp} from '@react-navigation/native';
+import {
+  ParamListBase,
+  RouteProp,
+  getFocusedRouteNameFromRoute,
+} from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 
@@ -16,8 +20,10 @@ const CalendarPage = ({route}: {route: RouteProp<ParamListBase>}) => (
 const SettingsPage = ({route}: {route: RouteProp<ParamListBase>}) => {
   return <Text>{route.name}</Text>;
 };
-export function NavBar() {
+export function NavBar({route}: {route: RouteProp<ParamListBase>}) {
   const {colors} = useTheme();
+
+  const focusedRouteName = getFocusedRouteNameFromRoute(route);
 
   const getNoteIcon = (focused: boolean, color: string) => {
     if (focused) {
@@ -91,11 +97,15 @@ export function NavBar() {
     return <Text style={[{color: color}, styles.navbarLabel]}>Задачи</Text>;
   };
 
-  const getSearchIcon = (focused: boolean, color: string) => {
-    if (focused) {
-      return <SimpleIcon name="magnifier" color={colors.primary} size={20} />;
-    }
-    return <SimpleIcon name="magnifier" color={color} size={20} />;
+  const getSearchIcon = (item: any) => {
+    const {focused, color} = item;
+    return (
+      <SimpleIcon
+        name="magnifier"
+        color={focused ? colors.primary : color}
+        size={20}
+      />
+    );
   };
 
   const getSearchLabel = (focused: boolean, color: string) => {
@@ -117,6 +127,7 @@ export function NavBar() {
           height: 55,
           paddingBottom: 5,
         },
+        tabBarActiveBackgroundColor: colors.greyDarkFill,
       }}>
       <Tab.Screen
         name="Notes"
@@ -124,6 +135,14 @@ export function NavBar() {
         options={{
           tabBarLabel: ({focused, color}) => getNoteLabel(focused, color),
           tabBarIcon: ({focused, color}) => getNoteIcon(focused, color),
+          tabBarItemStyle: {
+            borderRadius: 4,
+            borderWidth: 1,
+            borderColor:
+              focusedRouteName === 'Notes'
+                ? colors.lineGreyColor
+                : 'transparent',
+          },
         }}
       />
       <Tab.Screen
@@ -132,6 +151,14 @@ export function NavBar() {
         options={{
           tabBarLabel: ({focused, color}) => getCalendarLabel(focused, color),
           tabBarIcon: ({focused, color}) => getCalendarIcon(focused, color),
+          tabBarItemStyle: {
+            borderRadius: 4,
+            borderWidth: 1,
+            borderColor:
+              focusedRouteName === 'Calendar'
+                ? colors.lineGreyColor
+                : 'transparent',
+          },
         }}
       />
       <Tab.Screen
@@ -140,6 +167,14 @@ export function NavBar() {
         options={{
           tabBarLabel: ({focused, color}) => getTasksLabel(focused, color),
           tabBarIcon: ({focused, color}) => getTasksIcon(focused, color),
+          tabBarItemStyle: {
+            borderRadius: 4,
+            borderWidth: 1,
+            borderColor:
+              focusedRouteName === 'Tasks'
+                ? colors.lineGreyColor
+                : 'transparent',
+          },
         }}
       />
       <Tab.Screen
@@ -147,7 +182,15 @@ export function NavBar() {
         component={CalendarPage}
         options={{
           tabBarLabel: ({focused, color}) => getSearchLabel(focused, color),
-          tabBarIcon: ({focused, color}) => getSearchIcon(focused, color),
+          tabBarIcon: item => getSearchIcon(item),
+          tabBarItemStyle: {
+            borderRadius: 4,
+            borderWidth: 1,
+            borderColor:
+              focusedRouteName === 'Search'
+                ? colors.lineGreyColor
+                : 'transparent',
+          },
         }}
       />
       <Tab.Screen
@@ -156,6 +199,14 @@ export function NavBar() {
         options={{
           tabBarLabel: ({focused, color}) => getProfileLabel(focused, color),
           tabBarIcon: ({focused, color}) => getProfileIcon(focused, color),
+          tabBarItemStyle: {
+            borderRadius: 4,
+            borderWidth: 1,
+            borderColor:
+              focusedRouteName === 'Settings'
+                ? colors.lineGreyColor
+                : 'transparent',
+          },
         }}
       />
     </Tab.Navigator>

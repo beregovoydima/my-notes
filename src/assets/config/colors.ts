@@ -72,6 +72,7 @@ export const lightColors = {
   blueColor: '#2a6b77',
   orangeColor: '#d68f00',
   redColor: '#bf2f13',
+  greyDarkFill: '#F0F2F5',
   // primaryContainer: '#d9dde0',
   // secondaryContainer: '#ecf0f1', //background top active button tabs
 };
@@ -91,6 +92,7 @@ export const darkColors = {
   blueColor: '#2a6b77',
   orangeColor: '#d68f00',
   redColor: '#bf2f13',
+  greyDarkFill: '#F0F2F5',
   // primaryContainer: '#d9dde0',
   // secondaryContainer: 'red',
 };

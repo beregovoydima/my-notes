@@ -15,17 +15,33 @@ import {notesService} from '@/core/services';
 import {useNavigation} from '@react-navigation/native';
 interface Props {
   list: NotesListItem;
-  deleteList: (id: string) => void;
 }
 
-export const ListCard = memo(({list, deleteList}: Props) => {
+export const ListCard = memo(({list}: Props) => {
   const {colors} = useTheme();
   const [isExpanded, setIsExpanded] = useState(false);
 
   const navigation: ScreenNavigationProp = useNavigation();
 
   const getLeftIcon = (props: any) => {
-    return <Avatar.Icon {...props} icon="clipboard-list" />;
+    return (
+      <Avatar.Icon
+        style={{
+          backgroundColor: list.color ? list.color : colors.primary,
+        }}
+        {...props}
+        icon="clipboard-list"
+      />
+    );
+  };
+
+  const deleteList = async (id: string) => {
+    const filterListCollection = [
+      ...notesService.storeGetListCollection(),
+    ].filter(el => el.id !== id);
+
+    notesService.storageSetLists(filterListCollection);
+    notesService.storeSetListCollection(filterListCollection);
   };
 
   const editList = (id: string) => {
@@ -74,6 +90,7 @@ export const ListCard = memo(({list, deleteList}: Props) => {
       };
       return (
         <ListCardItemCildren
+          color={list.color ? list.color : undefined}
           key={item.id}
           listChild={item}
           saveChildList={saveChildList}
@@ -102,13 +119,27 @@ export const ListCard = memo(({list, deleteList}: Props) => {
         />
         <Card.Content>
           <View style={styles.footer}>
-            {list.updated ? (
-              <Icon
-                source="circle-edit-outline"
-                size={12}
-                color={colors.greyColor}
-              />
-            ) : null}
+            <View style={styles.footer}>
+              {list.updated ? (
+                <Icon
+                  source="circle-edit-outline"
+                  size={12}
+                  color={colors.greyColor}
+                />
+              ) : null}
+              <Text
+                variant="labelSmall"
+                // eslint-disable-next-line react-native/no-inline-styles
+                style={{
+                  color: colors.greyColor,
+                  marginLeft: list.updated ? 4 : 0,
+                }}>
+                {moment(list.updated ? list.updated : list.created).format(
+                  'YYYY-MM-DD HH:mm',
+                )}
+              </Text>
+            </View>
+
             <Text
               variant="labelSmall"
               // eslint-disable-next-line react-native/no-inline-styles
@@ -116,9 +147,7 @@ export const ListCard = memo(({list, deleteList}: Props) => {
                 color: colors.greyColor,
                 marginLeft: list.updated ? 4 : 0,
               }}>
-              {moment(list.updated ? list.updated : list.created).format(
-                'YYYY-MM-DD HH:mm',
-              )}
+              {list.folder?.name}
             </Text>
           </View>
           {isExpanded ? (
@@ -151,6 +180,7 @@ const styles = StyleSheet.create({
   footer: {
     display: 'flex',
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
 });

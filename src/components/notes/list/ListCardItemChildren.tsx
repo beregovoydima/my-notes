@@ -13,9 +13,14 @@ import {ListCardItemCildrenItem} from './ListCardItemChildrenItem';
 interface Props {
   listChild: NotesListItemChildren;
   saveChildList: (val: NotesListItemChildren) => void;
+  color?: string;
 }
 
-export const ListCardItemCildren = ({listChild, saveChildList}: Props) => {
+export const ListCardItemCildren = ({
+  listChild,
+  saveChildList,
+  color,
+}: Props) => {
   const {colors} = useTheme();
 
   const [isExpanded, setIsExpanded] = useState(false);
@@ -57,6 +62,7 @@ export const ListCardItemCildren = ({listChild, saveChildList}: Props) => {
     <View style={styles.container}>
       <View style={styles.childContent}>
         <CheckBoxListTitle
+          color={color}
           list={listChild}
           checkList={val => {
             checkList(val);
@@ -94,6 +100,7 @@ export const ListCardItemCildren = ({listChild, saveChildList}: Props) => {
                 key={el.id}
                 saveChildren={saveChildren}
                 children={el}
+                color={color}
               />
             );
           })

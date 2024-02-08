@@ -19,6 +19,11 @@ export const NotesSegmentedButtons = ({changePageType, page}: Props) => {
         buttons={[
           {
             icon: 'note-multiple',
+            value: 'all',
+            label: 'Все',
+          },
+          {
+            icon: 'note-multiple',
             value: 'notes',
             label: 'Заметки',
           },
@@ -44,6 +49,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttons: {
-    width: '90%',
+    marginLeft: 8,
+    marginRight: 8,
   },
 });

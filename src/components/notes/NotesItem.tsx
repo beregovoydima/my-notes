@@ -1,7 +1,6 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useMemo} from 'react';
 import {FlatList} from 'react-native';
 import {Text} from 'react-native-paper';
-import {notesService} from '@/core/services';
 import {NotesItems, NotesSortType} from '@/core/interfaces';
 import {NoteCard} from './card/NoteCard';
 
@@ -34,28 +33,10 @@ export const NotesItem = ({notes, sortedType}: Props) => {
     return notes;
   }, [notes, sortedType]);
 
-  const saveNotesInStorage = async () => {
-    const response = notesService.storeGetCollectionNote();
-    await notesService.storageSetNotes(response);
-  };
-
-  const deleteNote = useCallback(
-    (id: string) => {
-      const findNote = notes.find(el => el.id === id);
-      if (findNote) {
-        saveNotesInStorage();
-        notesService.storeSetNotes([...notes.filter(el => el.id !== id)]);
-      }
-    },
-    [notes],
-  );
-
   return (
     <FlatList
       data={sortedNotes}
-      renderItem={({item, index}) => (
-        <NoteCard item={item} index={index} deleteNote={deleteNote} />
-      )}
+      renderItem={({item, index}) => <NoteCard item={item} index={index} />}
       keyExtractor={item => item.id}
       ListEmptyComponent={<Text>Список заметок пуст.</Text>}
     />

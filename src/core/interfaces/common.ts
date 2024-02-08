@@ -13,3 +13,5 @@ export type PagesType =
   | 'Search'
   | 'Settings'
   | 'More';
+
+export type SortDirection = 'asc' | 'desc';

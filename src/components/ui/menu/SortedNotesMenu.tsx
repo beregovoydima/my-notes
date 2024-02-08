@@ -9,7 +9,7 @@ interface Props {
   changeSort: (sort: NotesSortType) => void;
 }
 
-export const SortedNotesMenu = memo(({changeSort, sortType}: Props) => {
+export const SortedNotesMenu = memo(({changeSort}: Props) => {
   const {colors} = useTheme();
   const [visible, setVisible] = useState(false);
 
@@ -21,17 +21,18 @@ export const SortedNotesMenu = memo(({changeSort, sortType}: Props) => {
     setVisible(false);
   };
 
-  const icons = {
-    created: 'sort-clock-ascending-outline',
-    updated: 'sort-clock-ascending',
-    color: 'sort-bool-ascending',
-    title: 'sort-alphabetical-ascending',
-  };
+  // const icons = {
+  //   created: 'sort-clock-ascending-outline',
+  //   updated: 'sort-clock-ascending',
+  //   color: 'sort-bool-ascending',
+  //   title: 'sort-alphabetical-ascending',
+  //   folder: 'folder',
+  // };
 
   const getIconButton = () => {
     return (
       <IconButton
-        icon={icons[sortType]}
+        icon="sort-variant"
         style={styles.anchor}
         onPress={openMenu}
       />
@@ -67,8 +68,11 @@ export const SortedNotesMenu = memo(({changeSort, sortType}: Props) => {
         onPress={() => change('title')}
         title="По названию"
       />
-      <Divider />
-      <Menu.Item onPress={() => {}} title="To do" />
+      <Menu.Item
+        leadingIcon="sort-alphabetical-ascending"
+        onPress={() => change('folder')}
+        title="По названию папки"
+      />
     </Menu>
   );
 });

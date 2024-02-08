@@ -2,25 +2,36 @@
 import React, {useEffect, useState} from 'react';
 import {FabButton} from '@/components/ui/FabButton';
 import {StyleSheet, View} from 'react-native';
-import {Appbar} from 'react-native-paper';
+import {Appbar, Chip} from 'react-native-paper';
 import {useTheme} from '@/assets/config/colors';
 import {NotesSegmentedButtons} from '@/components/ui/buttons/NotesSegmentedButtons';
-import {NotesPageType, NotesSortType} from '@/core/interfaces';
+import {
+  NotesFolderItemKey,
+  NotesPageType,
+  NotesSortType,
+  SortDirection,
+} from '@/core/interfaces';
 import {NotesItem} from '@/components/notes/NotesItem';
 import {FoldersItem} from '@/components/notes/FoldersItem';
 import {notesService} from '@/core/services';
 import {useSelector} from 'react-redux';
 import {ListItem} from '@/components/notes/ListItem';
 import {SortedNotesMenu} from '@/components/ui/menu/SortedNotesMenu';
+import {AllNotesItem} from '@/components/notes/AllNotesItem';
+import {SortedTypeNotesMenu} from '@/components/ui/menu/SortedTypeNotesMenu';
 
-export function NotesPage({route}: {route: any; navigation: any}) {
+export function NotesPage({}: {route: any; navigation: any}) {
   const [isFolderModalVisible, setVisibleFolderModal] = useState(false);
-  const [page, setValue] = useState<NotesPageType>('notes');
+  const [page, setPage] = useState<NotesPageType>('notes');
   const [sortedType, setSortedType] = useState<NotesSortType>('created');
+  const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
+  const [filterFolder, setFilterFolder] = useState<NotesFolderItemKey | null>(
+    null,
+  );
   const notes = useSelector(() => notesService.storeGetCollectionNote());
 
   const showFolderModal = () => {
-    setValue('folders');
+    setPage('folders');
     setVisibleFolderModal(true);
   };
 
@@ -29,8 +40,13 @@ export function NotesPage({route}: {route: any; navigation: any}) {
   const {colors} = useTheme();
 
   const changeValue = (val: string) => {
-    if (val === 'folders' || val === 'notes' || val === 'list') {
-      setValue(val);
+    if (
+      val === 'folders' ||
+      val === 'notes' ||
+      val === 'list' ||
+      val === 'all'
+    ) {
+      setPage(val);
     }
   };
 
@@ -54,6 +70,11 @@ export function NotesPage({route}: {route: any; navigation: any}) {
     }
   };
 
+  const setFilterFolderItem = (val: NotesFolderItemKey) => {
+    setFilterFolder(val);
+    setPage('all');
+  };
+
   useEffect(() => {
     setNotesCollection();
     getAllList();
@@ -61,9 +82,26 @@ export function NotesPage({route}: {route: any; navigation: any}) {
 
   return (
     <View style={styles.page}>
-      <Appbar.Header style={{backgroundColor: colors.background}}>
-        <Appbar.BackAction onPress={() => {}} />
-        <Appbar.Content title={route.name} />
+      <Appbar.Header
+        // eslint-disable-next-line react-native/no-inline-styles
+        style={{
+          backgroundColor: colors.background,
+          justifyContent: 'flex-end',
+        }}>
+        {filterFolder ? (
+          <Chip icon="folder" onPress={() => setFilterFolder(null)}>
+            {filterFolder.name}
+          </Chip>
+        ) : null}
+        <Appbar.Action
+          icon={() => (
+            <SortedTypeNotesMenu
+              sortDirection={sortDirection}
+              changeSort={setSortDirection}
+            />
+          )}
+          onPress={() => {}}
+        />
         <Appbar.Action
           icon={() => (
             <SortedNotesMenu sortType={sortedType} changeSort={setSortedType} />
@@ -79,11 +117,18 @@ export function NotesPage({route}: {route: any; navigation: any}) {
             <NotesItem notes={notes} sortedType={sortedType} />
           ) : page === 'list' ? (
             <ListItem sortedType={sortedType} />
+          ) : page === 'all' ? (
+            <AllNotesItem
+              sortedType={sortedType}
+              sortDirection={sortDirection}
+              filterFolder={filterFolder}
+            />
           ) : (
             <FoldersItem
               isModalVisible={isFolderModalVisible}
               hideModal={hideModal}
               setVisibleFolderModal={showFolderModal}
+              setFilterFolder={setFilterFolderItem}
             />
           )}
         </View>

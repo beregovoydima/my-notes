@@ -19,6 +19,7 @@ export const ColorPicker = ({visible, hideModal, changeColor}: Props) => {
         {styleColorArr.map(el => {
           return (
             <TouchableOpacity
+              key={el}
               style={[
                 styles.color,
                 {

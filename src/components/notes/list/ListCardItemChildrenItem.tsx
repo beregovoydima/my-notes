@@ -7,10 +7,11 @@ import {Checkbox, Text} from 'react-native-paper';
 interface Props {
   children: NotesListItemChildrenItem;
   saveChildren: (children: NotesListItemChildrenItem) => void;
+  color?: string;
 }
 
 export const ListCardItemCildrenItem = React.memo(
-  ({children, saveChildren}: Props) => {
+  ({children, saveChildren, color}: Props) => {
     const {colors} = useTheme();
 
     const checkList = () => {
@@ -25,6 +26,7 @@ export const ListCardItemCildrenItem = React.memo(
       <View style={styles.childContent}>
         <Checkbox
           status={children.isChecked ? 'checked' : 'unchecked'}
+          color={color ? color : undefined}
           onPress={checkList}
         />
         <Text

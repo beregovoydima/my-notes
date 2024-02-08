@@ -5,7 +5,7 @@ import {FolderModal} from '@/components/modals/notes/FolderModal';
 import moment from 'moment';
 import {RootState} from '@/framework/store/store';
 import {useSelector} from 'react-redux';
-import {NotesFolderItem} from '@/core/interfaces';
+import {NotesFolderItem, NotesFolderItemKey} from '@/core/interfaces';
 import {FolderCard} from './card/FolderCard';
 import uuid from 'react-native-uuid';
 
@@ -13,12 +13,14 @@ interface Props {
   isModalVisible: boolean;
   hideModal: () => void;
   setVisibleFolderModal: () => void;
+  setFilterFolder: (folderId: NotesFolderItemKey) => void;
 }
 
 export const FoldersItem = ({
   isModalVisible,
   hideModal,
   setVisibleFolderModal,
+  setFilterFolder,
 }: Props) => {
   const folders = useSelector((state: RootState) => state.folders.folders);
   const [editFolderData, setEditFolder] = useState<NotesFolderItem | null>(
@@ -79,10 +81,11 @@ export const FoldersItem = ({
           item={item}
           deleteFolder={deleteFolder}
           setEditFolder={setEditFolder}
+          setFilterFolder={setFilterFolder}
         />
       );
     },
-    [folders],
+    [folders, setFilterFolder],
   );
 
   useEffect(() => {

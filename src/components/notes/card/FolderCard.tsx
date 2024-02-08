@@ -1,6 +1,6 @@
 import {useTheme} from '@/assets/config/colors';
 import {FoldersMenu} from '@/components/ui/menu/FoldersMenu';
-import {NotesFolderItem} from '@/core/interfaces';
+import {NotesFolderItem, NotesFolderItemKey} from '@/core/interfaces';
 import moment from 'moment';
 import React, {useCallback} from 'react';
 import {StyleSheet, View} from 'react-native';
@@ -10,10 +10,11 @@ interface Props {
   item: NotesFolderItem;
   deleteFolder: (id: string) => void;
   setEditFolder: (folder: NotesFolderItem) => void;
+  setFilterFolder: (folderId: NotesFolderItemKey) => void;
 }
 
 export const FolderCard = React.memo(
-  ({item, deleteFolder, setEditFolder}: Props) => {
+  ({item, deleteFolder, setEditFolder, setFilterFolder}: Props) => {
     const {colors} = useTheme();
 
     const getLeftIcon = (props: any) => {
@@ -40,7 +41,8 @@ export const FolderCard = React.memo(
             {
               backgroundColor: colors.whiteColor,
             },
-          ]}>
+          ]}
+          onPress={() => setFilterFolder({id: item.id, name: item.label})}>
           <Card.Title
             title={item.label}
             left={getLeftIcon}

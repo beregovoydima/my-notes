@@ -1,22 +1,15 @@
 import {useTheme} from '@/assets/config/colors';
 import {NotesMenu} from '@/components/ui/menu/NotesMenu';
 import {NotesItems, ScreenNavigationProp} from '@/core/interfaces';
+import {notesService} from '@/core/services';
 import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
-import React from 'react';
+import React, {useCallback} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Avatar, Card, Icon, Text} from 'react-native-paper';
 
 export const NoteCard = React.memo(
-  ({
-    item,
-    index,
-    deleteNote,
-  }: {
-    item: NotesItems;
-    index: number;
-    deleteNote: (id: string) => void;
-  }) => {
+  ({item, index}: {item: NotesItems; index: number}) => {
     const {colors} = useTheme();
     const navigation: ScreenNavigationProp = useNavigation();
 
@@ -32,6 +25,20 @@ export const NoteCard = React.memo(
     const editNote = (id: string) => {
       navigation.navigate('NoteEdit', {noteId: id});
     };
+
+    const saveNotesInStorage = async () => {
+      const response = notesService.storeGetCollectionNote();
+      await notesService.storageSetNotes(response);
+    };
+
+    const deleteNote = useCallback((id: string) => {
+      const notes = notesService.storeGetCollectionNote();
+      const findNote = notes.find(el => el.id === id);
+      if (findNote) {
+        saveNotesInStorage();
+        notesService.storeSetNotes([...notes.filter(el => el.id !== id)]);
+      }
+    }, []);
 
     const getMoreIcon = () => {
       return (
@@ -56,15 +63,26 @@ export const NoteCard = React.memo(
           />
           <Card.Content>
             <View style={styles.footer}>
-              {item.updated ? (
-                <Icon
-                  source="circle-edit-outline"
-                  size={12}
-                  color={colors.greyColor}
-                />
-              ) : (
-                <></>
-              )}
+              <View style={styles.footer}>
+                {item.updated ? (
+                  <Icon
+                    source="circle-edit-outline"
+                    size={12}
+                    color={colors.greyColor}
+                  />
+                ) : null}
+                <Text
+                  variant="labelSmall"
+                  // eslint-disable-next-line react-native/no-inline-styles
+                  style={{
+                    color: colors.greyColor,
+                    marginLeft: item.updated ? 4 : 0,
+                  }}>
+                  {moment(item.updated ? item.updated : item.created).format(
+                    'YYYY-MM-DD HH:mm',
+                  )}
+                </Text>
+              </View>
               <Text
                 variant="labelSmall"
                 // eslint-disable-next-line react-native/no-inline-styles
@@ -72,9 +90,7 @@ export const NoteCard = React.memo(
                   color: colors.greyColor,
                   marginLeft: item.updated ? 4 : 0,
                 }}>
-                {moment(item.updated ? item.updated : item.created).format(
-                  'YYYY-MM-DD HH:mm',
-                )}
+                {item.folder?.name}
               </Text>
             </View>
           </Card.Content>
@@ -91,6 +107,7 @@ const styles = StyleSheet.create({
   footer: {
     display: 'flex',
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
 });

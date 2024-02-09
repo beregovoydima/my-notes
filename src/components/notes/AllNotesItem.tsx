@@ -1,5 +1,5 @@
-import React, {memo, useCallback, useMemo} from 'react';
-import {FlatList, Text} from 'react-native';
+import React, {memo, useMemo} from 'react';
+import {Text} from 'react-native';
 import {
   NotesFolderItemKey,
   NotesItems,
@@ -12,12 +12,21 @@ import {notesService} from '@/core/services';
 import {useSelector} from 'react-redux';
 import {styleColorArr} from '@/core/utils';
 import {NoteCard} from './card/NoteCard';
+import {FlashList} from '@shopify/flash-list';
 
 interface Props {
   sortedType: NotesSortType;
   sortDirection: SortDirection;
   filterFolder: NotesFolderItemKey | null;
 }
+
+const keyExtractor = (item: NotesListItem | NotesItems) => item?.id;
+const renderItem = ({item}: {item: NotesItems | NotesListItem}) => {
+  if (item.type === 'note') {
+    return <NoteCard item={item as NotesItems} />;
+  }
+  return <ListCard list={item as NotesListItem} />;
+};
 
 export const AllNotesItem = memo(
   ({sortedType, sortDirection, filterFolder}: Props) => {
@@ -102,25 +111,12 @@ export const AllNotesItem = memo(
       return [...sortedItemsWithDiraction];
     }, [filterFolder, sortedItemsWithDiraction]);
 
-    const renderItem = useCallback(
-      ({item, index}: {item: NotesItems | NotesListItem; index: number}) => {
-        if (item.type === 'note') {
-          return <NoteCard item={item as NotesItems} index={index} />;
-        }
-        return <ListCard list={item as NotesListItem} />;
-      },
-      [],
-    );
-
     return (
-      <FlatList
+      <FlashList
         data={filteredItems}
-        keyExtractor={el => el.id}
+        keyExtractor={keyExtractor}
         renderItem={renderItem}
-        initialNumToRender={7}
-        maxToRenderPerBatch={5}
-        windowSize={15}
-        onEndReachedThreshold={0.5}
+        estimatedItemSize={114}
         ListEmptyComponent={<Text>Список заметок пуст.</Text>}
       />
     );

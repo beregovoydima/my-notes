@@ -11,10 +11,19 @@ interface Props {
   saveChildren: (children: NotesListItemChildrenItem) => void;
   deleteChildren: (children: NotesListItemChildrenItem) => void;
   color?: string;
+  addItemList: () => void;
+  lastItem: boolean;
 }
 
 export const ListModalItemCildrenItem = React.memo(
-  ({children, saveChildren, deleteChildren, color}: Props) => {
+  ({
+    children,
+    saveChildren,
+    deleteChildren,
+    color,
+    addItemList,
+    lastItem,
+  }: Props) => {
     const {colors} = useTheme();
 
     const saveTitle = (val: string) => {
@@ -44,7 +53,11 @@ export const ListModalItemCildrenItem = React.memo(
           style={{color: colors.greyColor, fontSize: 16}}
           label={children.text}
           isChecked={children.isChecked}
+          autofocus={lastItem}
           saveText={val => saveTitle(val)}
+          onSubmitEditing={() => {
+            addItemList();
+          }}
         />
         <IconButton
           icon="delete"

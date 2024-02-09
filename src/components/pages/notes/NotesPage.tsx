@@ -14,7 +14,6 @@ import {
 import {NotesItem} from '@/components/notes/NotesItem';
 import {FoldersItem} from '@/components/notes/FoldersItem';
 import {notesService} from '@/core/services';
-import {useSelector} from 'react-redux';
 import {ListItem} from '@/components/notes/ListItem';
 import {SortedNotesMenu} from '@/components/ui/menu/SortedNotesMenu';
 import {AllNotesItem} from '@/components/notes/AllNotesItem';
@@ -28,7 +27,6 @@ export function NotesPage({}: {route: any; navigation: any}) {
   const [filterFolder, setFilterFolder] = useState<NotesFolderItemKey | null>(
     null,
   );
-  const notes = useSelector(() => notesService.storeGetCollectionNote());
 
   const showFolderModal = () => {
     setPage('folders');
@@ -83,11 +81,7 @@ export function NotesPage({}: {route: any; navigation: any}) {
   return (
     <View style={styles.page}>
       <Appbar.Header
-        // eslint-disable-next-line react-native/no-inline-styles
-        style={{
-          backgroundColor: colors.background,
-          justifyContent: 'flex-end',
-        }}>
+        style={[styles.header, {backgroundColor: colors.background}]}>
         {filterFolder ? (
           <Chip icon="folder" onPress={() => setFilterFolder(null)}>
             {filterFolder.name}
@@ -114,9 +108,9 @@ export function NotesPage({}: {route: any; navigation: any}) {
         <NotesSegmentedButtons page={page} changePageType={changeValue} />
         <View style={styles.list}>
           {page === 'notes' ? (
-            <NotesItem notes={notes} sortedType={sortedType} />
+            <NotesItem sortedType={sortedType} sortDirection={sortDirection} />
           ) : page === 'list' ? (
-            <ListItem sortedType={sortedType} />
+            <ListItem sortedType={sortedType} sortDirection={sortDirection} />
           ) : page === 'all' ? (
             <AllNotesItem
               sortedType={sortedType}
@@ -143,14 +137,19 @@ const styles = StyleSheet.create({
     display: 'flex',
     flex: 1,
   },
+  header: {
+    height: 50,
+    justifyContent: 'flex-end',
+  },
   container: {
-    paddingTop: 10,
+    paddingTop: 4,
     paddingLeft: 4,
     paddingRight: 4,
     flex: 1,
   },
   list: {
-    marginTop: 8,
-    marginBottom: 50,
+    flex: 1,
+    marginTop: 4,
+    marginBottom: 4,
   },
 });

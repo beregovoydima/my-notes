@@ -124,7 +124,7 @@ export function NavBar({route}: {route: RouteProp<ParamListBase>}) {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          height: 55,
+          height: 60,
           paddingBottom: 5,
         },
         tabBarActiveBackgroundColor: colors.greyDarkFill,

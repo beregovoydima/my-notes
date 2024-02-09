@@ -64,8 +64,8 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
     if (size === 4) {
       activeSize = 6;
     } else if (size === 6) {
-      activeSize = 2;
-    } else if (size === 2) {
+      activeSize = 3;
+    } else if (size === 3) {
       activeSize = 4;
     }
 
@@ -158,7 +158,7 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
             },
             styles.text,
           ]}>
-          {size === 2 ? 'S' : size === 4 ? 'M' : 'L'}
+          {size === 3 ? 'S' : size === 4 ? 'M' : 'L'}
         </Text>
       </View>
     );
@@ -348,6 +348,7 @@ const styles = StyleSheet.create({
   },
   chips: {
     maxHeight: 40,
+    minHeight: 40,
     padding: 4,
   },
   icon: {

@@ -1,9 +1,11 @@
 import {useTheme} from '@/assets/config/colors';
 import React, {useEffect, useState} from 'react';
 import {
+  NativeSyntheticEvent,
   StyleSheet,
   Text,
   TextInput,
+  TextInputSubmitEditingEventData,
   TextStyle,
   TouchableOpacity,
   View,
@@ -14,6 +16,10 @@ interface Props {
   saveText: (val: string) => void;
   style?: TextStyle;
   customText?: string;
+  autofocus?: boolean;
+  onSubmitEditing?: (
+    e: NativeSyntheticEvent<TextInputSubmitEditingEventData>,
+  ) => void;
 }
 
 export const EditableText = ({
@@ -22,21 +28,33 @@ export const EditableText = ({
   saveText,
   style,
   customText,
+  onSubmitEditing,
+  autofocus,
 }: Props) => {
   const {colors} = useTheme();
 
   const [isEditing, setIsEditing] = useState(false);
   const [text, setText] = useState('');
+  const [isFocused, setIsFocused] = useState(false);
 
   const handleSave = () => {
     saveText(text);
     setIsEditing(false);
+    setIsFocused(false);
   };
 
   const changeText = (e: string) => {
     setText(e);
     saveText(e);
   };
+
+  useEffect(() => {
+    if (autofocus) {
+      setIsEditing(true);
+      setIsFocused(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     setText(label);
@@ -57,13 +75,23 @@ export const EditableText = ({
           value={text}
           onChangeText={changeText}
           onBlur={handleSave}
-          autoFocus
+          autoFocus={isFocused}
           selectionColor={colors.primary}
+          onSubmitEditing={e => {
+            e.preventDefault(); // Избегаем действия по умолчанию для Enter
+            handleSave();
+            if (onSubmitEditing && !!text) {
+              onSubmitEditing(e); // Вызываем функцию сохранения при нажатии Enter
+            }
+          }}
         />
       ) : (
         <TouchableOpacity
           style={styles.textContainer}
-          onPress={() => setIsEditing(true)}>
+          onPress={() => {
+            setIsFocused(true);
+            setIsEditing(true);
+          }}>
           <View>
             <Text
               numberOfLines={2}

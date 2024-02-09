@@ -49,14 +49,16 @@ export const ListModalItem = ({list, changeList}: Props) => {
   return (
     <View style={[styles.card, {backgroundColor: colors.whiteColor}]}>
       <Divider />
-      {list.items.map(child => {
+      {list.items.map((child, i) => {
         return (
           <ListModalItemCildren
             key={child.id}
             listChild={child}
+            lastItem={i === list.items.length - 1}
             color={list.color ? list.color : undefined}
             saveChildList={saveChildList}
             deleteListItem={deleteListItem}
+            addList={addList}
           />
         );
       })}

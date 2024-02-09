@@ -8,81 +8,74 @@ import React, {useCallback} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Avatar, Card, Icon, Text} from 'react-native-paper';
 
-export const NoteCard = React.memo(
-  ({item, index}: {item: NotesItems; index: number}) => {
-    const {colors} = useTheme();
-    const navigation: ScreenNavigationProp = useNavigation();
+export const NoteCard = React.memo(({item}: {item: NotesItems}) => {
+  const {colors} = useTheme();
+  const navigation: ScreenNavigationProp = useNavigation();
 
-    const stripHtmlTags = (htmlString: string) => {
-      const stringWithLineBreaks = htmlString.replace(/<li>/g, '\n');
-      return stringWithLineBreaks.replace(/<[^>]*>/g, ' ');
-    };
+  const stripHtmlTags = (htmlString: string) => {
+    const stringWithLineBreaks = htmlString.replace(/<li>/g, '\n');
+    return stringWithLineBreaks.replace(/<[^>]*>/g, ' ');
+  };
 
-    const leftContent = (props: {size: number}) => {
-      return <Avatar.Icon {...props} icon="note" />;
-    };
-
-    const editNote = (id: string) => {
-      navigation.navigate('NoteEdit', {noteId: id});
-    };
-
-    const saveNotesInStorage = async () => {
-      const response = notesService.storeGetCollectionNote();
-      await notesService.storageSetNotes(response);
-    };
-
-    const deleteNote = useCallback((id: string) => {
-      const notes = notesService.storeGetCollectionNote();
-      const findNote = notes.find(el => el.id === id);
-      if (findNote) {
-        saveNotesInStorage();
-        notesService.storeSetNotes([...notes.filter(el => el.id !== id)]);
-      }
-    }, []);
-
-    const getMoreIcon = () => {
-      return (
-        <NotesMenu
-          editNote={() => editNote(item.id)}
-          notes={item}
-          deleteNote={() => deleteNote(item.id)}
-          index={index}
-        />
-      );
-    };
-
+  const leftContent = (props: {size: number}) => {
     return (
-      <View style={styles.item}>
-        <Card
-          style={{backgroundColor: colors.whiteColor}}
-          onPress={() => editNote(item.id)}>
-          <Card.Title
-            title={item.title || stripHtmlTags(item.label)}
-            left={props => leftContent(props)}
-            right={getMoreIcon}
-          />
-          <Card.Content>
+      <Avatar.Icon
+        {...props}
+        style={{backgroundColor: item.color ? item.color : colors.primary}}
+        color={colors.whiteColor}
+        icon="note"
+      />
+    );
+  };
+
+  const editNote = (id: string) => {
+    navigation.navigate('NoteEdit', {noteId: id});
+  };
+
+  const saveNotesInStorage = async () => {
+    const response = notesService.storeGetCollectionNote();
+    await notesService.storageSetNotes(response);
+  };
+
+  const deleteNote = useCallback((id: string) => {
+    const notes = notesService.storeGetCollectionNote();
+    const findNote = notes.find(el => el.id === id);
+    if (findNote) {
+      saveNotesInStorage();
+      notesService.storeSetNotes([...notes.filter(el => el.id !== id)]);
+    }
+  }, []);
+
+  const getMoreIcon = () => {
+    return (
+      <NotesMenu
+        editNote={() => editNote(item.id)}
+        notes={item}
+        deleteNote={() => deleteNote(item.id)}
+      />
+    );
+  };
+
+  return (
+    <View style={styles.item}>
+      <Card
+        style={{backgroundColor: colors.whiteColor}}
+        onPress={() => editNote(item.id)}>
+        <Card.Title
+          title={item.title || stripHtmlTags(item.label)}
+          left={props => leftContent(props)}
+          right={getMoreIcon}
+        />
+        <Card.Content>
+          <View style={styles.footer}>
             <View style={styles.footer}>
-              <View style={styles.footer}>
-                {item.updated ? (
-                  <Icon
-                    source="circle-edit-outline"
-                    size={12}
-                    color={colors.greyColor}
-                  />
-                ) : null}
-                <Text
-                  variant="labelSmall"
-                  // eslint-disable-next-line react-native/no-inline-styles
-                  style={{
-                    color: colors.greyColor,
-                    marginLeft: item.updated ? 4 : 0,
-                  }}>
-                  {moment(item.updated ? item.updated : item.created).format(
-                    'YYYY-MM-DD HH:mm',
-                  )}
-                </Text>
-              </View>
+              {item.updated ? (
+                <Icon
+                  source="circle-edit-outline"
+                  size={12}
+                  color={colors.greyColor}
+                />
+              ) : null}
               <Text
                 variant="labelSmall"
                 // eslint-disable-next-line react-native/no-inline-styles
@@ -90,15 +83,26 @@ export const NoteCard = React.memo(
                   color: colors.greyColor,
                   marginLeft: item.updated ? 4 : 0,
                 }}>
-                {item.folder?.name}
+                {moment(item.updated ? item.updated : item.created).format(
+                  'YYYY-MM-DD HH:mm',
+                )}
               </Text>
             </View>
-          </Card.Content>
-        </Card>
-      </View>
-    );
-  },
-);
+            <Text
+              variant="labelSmall"
+              // eslint-disable-next-line react-native/no-inline-styles
+              style={{
+                color: colors.greyColor,
+                marginLeft: item.updated ? 4 : 0,
+              }}>
+              {item.folder?.name}
+            </Text>
+          </View>
+        </Card.Content>
+      </Card>
+    </View>
+  );
+});
 
 const styles = StyleSheet.create({
   item: {

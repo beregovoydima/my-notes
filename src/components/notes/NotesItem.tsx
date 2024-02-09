@@ -1,15 +1,21 @@
 import React, {useMemo} from 'react';
-import {FlatList} from 'react-native';
 import {Text} from 'react-native-paper';
-import {NotesItems, NotesSortType} from '@/core/interfaces';
+import {NotesItems, NotesSortType, SortDirection} from '@/core/interfaces';
 import {NoteCard} from './card/NoteCard';
+import {FlashList} from '@shopify/flash-list';
+import {useSelector} from 'react-redux';
+import {notesService} from '@/core/services';
 
 interface Props {
-  notes: NotesItems[];
   sortedType: NotesSortType;
+  sortDirection: SortDirection;
 }
 
-export const NotesItem = ({notes, sortedType}: Props) => {
+const keyExtractor = (item: NotesItems) => item?.id;
+const renderItem = ({item}: {item: NotesItems}) => <NoteCard item={item} />;
+
+export const NotesItem = ({sortedType, sortDirection}: Props) => {
+  const notes = useSelector(() => notesService.storeGetCollectionNote());
   const sortedNotes = useMemo(() => {
     if (sortedType === 'created') {
       return [...notes].sort((a, b) => {
@@ -33,11 +39,19 @@ export const NotesItem = ({notes, sortedType}: Props) => {
     return notes;
   }, [notes, sortedType]);
 
+  const sortedListWithDiraction = useMemo(() => {
+    if (sortDirection === 'desc') {
+      return [...sortedNotes];
+    }
+    return [...sortedNotes].reverse();
+  }, [sortDirection, sortedNotes]);
+
   return (
-    <FlatList
-      data={sortedNotes}
-      renderItem={({item, index}) => <NoteCard item={item} index={index} />}
-      keyExtractor={item => item.id}
+    <FlashList
+      data={sortedListWithDiraction}
+      renderItem={renderItem}
+      keyExtractor={keyExtractor}
+      estimatedItemSize={110}
       ListEmptyComponent={<Text>Список заметок пуст.</Text>}
     />
   );

@@ -38,7 +38,7 @@ export const FabButton = ({showFolderModal}: Props) => {
         style={fabStyle.buttonStyle}
         actions={[
           {
-            icon: ({size}) => getIcon(size, 'plus'),
+            icon: ({size}) => getIcon(size, 'note'),
             label: 'Создать заметку',
             labelTextColor: colors.text,
             onPress: () => navigation.navigate('NoteEdit', {noteId: null}),

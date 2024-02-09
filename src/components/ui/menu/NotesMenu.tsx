@@ -1,16 +1,16 @@
 import {useTheme} from '@/assets/config/colors';
+import {NotesItems} from '@/core/interfaces';
 import React, {memo, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Divider, IconButton, Menu} from 'react-native-paper';
 
 interface Props {
-  editNote: (id: number) => void;
-  deleteNote: (id: number, index: number) => void;
-  notes: any;
-  index: number;
+  editNote: (id: string) => void;
+  deleteNote: (id: string) => void;
+  notes: NotesItems;
 }
 
-export const NotesMenu = memo(({editNote, deleteNote, notes, index}: Props) => {
+export const NotesMenu = memo(({editNote, deleteNote, notes}: Props) => {
   const {colors} = useTheme();
   const [visible, setVisible] = useState(false);
 
@@ -23,7 +23,7 @@ export const NotesMenu = memo(({editNote, deleteNote, notes, index}: Props) => {
   };
 
   const delFolder = () => {
-    deleteNote(notes.id, index);
+    deleteNote(notes.id);
   };
 
   return (

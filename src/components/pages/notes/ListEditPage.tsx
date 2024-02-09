@@ -19,7 +19,7 @@ import {
   BackHandler,
   TouchableOpacity,
 } from 'react-native';
-import {Button, Chip, Divider} from 'react-native-paper';
+import {Button, Chip, Divider, Icon} from 'react-native-paper';
 // import {Button} from 'react-native-paper';
 import {useTheme} from '@/assets/config/colors';
 import {ListModalItem} from '@/components/notes/list/ListModalItem';
@@ -173,10 +173,10 @@ export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
         style={[
           styles.view,
           {
-            backgroundColor: hex2rgba(
-              list.color ? list.color : colors.primary,
-              0.04,
-            ),
+            // backgroundColor: hex2rgba(
+            //   list.color ? list.color : colors.primary,
+            //   0.04,
+            // ),
           },
         ]}>
         {/* <Text variant="titleLarge" style={{}}>
@@ -211,6 +211,9 @@ export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
               ]}
             />
           </TouchableOpacity>
+          {/* <View>
+            <Icon source="share-variant" size={24} color="red" />
+          </View> */}
 
           <ListMenu
             editList={function (): void {
@@ -293,6 +296,7 @@ const styles = StyleSheet.create({
   },
   chips: {
     maxHeight: 40,
+    minHeight: 40,
     padding: 4,
   },
   footer: {
@@ -300,8 +304,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignContent: 'center',
-    paddingTop: 10,
-    paddingBottom: 10,
+    paddingTop: 8,
+    paddingBottom: 8,
     paddingLeft: 20,
     paddingRight: 20,
   },

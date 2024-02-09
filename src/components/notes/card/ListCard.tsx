@@ -6,7 +6,7 @@ import {
   ScreenNavigationProp,
 } from '@/core/interfaces';
 import React, {memo, useCallback, useMemo, useState} from 'react';
-import {FlatList, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {Avatar, Card, Icon, Text} from 'react-native-paper';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import moment from 'moment';
@@ -26,6 +26,7 @@ export const ListCard = memo(({list}: Props) => {
   const getLeftIcon = (props: any) => {
     return (
       <Avatar.Icon
+        color={colors.whiteColor}
         style={{
           backgroundColor: list.color ? list.color : colors.primary,
         }}
@@ -76,7 +77,7 @@ export const ListCard = memo(({list}: Props) => {
   };
 
   const renderItem = useCallback(
-    ({item}: {item: NotesListItemChildren}) => {
+    (item: NotesListItemChildren) => {
       const saveChildList = (val: NotesListItemChildren) => {
         const listItem: NotesListItem = {
           ...list,
@@ -150,14 +151,11 @@ export const ListCard = memo(({list}: Props) => {
               {list.folder?.name}
             </Text>
           </View>
-          {isExpanded ? (
-            <FlatList
-              data={list.items}
-              keyExtractor={el => el.id}
-              renderItem={renderItem}
-              ListEmptyComponent={<></>}
-            />
-          ) : null}
+          {isExpanded
+            ? list.items.map(el => {
+                return renderItem(el);
+              })
+            : null}
         </Card.Content>
       </Card>
     </View>

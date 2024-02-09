@@ -11,17 +11,26 @@ import {StyleSheet, View} from 'react-native';
 import {Divider, IconButton} from 'react-native-paper';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {ListModalItemCildrenItem} from './ListModalItemChildrenItem';
-import uuid from 'react-native-uuid';
+import {getUuid} from '@/core/utils';
 
 interface Props {
   listChild: NotesListItemChildren;
   saveChildList: (val: NotesListItemChildren) => void;
-  deleteListItem: (val: NotesListItemChildren) => void;
   color?: string;
+  deleteListItem: (val: NotesListItemChildren) => void;
+  addList: () => void;
+  lastItem: boolean;
 }
 
 export const ListModalItemCildren = React.memo(
-  ({listChild, saveChildList, deleteListItem, color}: Props) => {
+  ({
+    listChild,
+    saveChildList,
+    deleteListItem,
+    color,
+    addList,
+    lastItem,
+  }: Props) => {
     const {colors} = useTheme();
 
     const [isExpanded, setIsExpanded] = useState(false);
@@ -44,7 +53,7 @@ export const ListModalItemCildren = React.memo(
         ...listChild,
         children: [
           ...listChild.children,
-          {id: uuid.v4().toString(), text: '', isChecked: false},
+          {id: getUuid(), text: '', isChecked: false},
         ],
       };
       saveChildList(child);
@@ -102,6 +111,12 @@ export const ListModalItemCildren = React.memo(
             label={listChild.text}
             isChecked={listChild.isChecked}
             saveText={val => saveTitle(val)}
+            autofocus={lastItem}
+            onSubmitEditing={() => {
+              if (lastItem) {
+                addList();
+              }
+            }}
           />
           <View style={styles.buttons}>
             {listChild.children.length ? (
@@ -112,9 +127,7 @@ export const ListModalItemCildren = React.memo(
                 onPress={() => toggleExpansion()}
                 style={styles.btn}
               />
-            ) : (
-              <></>
-            )}
+            ) : null}
 
             <IconButton
               icon="plus"
@@ -134,14 +147,16 @@ export const ListModalItemCildren = React.memo(
         </View>
 
         {isExpanded ? (
-          listChild.children.map(el => {
+          listChild.children.map((el, i) => {
             return (
               <ListModalItemCildrenItem
                 key={el.id}
                 children={el}
+                lastItem={i === listChild.children.length - 1}
                 color={color}
                 saveChildren={saveChildren}
                 deleteChildren={deleteChildren}
+                addItemList={addItemList}
               />
             );
           })

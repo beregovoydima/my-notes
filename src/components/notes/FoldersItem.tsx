@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {FlatList, Text} from 'react-native';
+import {Text} from 'react-native';
 import {notesService} from '@/core/services';
 import {FolderModal} from '@/components/modals/notes/FolderModal';
 import moment from 'moment';
@@ -8,7 +8,9 @@ import {useSelector} from 'react-redux';
 import {NotesFolderItem, NotesFolderItemKey} from '@/core/interfaces';
 import {FolderCard} from './card/FolderCard';
 import uuid from 'react-native-uuid';
+import {FlashList} from '@shopify/flash-list';
 
+const keyExtractor = (item: NotesFolderItem) => item?.id;
 interface Props {
   isModalVisible: boolean;
   hideModal: () => void;
@@ -103,10 +105,11 @@ export const FoldersItem = ({
         editFolderData={editFolderData}
       />
 
-      <FlatList
+      <FlashList
         data={folders}
         renderItem={({item}) => getFolderCard(item)}
-        keyExtractor={item => item.id}
+        keyExtractor={keyExtractor}
+        estimatedItemSize={113}
         ListEmptyComponent={<Text>Список заметок пуст.</Text>}
       />
     </>

@@ -3,6 +3,7 @@ import {
   NoteEditScreenRouteProp,
   NotesFolderItem,
   NotesItems,
+  ScreenNavigationProp,
   // ScreenNavigationProp,
 } from '@/core/interfaces';
 import {notesService} from '@/core/services';
@@ -19,6 +20,7 @@ import {
   View,
   BackHandler,
   Text,
+  TouchableOpacity,
 } from 'react-native';
 // import {Button} from 'react-native-paper';
 import {
@@ -32,13 +34,16 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Octicons from 'react-native-vector-icons/Octicons';
 import {useTheme} from '@/assets/config/colors';
-import {Chip, Divider} from 'react-native-paper';
+import {Button, Chip, Divider} from 'react-native-paper';
 import {useSelector} from 'react-redux';
 import {getUuid, hex2rgba} from '@/core/utils';
+import {useNavigation} from '@react-navigation/native';
+import {ColorPicker} from '@/components/modals/ui/ColorPicker';
 
 export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
-  // const navigation: ScreenNavigationProp = useNavigation();
+  const navigation: ScreenNavigationProp = useNavigation();
 
+  const [showColorPicker, setShowColorPicker] = useState(false);
   const [text, setDescription] = useState<string>('');
   const [size, setSize] = useState<FONT_SIZE>(4);
   const [note, setNote] = useState<NotesItems>({
@@ -85,14 +90,14 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
     }
   }, [route.params.noteId]);
 
-  // const handleSave = async () => {
-  //   if (route.params.noteId) {
-  //     await notesService.updateNote({...note, label: text});
-  //   } else {
-  //     await notesService.storeAddNote({...note, label: text});
-  //   }
-  //   navigation.navigate('Notes');
-  // };
+  const handleSave = async () => {
+    if (route.params.noteId) {
+      await notesService.updateNote({...note, label: text});
+    } else {
+      await notesService.storeAddNote({...note, label: text});
+    }
+    navigation.navigate('Notes');
+  };
 
   const backSave = useCallback(() => {
     if (route.params.noteId) {
@@ -222,6 +227,11 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
     }
   };
 
+  const changeColor = (color: string) => {
+    setNote({...note, color: color});
+    setShowColorPicker(false);
+  };
+
   return (
     <SafeAreaView
       style={[
@@ -233,6 +243,11 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
           ),
         },
       ]}>
+      <ColorPicker
+        visible={showColorPicker}
+        hideModal={() => setShowColorPicker(false)}
+        changeColor={changeColor}
+      />
       <ScrollView
         style={[
           styles.container,
@@ -245,7 +260,7 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
         ]}>
         <View
           style={[
-            styles.view,
+            styles.content,
             {
               backgroundColor: hex2rgba(
                 note.color ? note.color : colors.primary,
@@ -254,11 +269,32 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
             },
           ]}>
           <EditableText
+            style={styles.header}
             label={note.title}
-            isChecked={false}
+            customText="Введите название заметки"
             saveText={e => setNote({...note, title: e})}
-            style={styles.title}
-            customText="Заголовок"
+            isChecked={false}
+          />
+          <TouchableOpacity onPress={() => setShowColorPicker(true)}>
+            <View
+              style={[
+                {
+                  backgroundColor: note.color ? note.color : colors.primary,
+                },
+                styles.colorPicker,
+              ]}
+            />
+          </TouchableOpacity>
+          {/* <View>
+            <Icon source="share-variant" size={24} color="red" />
+          </View> */}
+
+          <Icon
+            size={24}
+            name="dots-vertical"
+            color={colors.greyColor}
+            // eslint-disable-next-line react-native/no-inline-styles
+            style={{marginRight: 10}}
           />
         </View>
         <Divider />
@@ -328,6 +364,21 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
         getStrickedIcon={(icon: IconRecord) => getStrickedIcon(icon)}
         getUnderlineIcon={(icon: IconRecord) => getUnderlineIcon(icon)}
       />
+      <Divider />
+      <View style={[styles.footer, {backgroundColor: colors.whiteColor}]}>
+        <Button
+          mode="contained"
+          style={[styles.button, {backgroundColor: colors.error}]}
+          onPress={() => navigation.navigate('Notes')}>
+          Отмена
+        </Button>
+        <Button
+          mode="contained"
+          style={[styles.button, {backgroundColor: colors.success}]}
+          onPress={() => handleSave()}>
+          Сохранить
+        </Button>
+      </View>
       {/* <Button onPress={handleSave}>Save</Button> */}
     </SafeAreaView>
   );
@@ -340,6 +391,23 @@ const styles = StyleSheet.create({
   view: {
     display: 'flex',
     flex: 1,
+  },
+  header: {
+    fontSize: 20,
+    fontWeight: '500',
+  },
+  colorPicker: {
+    width: 40,
+    height: 40,
+    marginRight: 20,
+    marginLeft: 20,
+  },
+  content: {
+    minHeight: 60,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   text: {
     marginLeft: 4,
@@ -355,5 +423,22 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
   },
-  title: {height: 60, fontSize: 20},
+  title: {
+    height: 60,
+    fontSize: 20,
+  },
+  button: {
+    maxWidth: '40%',
+    marginLeft: 20,
+  },
+  footer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignContent: 'center',
+    paddingTop: 8,
+    paddingBottom: 8,
+    paddingLeft: 20,
+    paddingRight: 20,
+  },
 });

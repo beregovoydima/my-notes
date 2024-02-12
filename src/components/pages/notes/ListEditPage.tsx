@@ -19,7 +19,7 @@ import {
   BackHandler,
   TouchableOpacity,
 } from 'react-native';
-import {Button, Chip, Divider, Icon} from 'react-native-paper';
+import {Button, Chip, Divider} from 'react-native-paper';
 // import {Button} from 'react-native-paper';
 import {useTheme} from '@/assets/config/colors';
 import {ListModalItem} from '@/components/notes/list/ListModalItem';
@@ -289,7 +289,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '500',
   },
-
   button: {
     maxWidth: '40%',
     marginLeft: 20,

@@ -16,10 +16,13 @@ export const hex2rgba = (hex: string, alpha = 1) => {
 };
 
 export const styleColorArr = [
-  lightColors.primary,
-  lightColors.orangeColor,
-  lightColors.redColor,
+  lightColors.purpleDeep,
+  lightColors.deepOrangeColor,
+  lightColors.yellowAccent,
+  lightColors.lime,
+  lightColors.cian,
   lightColors.success,
   lightColors.info,
-  lightColors.warning,
+  lightColors.orangeColor,
+  lightColors.blueGrey,
 ];

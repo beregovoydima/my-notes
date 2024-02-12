@@ -13,6 +13,7 @@ import moment from 'moment';
 import {ListCardItemCildren} from '../list/ListCardItemChildren';
 import {notesService} from '@/core/services';
 import {useNavigation} from '@react-navigation/native';
+
 interface Props {
   list: NotesListItem;
 }
@@ -105,7 +106,7 @@ export const ListCard = memo(({list}: Props) => {
   }, [list]);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container]}>
       <Card
         style={[{backgroundColor: colors.whiteColor}]}
         onPress={() => editList(list.id)}>

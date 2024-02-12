@@ -10,12 +10,9 @@ import {
   RouteProp,
   getFocusedRouteNameFromRoute,
 } from '@react-navigation/native';
+import {CalendarPage} from '../pages/calendar/CalendarPage';
 
 const Tab = createBottomTabNavigator();
-
-const CalendarPage = ({route}: {route: RouteProp<ParamListBase>}) => (
-  <Text>{route.name}</Text>
-);
 
 const SettingsPage = ({route}: {route: RouteProp<ParamListBase>}) => {
   return <Text>{route.name}</Text>;
@@ -25,96 +22,115 @@ export function NavBar({route}: {route: RouteProp<ParamListBase>}) {
 
   const focusedRouteName = getFocusedRouteNameFromRoute(route);
 
-  const getNoteIcon = (focused: boolean, color: string) => {
-    if (focused) {
-      return <SimpleIcon name="note" color={colors.primary} size={20} />;
-    }
-    return <SimpleIcon name="note" color={color} size={20} />;
-  };
-
-  const getNoteLabel = (focused: boolean, color: string) => {
-    if (focused) {
-      return (
-        <Text style={[{color: colors.primary}, styles.navbarLabel]}>
-          Заметки
-        </Text>
-      );
-    }
-    return <Text style={[{color: color}, styles.navbarLabel]}>Заметки</Text>;
-  };
-
-  const getCalendarIcon = (focused: boolean, color: string) => {
-    if (focused) {
-      return <SimpleIcon name="calendar" color={colors.primary} size={20} />;
-    }
-    return <SimpleIcon name="calendar" color={color} size={20} />;
-  };
-
-  const getCalendarLabel = (focused: boolean, color: string) => {
-    if (focused) {
-      return (
-        <Text style={[{color: colors.primary}, styles.navbarLabel]}>
-          Календарь
-        </Text>
-      );
-    }
-    return <Text style={[{color: color}, styles.navbarLabel]}>Календарь</Text>;
-  };
-
-  const getProfileIcon = (focused: boolean, color: string) => {
-    if (focused) {
-      return <SimpleIcon name="menu" color={colors.primary} size={20} />;
-    }
-    return <SimpleIcon name="menu" color={color} size={20} />;
-  };
-
-  const getProfileLabel = (focused: boolean, color: string) => {
-    if (focused) {
-      return (
-        <Text style={[{color: colors.primary}, styles.navbarLabel]}>
-          Больше
-        </Text>
-      );
-    }
-    return <Text style={[{color: color}, styles.navbarLabel]}>Больше</Text>;
-  };
-
-  const getTasksIcon = (focused: boolean, color: string) => {
-    if (focused) {
-      return <SimpleIcon name="notebook" color={colors.primary} size={20} />;
-    }
-    return <SimpleIcon name="notebook" color={color} size={20} />;
-  };
-
-  const getTasksLabel = (focused: boolean, color: string) => {
-    if (focused) {
-      return (
-        <Text style={[{color: colors.primary}, styles.navbarLabel]}>
-          Задачи
-        </Text>
-      );
-    }
-    return <Text style={[{color: color}, styles.navbarLabel]}>Задачи</Text>;
-  };
-
-  const getSearchIcon = (item: any) => {
-    const {focused, color} = item;
+  const getNoteIcon = (focused: boolean) => {
     return (
       <SimpleIcon
-        name="magnifier"
-        color={focused ? colors.primary : color}
+        name="note"
+        color={focused ? colors.primary : colors.greyIconColor}
         size={20}
       />
     );
   };
 
-  const getSearchLabel = (focused: boolean, color: string) => {
-    if (focused) {
-      return (
-        <Text style={[{color: colors.primary}, styles.navbarLabel]}>Поиск</Text>
-      );
-    }
-    return <Text style={[{color: color}, styles.navbarLabel]}>Поиск</Text>;
+  const getNoteLabel = (focused: boolean) => {
+    return (
+      <Text
+        style={[
+          {color: focused ? colors.primary : colors.greyIconColor},
+          styles.navbarLabel,
+        ]}>
+        Заметки
+      </Text>
+    );
+  };
+
+  const getCalendarIcon = (focused: boolean) => {
+    return (
+      <SimpleIcon
+        name="calendar"
+        color={focused ? colors.primary : colors.greyIconColor}
+        size={20}
+      />
+    );
+  };
+
+  const getCalendarLabel = (focused: boolean) => {
+    return (
+      <Text
+        style={[
+          {color: focused ? colors.primary : colors.greyIconColor},
+          styles.navbarLabel,
+        ]}>
+        Календарь
+      </Text>
+    );
+  };
+
+  const getProfileIcon = (focused: boolean) => {
+    return (
+      <SimpleIcon
+        name="menu"
+        color={focused ? colors.primary : colors.greyIconColor}
+        size={20}
+      />
+    );
+  };
+
+  const getProfileLabel = (focused: boolean) => {
+    return (
+      <Text
+        style={[
+          {color: focused ? colors.primary : colors.greyIconColor},
+          styles.navbarLabel,
+        ]}>
+        Больше
+      </Text>
+    );
+  };
+
+  const getTasksIcon = (focused: boolean) => {
+    return (
+      <SimpleIcon
+        name="notebook"
+        color={focused ? colors.primary : colors.greyIconColor}
+        size={20}
+      />
+    );
+  };
+
+  const getTasksLabel = (focused: boolean) => {
+    return (
+      <Text
+        style={[
+          {color: focused ? colors.primary : colors.greyIconColor},
+          styles.navbarLabel,
+        ]}>
+        Задачи
+      </Text>
+    );
+  };
+
+  const getSearchIcon = (item: any) => {
+    const {focused} = item;
+    return (
+      <SimpleIcon
+        name="magnifier"
+        color={focused ? colors.primary : colors.greyIconColor}
+        size={20}
+      />
+    );
+  };
+
+  const getSearchLabel = (focused: boolean) => {
+    return (
+      <Text
+        style={[
+          {color: focused ? colors.primary : colors.greyIconColor},
+          styles.navbarLabel,
+        ]}>
+        Поиск
+      </Text>
+    );
   };
 
   return (
@@ -133,8 +149,8 @@ export function NavBar({route}: {route: RouteProp<ParamListBase>}) {
         name="Notes"
         component={NotesPage}
         options={{
-          tabBarLabel: ({focused, color}) => getNoteLabel(focused, color),
-          tabBarIcon: ({focused, color}) => getNoteIcon(focused, color),
+          tabBarLabel: ({focused}) => getNoteLabel(focused),
+          tabBarIcon: ({focused}) => getNoteIcon(focused),
           tabBarItemStyle: {
             borderRadius: 4,
             borderWidth: 1,
@@ -149,8 +165,8 @@ export function NavBar({route}: {route: RouteProp<ParamListBase>}) {
         name="Calendar"
         component={CalendarPage}
         options={{
-          tabBarLabel: ({focused, color}) => getCalendarLabel(focused, color),
-          tabBarIcon: ({focused, color}) => getCalendarIcon(focused, color),
+          tabBarLabel: ({focused}) => getCalendarLabel(focused),
+          tabBarIcon: ({focused}) => getCalendarIcon(focused),
           tabBarItemStyle: {
             borderRadius: 4,
             borderWidth: 1,
@@ -163,10 +179,10 @@ export function NavBar({route}: {route: RouteProp<ParamListBase>}) {
       />
       <Tab.Screen
         name="Tasks"
-        component={CalendarPage}
+        component={SettingsPage}
         options={{
-          tabBarLabel: ({focused, color}) => getTasksLabel(focused, color),
-          tabBarIcon: ({focused, color}) => getTasksIcon(focused, color),
+          tabBarLabel: ({focused}) => getTasksLabel(focused),
+          tabBarIcon: ({focused}) => getTasksIcon(focused),
           tabBarItemStyle: {
             borderRadius: 4,
             borderWidth: 1,
@@ -179,9 +195,9 @@ export function NavBar({route}: {route: RouteProp<ParamListBase>}) {
       />
       <Tab.Screen
         name="Search"
-        component={CalendarPage}
+        component={SettingsPage}
         options={{
-          tabBarLabel: ({focused, color}) => getSearchLabel(focused, color),
+          tabBarLabel: ({focused}) => getSearchLabel(focused),
           tabBarIcon: item => getSearchIcon(item),
           tabBarItemStyle: {
             borderRadius: 4,
@@ -197,8 +213,8 @@ export function NavBar({route}: {route: RouteProp<ParamListBase>}) {
         name="Settings"
         component={SettingsPage}
         options={{
-          tabBarLabel: ({focused, color}) => getProfileLabel(focused, color),
-          tabBarIcon: ({focused, color}) => getProfileIcon(focused, color),
+          tabBarLabel: ({focused}) => getProfileLabel(focused),
+          tabBarIcon: ({focused}) => getProfileIcon(focused),
           tabBarItemStyle: {
             borderRadius: 4,
             borderWidth: 1,

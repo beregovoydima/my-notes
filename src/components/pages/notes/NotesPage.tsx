@@ -83,7 +83,17 @@ export function NotesPage({}: {route: any; navigation: any}) {
       <Appbar.Header
         style={[styles.header, {backgroundColor: colors.background}]}>
         {filterFolder ? (
-          <Chip icon="folder" onPress={() => setFilterFolder(null)}>
+          <Chip
+            icon="folder"
+            mode="outlined"
+            closeIcon="close"
+            style={[
+              styles.chip,
+              {
+                backgroundColor: colors.whiteColor,
+              },
+            ]}
+            onClose={() => setFilterFolder(null)}>
             {filterFolder.name}
           </Chip>
         ) : null}
@@ -140,6 +150,10 @@ const styles = StyleSheet.create({
   header: {
     height: 50,
     justifyContent: 'flex-end',
+  },
+  chip: {
+    justifyContent: 'center',
+    marginRight: 20,
   },
   container: {
     paddingTop: 4,

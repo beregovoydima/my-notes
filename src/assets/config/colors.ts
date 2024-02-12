@@ -58,11 +58,12 @@ import {useTheme as _useTheme} from 'react-native-paper';
 // elevation: MD3ElevationColors;
 
 export const lightColors = {
-  primary: '#6B52AE', // Основной фиолетовый
+  primary: '#3F51B5', // Основной фиолетовый
   accent: '#8f5db7',
-  success: '#26A69A', // Зеленый
+  success: '#4CAF50', // Зеленый
   warning: '#f39c12', // Оранжевый
   info: '#3498db', // Синий (дополнительный)
+  error: '#E53935',
   background: '#f7f8fa', // Светлый серый
   text: '#2c3e50', // Темный серый
   navbar: '#ffffff', // Белый
@@ -70,11 +71,20 @@ export const lightColors = {
   greyColor: '#6D7693',
   lineGreyColor: '#d9dde0',
   blueColor: '#2a6b77',
-  orangeColor: '#d68f00',
+  deepOrangeColor: '#FF5722',
+  orangeColor: '#FF9800',
   redColor: '#bf2f13',
   greyDarkFill: '#F0F2F5',
-  // primaryContainer: '#d9dde0',
-  // secondaryContainer: '#ecf0f1', //background top active button tabs
+  greyIconColor: '#6D7693',
+  primaryContainer: '#E8EAF6',
+  onPrimaryContainer: '#DEE4F0',
+  purpleDeep: '#673AB7',
+  yellowAccent: '#FFD600',
+  cian: '#00BCD4',
+  lime: '#C0CA33',
+  greenAccent: '#7CB342',
+  blueGrey: '#546E7A',
+  secondaryContainer: '#DEE4F0', //background top active button tabs
 };
 
 export const darkColors = {
@@ -93,8 +103,16 @@ export const darkColors = {
   orangeColor: '#d68f00',
   redColor: '#bf2f13',
   greyDarkFill: '#F0F2F5',
-  // primaryContainer: '#d9dde0',
-  // secondaryContainer: 'red',
+  greyIconColor: '#6D7693',
+  primaryContainer: '#E8EAF6',
+  onPrimaryContainer: '#DEE4F0',
+  purpleDeep: '#673AB7',
+  yellowAccent: '#FFD600',
+  cian: '#00BCD4',
+  lime: '#C0CA33',
+  greenAccent: '#7CB342',
+  blueGrey: '#546E7A',
+  secondaryContainer: '#DEE4F0',
 };
 
 export const lightTheme = {

@@ -11,6 +11,7 @@ import {notesService} from '@/core/services';
 // import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 import React, {useCallback, useEffect, useState} from 'react';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
   SafeAreaView,
   ScrollView,
@@ -24,10 +25,10 @@ import {Button, Chip, Divider} from 'react-native-paper';
 import {useTheme} from '@/assets/config/colors';
 import {ListModalItem} from '@/components/notes/list/ListModalItem';
 import {useNavigation} from '@react-navigation/native';
-import {getUuid, hex2rgba} from '@/core/utils';
+import {getUuid, handleShare, hex2rgba, parseList} from '@/core/utils';
 import {useSelector} from 'react-redux';
-import {ListMenu} from '@/components/ui/menu/ListMenu';
 import {ColorPicker} from '@/components/modals/ui/ColorPicker';
+import {ListEditMenu} from '@/components/ui/menu/ListEditMenu';
 
 export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
   // const navigation: ScreenNavigationProp = useNavigation();
@@ -157,9 +158,21 @@ export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
     };
   }, [backSave, list]);
 
-  // const changeDescription = (description: string) => {
-  //   setDescription(description);
-  // };
+  const deleteList = async () => {
+    const filterListCollection = [
+      ...notesService.storeGetListCollection(),
+    ].filter(el => el.id !== list.id);
+
+    notesService.storageSetLists(filterListCollection);
+    notesService.storeSetListCollection(filterListCollection);
+  };
+
+  const shareList = () => {
+    handleShare({
+      title: list.title,
+      message: parseList(list), // Текст, который вы хотите поделиться
+    });
+  };
 
   return (
     <SafeAreaView
@@ -215,20 +228,32 @@ export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
             <Icon source="share-variant" size={24} color="red" />
           </View> */}
 
-          <ListMenu
-            editList={function (): void {
-              throw new Error('Function not implemented.');
-            }}
-            deleteList={function (): void {
-              throw new Error('Function not implemented.');
-            }}
-            listId={''}
-          />
+          <View>
+            <Icon
+              name="share-variant"
+              size={24}
+              color={colors.greyIconColor}
+              style={styles.ml10}
+              onPress={shareList}
+            />
+          </View>
+
+          <ListEditMenu deleteList={() => deleteList()} />
         </View>
         <ScrollView>
           <ListModalItem list={list} changeList={val => changeList(val)} />
         </ScrollView>
-        <ScrollView horizontal style={styles.chips}>
+        <ScrollView
+          horizontal
+          style={[
+            styles.chips,
+            {
+              backgroundColor: hex2rgba(
+                list.color ? list.color : colors.primary,
+                0.04,
+              ),
+            },
+          ]}>
           {folders.map(el => {
             return (
               <Chip
@@ -292,6 +317,9 @@ const styles = StyleSheet.create({
   button: {
     maxWidth: '40%',
     marginLeft: 20,
+  },
+  ml10: {
+    marginLeft: 10,
   },
   chips: {
     maxHeight: 40,

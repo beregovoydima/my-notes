@@ -4,16 +4,11 @@ import {
   NotesFolderItem,
   NotesItems,
   ScreenNavigationProp,
-  // ScreenNavigationProp,
 } from '@/core/interfaces';
 import {notesService} from '@/core/services';
-// import {useNavigation} from '@react-navigation/native';
-// import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
-  Platform,
-  KeyboardAvoidingView,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -22,7 +17,6 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native';
-// import {Button} from 'react-native-paper';
 import {
   actions,
   FONT_SIZE,
@@ -34,11 +28,12 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Octicons from 'react-native-vector-icons/Octicons';
 import {useTheme} from '@/assets/config/colors';
-import {Button, Chip, Divider} from 'react-native-paper';
+import {Chip, Divider} from 'react-native-paper';
 import {useSelector} from 'react-redux';
-import {getUuid, hex2rgba} from '@/core/utils';
-import {useNavigation} from '@react-navigation/native';
+import {getUuid, handleShare, hex2rgba, parseNoteLabel} from '@/core/utils';
 import {ColorPicker} from '@/components/modals/ui/ColorPicker';
+import {NotesEditMenu} from '@/components/ui/menu/NotesEditMenu';
+import {useNavigation} from '@react-navigation/native';
 
 export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
   const navigation: ScreenNavigationProp = useNavigation();
@@ -56,10 +51,9 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
     title: '', //string
     label: '',
     files: [],
-    fontWeight: 400, // font weight
-    fontSize: 16, //font Size
   });
   const richTextRef = useRef<RichEditor | null>(null);
+  const scroll = useRef<ScrollView | null>(null);
   const folders = useSelector(() => notesService.storeGetFoldersCollection());
 
   const {colors} = useTheme();
@@ -67,13 +61,10 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
   const handleFontSize = () => {
     let activeSize: FONT_SIZE = 4 as FONT_SIZE;
     if (size === 4) {
-      activeSize = 6;
-    } else if (size === 6) {
-      activeSize = 3;
-    } else if (size === 3) {
+      activeSize = 5;
+    } else if (size === 5) {
       activeSize = 4;
     }
-
     // 1=  10px, 2 = 13px, 3 = 16px, 4 = 18px, 5 = 24px, 6 = 32px, 7 = 48px;
     setSize(activeSize);
     richTextRef.current?.setFontSize(activeSize);
@@ -90,16 +81,10 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
     }
   }, [route.params.noteId]);
 
-  const handleSave = async () => {
-    if (route.params.noteId) {
-      await notesService.updateNote({...note, label: text});
-    } else {
-      await notesService.storeAddNote({...note, label: text});
-    }
-    navigation.navigate('Notes');
-  };
-
   const backSave = useCallback(() => {
+    if (!note.title) {
+      note.title = moment().format('YYYY-MM-DD');
+    }
     if (route.params.noteId) {
       notesService.updateNote({...note, label: text});
     } else {
@@ -127,6 +112,13 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
   //         </div>`,
   //   );
   // }, []);
+
+  const shareNote = () => {
+    handleShare({
+      title: note.title,
+      message: note.title + '\n' + parseNoteLabel(note.label), // Текст, который вы хотите поделиться
+    });
+  };
 
   const getBoldIcon = (icon: IconRecord) => {
     return (
@@ -163,7 +155,7 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
             },
             styles.text,
           ]}>
-          {size === 3 ? 'S' : size === 4 ? 'M' : 'L'}
+          {size === 4 ? 'M' : 'L'}
         </Text>
       </View>
     );
@@ -211,6 +203,7 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
 
   const changeDescription = (description: string) => {
     setDescription(description);
+    setNote({...note, label: description});
   };
 
   const handleFolderSet = (folder: NotesFolderItem) => {
@@ -232,6 +225,25 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
     setShowColorPicker(false);
   };
 
+  const handleCursorPosition = useCallback((scrollY: number) => {
+    scroll.current!.scrollTo({y: scrollY - 30, animated: true});
+  }, []);
+
+  const deleteNote = () => {
+    const notes = notesService.storeGetCollectionNote();
+    const findNote = notes.find(el => el.id === note.id);
+    if (findNote) {
+      saveNotesInStorage();
+      notesService.storeSetNotes([...notes.filter(el => el.id !== note.id)]);
+    }
+    navigation.navigate('Notes');
+  };
+
+  const saveNotesInStorage = async () => {
+    const response = notesService.storeGetCollectionNote();
+    await notesService.storageSetNotes(response);
+  };
+
   return (
     <SafeAreaView
       style={[
@@ -248,138 +260,122 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
         hideModal={() => setShowColorPicker(false)}
         changeColor={changeColor}
       />
-      <ScrollView
+      <View
         style={[
-          styles.container,
+          styles.content,
           {
             backgroundColor: hex2rgba(
               note.color ? note.color : colors.primary,
-              0.04,
+              0.15,
             ),
           },
         ]}>
-        <View
+        <EditableText
+          style={styles.header}
+          label={note.title}
+          customText="Введите название заметки"
+          saveText={e => setNote({...note, title: e})}
+          isChecked={false}
+        />
+        <TouchableOpacity onPress={() => setShowColorPicker(true)}>
+          <View
+            style={[
+              {
+                backgroundColor: note.color ? note.color : colors.primary,
+              },
+              styles.colorPicker,
+            ]}
+          />
+        </TouchableOpacity>
+        <View>
+          <Icon
+            name="share-variant"
+            size={24}
+            color={colors.greyIconColor}
+            style={styles.ml10}
+            onPress={shareNote}
+          />
+        </View>
+
+        <NotesEditMenu deleteNote={() => deleteNote()} />
+      </View>
+      <Divider />
+      <ScrollView
+        keyboardDismissMode={'none'}
+        ref={ref => (scroll.current = ref)}
+        nestedScrollEnabled={true}
+        scrollEventThrottle={20}
+        style={[styles.view]}>
+        <RichEditor
+          useContainer={true}
+          ref={ref => (richTextRef.current = ref)}
+          placeholder={'Текст заметки'}
+          onChange={changeDescription}
+          autoCapitalize="sentences"
+          initialContentHTML={note.label}
+          pasteAsPlainText={true}
+          onCursorPosition={handleCursorPosition}
+        />
+      </ScrollView>
+
+      <View>
+        <ScrollView
+          horizontal
           style={[
-            styles.content,
+            styles.chips,
             {
               backgroundColor: hex2rgba(
                 note.color ? note.color : colors.primary,
-                0.15,
+                0.04,
               ),
             },
           ]}>
-          <EditableText
-            style={styles.header}
-            label={note.title}
-            customText="Введите название заметки"
-            saveText={e => setNote({...note, title: e})}
-            isChecked={false}
-          />
-          <TouchableOpacity onPress={() => setShowColorPicker(true)}>
-            <View
-              style={[
-                {
-                  backgroundColor: note.color ? note.color : colors.primary,
-                },
-                styles.colorPicker,
-              ]}
-            />
-          </TouchableOpacity>
-          {/* <View>
-            <Icon source="share-variant" size={24} color="red" />
-          </View> */}
+          {folders.map(el => {
+            return (
+              <Chip
+                key={el.id}
+                mode="outlined"
+                selected={el.id === note.folder?.id ? true : false}
+                // eslint-disable-next-line react-native/no-inline-styles
+                style={{marginRight: 4, backgroundColor: colors.whiteColor}}
+                onPress={() => handleFolderSet(el)}>
+                {el.label}
+              </Chip>
+            );
+          })}
+        </ScrollView>
 
-          <Icon
-            size={24}
-            name="dots-vertical"
-            color={colors.greyColor}
-            // eslint-disable-next-line react-native/no-inline-styles
-            style={{marginRight: 10}}
-          />
-        </View>
-        <Divider />
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-          <RichEditor
-            ref={ref => (richTextRef.current = ref)}
-            placeholder={'Текст заметки'}
-            onChange={changeDescription}
-            initialContentHTML={note.label}
-          />
-        </KeyboardAvoidingView>
-      </ScrollView>
-      <ScrollView
-        horizontal
-        style={[
-          styles.chips,
-          {
-            backgroundColor: hex2rgba(
-              note.color ? note.color : colors.primary,
-              0.04,
-            ),
-          },
-        ]}>
-        {folders.map(el => {
-          return (
-            <Chip
-              key={el.id}
-              mode="outlined"
-              selected={el.id === note.folder?.id ? true : false}
-              // eslint-disable-next-line react-native/no-inline-styles
-              style={{marginRight: 4, backgroundColor: colors.whiteColor}}
-              onPress={() => handleFolderSet(el)}>
-              {el.label}
-            </Chip>
-          );
-        })}
-      </ScrollView>
-
-      <RichToolbar
-        editor={richTextRef}
-        actions={[
-          actions.undo,
-          actions.redo,
-          actions.setBold,
-          actions.setItalic,
-          actions.fontSize,
-          actions.insertBulletsList,
-          actions.insertOrderedList,
-          actions.setStrikethrough,
-          actions.setUnderline,
-        ]}
-        iconMap={{
-          [actions.setItalic]: getItalicIcon,
-          [actions.setBold]: getBoldIcon,
-          [actions.fontSize]: getTextHeightIcon,
-          [actions.insertBulletsList]: getBulletsListIcon,
-          [actions.insertOrderedList]: getOrderedListIcon,
-          [actions.setStrikethrough]: getStrickedIcon,
-          [actions.setUnderline]: getUnderlineIcon,
-        }}
-        getItalicIcon={(icon: IconRecord) => getItalicIcon(icon)}
-        getBoldIcon={(icon: IconRecord) => getBoldIcon(icon)}
-        fontSize={() => handleFontSize()}
-        getBulletsListIcon={(icon: IconRecord) => getBulletsListIcon(icon)}
-        getOrderedListIcon={(icon: IconRecord) => getOrderedListIcon(icon)}
-        getStrickedIcon={(icon: IconRecord) => getStrickedIcon(icon)}
-        getUnderlineIcon={(icon: IconRecord) => getUnderlineIcon(icon)}
-      />
-      <Divider />
-      <View style={[styles.footer, {backgroundColor: colors.whiteColor}]}>
-        <Button
-          mode="contained"
-          style={[styles.button, {backgroundColor: colors.error}]}
-          onPress={() => navigation.navigate('Notes')}>
-          Отмена
-        </Button>
-        <Button
-          mode="contained"
-          style={[styles.button, {backgroundColor: colors.success}]}
-          onPress={() => handleSave()}>
-          Сохранить
-        </Button>
+        <RichToolbar
+          editor={richTextRef}
+          actions={[
+            actions.undo,
+            actions.redo,
+            actions.setBold,
+            actions.setItalic,
+            actions.fontSize,
+            actions.insertBulletsList,
+            actions.insertOrderedList,
+            actions.setStrikethrough,
+            actions.setUnderline,
+          ]}
+          iconMap={{
+            [actions.setItalic]: getItalicIcon,
+            [actions.setBold]: getBoldIcon,
+            [actions.fontSize]: getTextHeightIcon,
+            [actions.insertBulletsList]: getBulletsListIcon,
+            [actions.insertOrderedList]: getOrderedListIcon,
+            [actions.setStrikethrough]: getStrickedIcon,
+            [actions.setUnderline]: getUnderlineIcon,
+          }}
+          getItalicIcon={(icon: IconRecord) => getItalicIcon(icon)}
+          getBoldIcon={(icon: IconRecord) => getBoldIcon(icon)}
+          fontSize={() => handleFontSize()}
+          getBulletsListIcon={(icon: IconRecord) => getBulletsListIcon(icon)}
+          getOrderedListIcon={(icon: IconRecord) => getOrderedListIcon(icon)}
+          getStrickedIcon={(icon: IconRecord) => getStrickedIcon(icon)}
+          getUnderlineIcon={(icon: IconRecord) => getUnderlineIcon(icon)}
+        />
       </View>
-      {/* <Button onPress={handleSave}>Save</Button> */}
     </SafeAreaView>
   );
 };
@@ -387,9 +383,9 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'space-between',
   },
   view: {
-    display: 'flex',
     flex: 1,
   },
   header: {
@@ -397,9 +393,9 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   colorPicker: {
-    width: 40,
-    height: 40,
-    marginRight: 20,
+    width: 35,
+    height: 35,
+    marginRight: 10,
     marginLeft: 20,
   },
   content: {
@@ -431,7 +427,13 @@ const styles = StyleSheet.create({
     maxWidth: '40%',
     marginLeft: 20,
   },
+  ml10: {
+    marginLeft: 10,
+  },
   footer: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-end',

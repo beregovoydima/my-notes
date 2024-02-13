@@ -1,5 +1,5 @@
 import React, {memo, useMemo} from 'react';
-import {Text} from 'react-native';
+import {StyleSheet, Text} from 'react-native';
 import {NotesListItem, NotesSortType, SortDirection} from '@/core/interfaces';
 import {ListCard} from './card/ListCard';
 import {notesService} from '@/core/services';
@@ -64,7 +64,7 @@ export const ListItem = memo(({sortedType, sortDirection}: Props) => {
   }, [allList, sortedType]);
 
   const sortedListWithDiraction = useMemo(() => {
-    if (sortDirection === 'desc') {
+    if (sortDirection === 'asc') {
       return [...sortedList];
     }
     return [...sortedList].reverse();
@@ -76,7 +76,17 @@ export const ListItem = memo(({sortedType, sortDirection}: Props) => {
       keyExtractor={keyExtractor}
       renderItem={renderItem}
       estimatedItemSize={114}
-      ListEmptyComponent={<Text>Список заметок пуст.</Text>}
+      ListEmptyComponent={
+        <Text style={styles.emptyText}>Список заметок пуст.</Text>
+      }
     />
   );
+});
+
+const styles = StyleSheet.create({
+  emptyText: {
+    textAlign: 'center',
+    marginTop: 8,
+    color: 'black',
+  },
 });

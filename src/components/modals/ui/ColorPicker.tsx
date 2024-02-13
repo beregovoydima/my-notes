@@ -3,7 +3,8 @@ import {getUuid, styleColorArr} from '@/core/utils';
 import React, {useState} from 'react';
 import {StyleSheet, View, TouchableOpacity} from 'react-native';
 import DragList, {DragListRenderItemInfo} from 'react-native-draglist';
-import {Icon, Modal, Portal, Text} from 'react-native-paper';
+import {Modal, Portal, Text} from 'react-native-paper';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 interface Props {
   visible: boolean;
@@ -46,7 +47,11 @@ export const ColorPicker = ({visible, hideModal, changeColor}: Props) => {
         <View style={styles.drag}>
           <Text style={styles.text}>{index + 1}</Text>
           <TouchableOpacity onPressIn={onDragStart} onPressOut={onDragEnd}>
-            <Icon source="drag-vertical" size={24} />
+            <MaterialIcons
+              name="drag-indicator"
+              color={colors.greyIconColor}
+              size={26}
+            />
           </TouchableOpacity>
         </View>
       </View>
@@ -102,8 +107,10 @@ const styles = StyleSheet.create({
     margin: 20,
   },
   text: {
-    color: 'black',
-    marginRight: 10,
+    color: 'grey',
+    textAlignVertical: 'center',
+    marginRight: 16,
+    fontSize: 18,
   },
   color: {
     margin: 4,

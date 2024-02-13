@@ -93,6 +93,7 @@ export function NotesPage({}: {route: any; navigation: any}) {
                 backgroundColor: colors.whiteColor,
               },
             ]}
+            onPress={() => setFilterFolder(null)}
             onClose={() => setFilterFolder(null)}>
             {filterFolder.name}
           </Chip>
@@ -100,6 +101,7 @@ export function NotesPage({}: {route: any; navigation: any}) {
         <Appbar.Action
           icon={() => (
             <SortedTypeNotesMenu
+              sortType={sortedType}
               sortDirection={sortDirection}
               changeSort={setSortDirection}
             />

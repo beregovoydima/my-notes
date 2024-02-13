@@ -5,6 +5,7 @@ import {NoteCard} from './card/NoteCard';
 import {FlashList} from '@shopify/flash-list';
 import {useSelector} from 'react-redux';
 import {notesService} from '@/core/services';
+import {StyleSheet} from 'react-native';
 
 interface Props {
   sortedType: NotesSortType;
@@ -40,7 +41,7 @@ export const NotesItem = ({sortedType, sortDirection}: Props) => {
   }, [notes, sortedType]);
 
   const sortedListWithDiraction = useMemo(() => {
-    if (sortDirection === 'desc') {
+    if (sortDirection === 'asc') {
       return [...sortedNotes];
     }
     return [...sortedNotes].reverse();
@@ -52,7 +53,16 @@ export const NotesItem = ({sortedType, sortDirection}: Props) => {
       renderItem={renderItem}
       keyExtractor={keyExtractor}
       estimatedItemSize={110}
-      ListEmptyComponent={<Text>Список заметок пуст.</Text>}
+      ListEmptyComponent={
+        <Text style={styles.emptyText}>Список заметок пуст.</Text>
+      }
     />
   );
 };
+
+const styles = StyleSheet.create({
+  emptyText: {
+    textAlign: 'center',
+    marginTop: 8,
+  },
+});

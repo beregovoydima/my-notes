@@ -1,5 +1,3 @@
-import {FontWeightSize, FontWeightType} from './styles';
-
 export type NotesPageType = 'notes' | 'folders' | 'list' | 'all';
 
 export type NoteType = 'note' | 'list';
@@ -22,8 +20,6 @@ export interface NotesItems {
   label: string;
   deleted?: NotesItemsDeleted;
   files: [];
-  fontWeight: FontWeightType; // font weight
-  fontSize: FontWeightSize; //font Size
 }
 
 export interface NotesItemsDeleted {

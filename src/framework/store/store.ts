@@ -8,6 +8,7 @@ import {
 import notesSlice from './notes';
 import foldersSlice from './folders';
 import listSlice from './list';
+import settingsSlice from './settings';
 
 export type RootState = ReturnType<typeof store.getState>;
 
@@ -16,6 +17,7 @@ const store = configureStore({
     notes: notesSlice,
     folders: foldersSlice,
     list: listSlice,
+    settings: settingsSlice,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

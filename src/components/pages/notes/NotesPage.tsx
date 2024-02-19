@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, {useEffect, useState} from 'react';
-import {FabButton} from '@/components/ui/FabButton';
-import {StyleSheet, View} from 'react-native';
+import {FabButton} from '@/components/ui/fab/FabButton';
+import {SafeAreaView, StyleSheet, View} from 'react-native';
 import {Appbar, Chip} from 'react-native-paper';
 import {useTheme} from '@/assets/config/colors';
 import {NotesSegmentedButtons} from '@/components/ui/buttons/NotesSegmentedButtons';
@@ -79,7 +79,7 @@ export function NotesPage({}: {route: any; navigation: any}) {
   }, []);
 
   return (
-    <View style={styles.page}>
+    <SafeAreaView style={styles.page}>
       <Appbar.Header
         style={[styles.header, {backgroundColor: colors.background}]}>
         {filterFolder ? (
@@ -140,7 +140,7 @@ export function NotesPage({}: {route: any; navigation: any}) {
         </View>
       </View>
       <FabButton showFolderModal={showFolderModal} />
-    </View>
+    </SafeAreaView>
   );
 }
 

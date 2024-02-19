@@ -85,6 +85,17 @@ export const lightColors = {
   greenAccent: '#7CB342',
   blueGrey: '#546E7A',
   secondaryContainer: '#DEE4F0', //background top active button tabs
+  elevation: {
+    level0: 'transparent',
+    // Note: Color values with transparency cause RN to transfer shadows to children nodes
+    // instead of View component in Surface. Providing solid background fixes the issue.
+    // Opaque color values generated with `palette.primary99` used as background
+    level1: '#f5f6fb', // palette.primary40, alpha 0.05
+    level2: '#eff1f9', // palette.primary40, alpha 0.08
+    level3: '#e9ebf6', // palette.primary40, alpha 0.11
+    level4: '#e7eaf6', // palette.primary40, alpha 0.12
+    level5: '#e4e6f4', // palette.primary40, alpha 0.14
+  },
 };
 
 export const darkColors = {

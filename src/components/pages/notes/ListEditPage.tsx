@@ -105,11 +105,11 @@ export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
         });
 
       const lists = notesService.storeGetListCollection();
+      list.title = list.title ? list.title : moment().format('YYYY-MM-DD');
       notesService.storageSetLists([
         ...lists,
         {
           ...list,
-          title: list.title ? list.title : new Date().toDateString(),
           items: filterEmptyItems,
         },
       ]);
@@ -165,6 +165,7 @@ export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
 
     notesService.storageSetLists(filterListCollection);
     notesService.storeSetListCollection(filterListCollection);
+    navigation.navigate('Notes');
   };
 
   const shareList = () => {

@@ -10,6 +10,7 @@ import {ListEditPage} from './src/components/pages/notes/ListEditPage';
 import {Provider} from 'react-redux';
 import store from './src/framework/store/store';
 import {NavBar} from './src/components/navigation/Navbar';
+import {CalendarEvent} from './src/components/pages/calendar/CalendarEvent';
 
 // type HomeScreenProps = NativeStackScreenProps<any, 'Home'>;
 
@@ -27,20 +28,6 @@ const Stack = createNativeStackNavigator();
 
 function App() {
   const isDarkMode = Appearance.getColorScheme() === 'dark';
-
-  // const [pages] = useState<{name: PagesType; component: any}[]>([
-  //   {name: 'Notes', component: NotesPage},
-  //   {name: 'Calendar', component: CalendarPage},
-  //   {name: 'Tasks', component: TasksPage},
-  //   {name: 'Search', component: SearchPage},
-  //   {name: 'More', component: MorePage},
-  // ]);
-
-  // const [activePage, setActivePage] = useState<PagesType>('Notes');
-
-  // const changeActivePage = (page: PagesType) => {
-  //   setActivePage(page);
-  // };
 
   return (
     <NavigationContainer>
@@ -63,11 +50,12 @@ function App() {
                 component={ListEditPage}
                 options={{headerShown: false}}
               />
+              <Stack.Screen
+                name="CalendarEvent"
+                component={CalendarEvent}
+                options={{headerShown: false}}
+              />
             </Stack.Navigator>
-            {/* <TabMenu
-              activePage={activePage}
-              changeActivePage={changeActivePage}
-            /> */}
           </GestureHandlerRootView>
         </PaperProvider>
       </Provider>

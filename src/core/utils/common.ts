@@ -41,24 +41,23 @@ export const parseNoteLabel = (htmlString: string) => {
 
 export const parseList = (list: NotesListItem): string => {
   let listItem = list.title + '\n';
-  list.items.forEach(
-    el =>
-      (listItem =
-        listItem +
-        '\n\t' +
-        el.text +
-        (el.isChecked ? ' ' + '\u2713' : '') +
-        el.children
-          .map(
-            item =>
-              '\n\t\t' +
-              ' ' +
-              '\u2022' +
-              item.text +
-              (item.isChecked ? ' ' + '\u2713' : ''),
-          )
-          .join('')),
-  );
+  list.items.forEach(el => {
+    listItem =
+      listItem +
+      '\n\t' +
+      el.text +
+      (el.isChecked ? ' ' + '\u2713' : '') +
+      el.children
+        .map(
+          item =>
+            '\n\t\t' +
+            ' ' +
+            '\u2022' +
+            item.text +
+            (item.isChecked ? ' ' + '\u2713' : ''),
+        )
+        .join('');
+  });
 
   return listItem;
 };

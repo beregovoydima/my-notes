@@ -16,7 +16,7 @@ const notesSlice = createSlice({
     setNotes: (state, action: PayloadAction<NotesItems[]>) => {
       state.notes = [...action.payload];
     },
-    removeNoteById: (state, action: PayloadAction<number>) => {
+    removeNoteById: (state, action: PayloadAction<string>) => {
       state.notes = [...state.notes.filter(el => el.id !== action.payload)];
     },
     setNote: (state, action: PayloadAction<NotesItems>) => {

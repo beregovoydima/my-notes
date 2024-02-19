@@ -1,23 +1,26 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {SafeAreaView, StyleSheet, ScrollView} from 'react-native';
 import {Appbar} from 'react-native-paper';
 import {useTheme} from '@/assets/config/colors';
 import {CalendarItem} from '@/components/calendar/CalendarItem';
+import {FabCalendarButton} from '@/components/ui/fab/FabCalendarButton';
 
 export function CalendarPage({route}: {route: any}) {
   const {colors} = useTheme();
 
   return (
-    <View style={styles.page}>
+    <SafeAreaView style={styles.page}>
       <Appbar.Header
         style={[styles.header, {backgroundColor: colors.background}]}>
         <Appbar.Content title={route.name} />
         <Appbar.Action icon="magnify" onPress={() => {}} />
       </Appbar.Header>
-      <View style={[styles.container, {backgroundColor: colors.background}]}>
+      <ScrollView
+        style={[styles.container, {backgroundColor: colors.background}]}>
         <CalendarItem />
-      </View>
-    </View>
+        <FabCalendarButton />
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 

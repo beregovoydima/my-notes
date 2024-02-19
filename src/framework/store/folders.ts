@@ -16,7 +16,7 @@ const notesSlice = createSlice({
     setFolders: (state, action: PayloadAction<NotesFolderItem[]>) => {
       state.folders = [...action.payload];
     },
-    removeFolderById: (state, action: PayloadAction<number>) => {
+    removeFolderById: (state, action: PayloadAction<string>) => {
       state.folders = [...state.folders.filter(el => el.id !== action.payload)];
     },
     setFolder: (state, action: PayloadAction<NotesFolderItem>) => {

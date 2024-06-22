@@ -1,13 +1,14 @@
 import {useTheme} from '@/assets/config/colors';
 import React, {memo, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {IconButton, Menu} from 'react-native-paper';
+import {Divider, IconButton, Menu} from 'react-native-paper';
 
 interface Props {
   deleteList: () => void;
+  saveList: () => void;
 }
 
-export const ListEditMenu = memo(({deleteList}: Props) => {
+export const ListEditMenu = memo(({deleteList, saveList}: Props) => {
   const {colors} = useTheme();
   const [visible, setVisible] = useState(false);
 
@@ -28,6 +29,13 @@ export const ListEditMenu = memo(({deleteList}: Props) => {
             onPress={openMenu}
           />
         }>
+        <Menu.Item
+          onPress={() => {
+            saveList();
+          }}
+          title="Сохранить"
+        />
+        <Divider />
         <Menu.Item
           onPress={() => {
             deleteList();

@@ -39,12 +39,6 @@ export const FabCalendarButton = () => {
             labelTextColor: colors.text,
             onPress: () => navigation.navigate('CalendarEvent', {}),
           },
-          {
-            icon: ({size}) => getIcon(size, 'event'),
-            label: 'Создать мероприятие',
-            labelTextColor: colors.text,
-            onPress: () => navigation.navigate('CalendarEvent', {}),
-          },
         ]}
         onStateChange={onStateChange}
         onPress={() => {

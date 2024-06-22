@@ -4,11 +4,8 @@ import {
   NotesFolderItem,
   NotesListItem,
   ScreenNavigationProp,
-  // ScreenNavigationProp,
 } from '@/core/interfaces';
 import {notesService} from '@/core/services';
-// import {useNavigation} from '@react-navigation/native';
-// import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 import React, {useCallback, useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -20,8 +17,7 @@ import {
   BackHandler,
   TouchableOpacity,
 } from 'react-native';
-import {Button, Chip, Divider} from 'react-native-paper';
-// import {Button} from 'react-native-paper';
+import {Chip, Divider} from 'react-native-paper';
 import {useTheme} from '@/assets/config/colors';
 import {ListModalItem} from '@/components/notes/list/ListModalItem';
 import {useNavigation} from '@react-navigation/native';
@@ -31,10 +27,9 @@ import {ColorPicker} from '@/components/modals/ui/ColorPicker';
 import {ListEditMenu} from '@/components/ui/menu/ListEditMenu';
 
 export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
-  // const navigation: ScreenNavigationProp = useNavigation();
-
   const {colors} = useTheme();
   const navigation: ScreenNavigationProp = useNavigation();
+
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [list, setList] = useState<NotesListItem>({
     id: getUuid(),
@@ -123,11 +118,6 @@ export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
     return false;
   }, [save]);
 
-  const handleSave = () => {
-    save();
-    navigation.navigate('Notes');
-  };
-
   const handleFolderSet = (folder: NotesFolderItem) => {
     if (folder.id === list.folder?.id) {
       setList({
@@ -145,6 +135,11 @@ export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
   const changeColor = (color: string) => {
     setList({...list, color: color});
     setShowColorPicker(false);
+  };
+
+  const handleSave = () => {
+    save();
+    navigation.navigate('Notes');
   };
 
   useEffect(() => {
@@ -171,7 +166,7 @@ export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
   const shareList = () => {
     handleShare({
       title: list.title,
-      message: parseList(list), // Текст, который вы хотите поделиться
+      message: parseList(list),
     });
   };
 
@@ -187,15 +182,12 @@ export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
         style={[
           styles.view,
           {
-            // backgroundColor: hex2rgba(
-            //   list.color ? list.color : colors.primary,
-            //   0.04,
-            // ),
+            backgroundColor: hex2rgba(
+              list.color ? list.color : colors.primary,
+              0.04,
+            ),
           },
         ]}>
-        {/* <Text variant="titleLarge" style={{}}>
-          {route.params.listId ? 'Редактировать' : 'Создать'}
-        </Text> */}
         <View
           style={[
             styles.content,
@@ -225,9 +217,6 @@ export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
               ]}
             />
           </TouchableOpacity>
-          {/* <View>
-            <Icon source="share-variant" size={24} color="red" />
-          </View> */}
 
           <View>
             <Icon
@@ -239,22 +228,15 @@ export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
             />
           </View>
 
-          <ListEditMenu deleteList={() => deleteList()} />
+          <ListEditMenu
+            deleteList={() => deleteList()}
+            saveList={() => handleSave()}
+          />
         </View>
         <ScrollView>
           <ListModalItem list={list} changeList={val => changeList(val)} />
         </ScrollView>
-        <ScrollView
-          horizontal
-          style={[
-            styles.chips,
-            {
-              backgroundColor: hex2rgba(
-                list.color ? list.color : colors.primary,
-                0.04,
-              ),
-            },
-          ]}>
+        <ScrollView horizontal style={[styles.chips]}>
           {folders.map(el => {
             return (
               <Chip
@@ -270,20 +252,6 @@ export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
           })}
         </ScrollView>
         <Divider />
-        <View style={[styles.footer, {backgroundColor: colors.whiteColor}]}>
-          <Button
-            mode="contained"
-            style={[styles.button, {backgroundColor: colors.error}]}
-            onPress={() => navigation.navigate('Notes')}>
-            Отмена
-          </Button>
-          <Button
-            mode="contained"
-            style={[styles.button, {backgroundColor: colors.success}]}
-            onPress={() => handleSave()}>
-            Сохранить
-          </Button>
-        </View>
       </View>
     </SafeAreaView>
   );
@@ -326,15 +294,6 @@ const styles = StyleSheet.create({
     maxHeight: 40,
     minHeight: 40,
     padding: 4,
-  },
-  footer: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignContent: 'center',
-    paddingTop: 8,
-    paddingBottom: 8,
-    paddingLeft: 20,
-    paddingRight: 20,
+    marginBottom: 10,
   },
 });

@@ -41,8 +41,8 @@ export const NoteCard = React.memo(({item}: {item: NotesItems}) => {
     const notes = notesService.storeGetCollectionNote();
     const findNote = notes.find(el => el.id === id);
     if (findNote) {
-      saveNotesInStorage();
       notesService.storeSetNotes([...notes.filter(el => el.id !== id)]);
+      saveNotesInStorage();
     }
   }, []);
 

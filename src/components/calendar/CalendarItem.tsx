@@ -4,7 +4,8 @@ import {getUuid, hex2rgba} from '@/core/utils';
 import moment from 'moment';
 import React, {Fragment, useCallback, useMemo, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Calendar} from 'react-native-calendars';
+import {Calendar, LocaleConfig} from 'react-native-calendars';
+import {ScrollView} from 'react-native-gesture-handler';
 import {Avatar, Card, Chip, Icon, Text} from 'react-native-paper';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
@@ -204,6 +205,49 @@ export const CalendarItem = () => {
       />
     );
   };
+  LocaleConfig.locales.ru = {
+    monthNames: [
+      'Январь',
+      'Февраль',
+      'Март',
+      'Апрель',
+      'Май',
+      'Июнь',
+      'Июль',
+      'Август',
+      'Сентябрь',
+      'Октябрь',
+      'Ноябрь',
+      'Декабрь',
+    ],
+    monthNamesShort: [
+      'Янв.',
+      'Фев.',
+      'Март',
+      'Апр.',
+      'Май',
+      'Июнь',
+      'Июль',
+      'Авг.',
+      'Сен.',
+      'Окт.',
+      'Ноя.',
+      'Дек.',
+    ],
+    dayNames: [
+      'Воскресенье',
+      'Понедельник',
+      'Вторник',
+      'Среда',
+      'Четверг',
+      'Пятница',
+      'Суббота',
+    ],
+    dayNamesShort: ['Вс.', 'Пн.', 'Вт.', 'Ср.', 'Чт.', 'Пт.', 'Сб.'],
+    today: 'Сегодня',
+  };
+
+  LocaleConfig.defaultLocale = 'ru';
 
   const renderArrow = (direction: 'left' | 'right') => {
     return (
@@ -259,7 +303,7 @@ export const CalendarItem = () => {
           Сегодня
         </Chip>
       </View>
-      <View style={{paddingBottom: 10}}>
+      <ScrollView style={{paddingBottom: 10}}>
         {customEvents.map(el => {
           return (
             <Card
@@ -317,7 +361,7 @@ export const CalendarItem = () => {
             </Card>
           );
         })}
-      </View>
+      </ScrollView>
     </Fragment>
   );
 };

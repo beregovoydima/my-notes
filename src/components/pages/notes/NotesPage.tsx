@@ -17,7 +17,7 @@ import {notesService} from '@/core/services';
 import {ListItem} from '@/components/notes/ListItem';
 import {SortedNotesMenu} from '@/components/ui/menu/SortedNotesMenu';
 import {AllNotesItem} from '@/components/notes/AllNotesItem';
-import {SortedTypeNotesMenu} from '@/components/ui/menu/SortedTypeNotesMenu';
+import {FabNotesPageButton} from '@/components/ui/fab/FabNotesPageButton';
 
 export function NotesPage({}: {route: any; navigation: any}) {
   const [isFolderModalVisible, setVisibleFolderModal] = useState(false);
@@ -73,6 +73,11 @@ export function NotesPage({}: {route: any; navigation: any}) {
     setPage('all');
   };
 
+  const changeSortType = (sort: NotesSortType, direction: SortDirection) => {
+    setSortedType(sort);
+    setSortDirection(direction);
+  };
+
   useEffect(() => {
     setNotesCollection();
     getAllList();
@@ -82,6 +87,7 @@ export function NotesPage({}: {route: any; navigation: any}) {
     <SafeAreaView style={styles.page}>
       <Appbar.Header
         style={[styles.header, {backgroundColor: colors.background}]}>
+        <Appbar.Content title={'Заметки'} />
         {filterFolder ? (
           <Chip
             icon="folder"
@@ -100,21 +106,12 @@ export function NotesPage({}: {route: any; navigation: any}) {
         ) : null}
         <Appbar.Action
           icon={() => (
-            <SortedTypeNotesMenu
+            <SortedNotesMenu
               sortType={sortedType}
-              sortDirection={sortDirection}
-              changeSort={setSortDirection}
+              changeSort={changeSortType}
             />
           )}
-          onPress={() => {}}
         />
-        <Appbar.Action
-          icon={() => (
-            <SortedNotesMenu sortType={sortedType} changeSort={setSortedType} />
-          )}
-          onPress={() => {}}
-        />
-        <Appbar.Action icon="magnify" onPress={() => {}} />
       </Appbar.Header>
       <View style={[styles.container, {backgroundColor: colors.background}]}>
         <NotesSegmentedButtons page={page} changePageType={changeValue} />
@@ -139,7 +136,11 @@ export function NotesPage({}: {route: any; navigation: any}) {
           )}
         </View>
       </View>
-      <FabButton showFolderModal={showFolderModal} />
+      {page === 'all' ? (
+        <FabButton showFolderModal={showFolderModal} />
+      ) : (
+        <FabNotesPageButton showFolderModal={showFolderModal} pageType={page} />
+      )}
     </SafeAreaView>
   );
 }

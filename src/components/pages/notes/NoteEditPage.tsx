@@ -16,6 +16,8 @@ import {
   BackHandler,
   Text,
   TouchableOpacity,
+  AppState,
+  AppStateStatus,
 } from 'react-native';
 import {
   actions,
@@ -70,6 +72,23 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
     richTextRef.current?.setFontSize(activeSize);
   };
 
+  const backSave = useCallback(() => {
+    if (!note.title) {
+      note.title = moment().format('YYYY-MM-DD');
+    }
+    if (route.params.noteId) {
+      notesService.updateNote({
+        ...note,
+        label: text,
+        updated: moment().format(),
+      });
+    } else {
+      notesService.storeAddNote({...note, label: text});
+    }
+
+    return false;
+  }, [note, route.params.noteId, text]);
+
   useEffect(() => {
     const response = notesService.storeGetCollectionNote();
     if (response.length && route.params?.noteId) {
@@ -81,18 +100,23 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
     }
   }, [route.params.noteId]);
 
-  const backSave = useCallback(() => {
-    if (!note.title) {
-      note.title = moment().format('YYYY-MM-DD');
-    }
-    if (route.params.noteId) {
-      notesService.updateNote({...note, label: text});
-    } else {
-      notesService.storeAddNote({...note, label: text});
-    }
+  useEffect(() => {
+    const handleAppStateChange = (nextAppState: AppStateStatus) => {
+      if (nextAppState === 'background') {
+        backSave();
+        navigation.navigate('NoteEdit', {noteId: note.id});
+      }
+    };
 
-    return false;
-  }, [note, route.params.noteId, text]);
+    const subscription = AppState.addEventListener(
+      'change',
+      handleAppStateChange,
+    );
+
+    return () => {
+      subscription.remove();
+    };
+  }, [backSave, navigation, note.id]);
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
@@ -233,8 +257,8 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
     const notes = notesService.storeGetCollectionNote();
     const findNote = notes.find(el => el.id === note.id);
     if (findNote) {
-      saveNotesInStorage();
       notesService.storeSetNotes([...notes.filter(el => el.id !== note.id)]);
+      saveNotesInStorage();
     }
     navigation.navigate('Notes');
   };

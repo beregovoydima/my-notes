@@ -12,7 +12,6 @@ interface Props {
 
 export const FabButton = ({showFolderModal}: Props) => {
   const [state, setState] = useState({open: false});
-  const [fabVisible] = useState(true);
   const navigation: ScreenNavigationProp = useNavigation();
   const onStateChange = ({open}: {open: boolean}) => setState({open});
 
@@ -29,7 +28,7 @@ export const FabButton = ({showFolderModal}: Props) => {
     <Portal>
       <FAB.Group
         open={open}
-        visible={fabVisible && isFocused}
+        visible={isFocused}
         icon={open ? 'close' : 'plus'}
         backdropColor={colors.background}
         variant="secondary"

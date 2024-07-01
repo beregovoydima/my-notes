@@ -16,6 +16,8 @@ import {
   View,
   BackHandler,
   TouchableOpacity,
+  AppState,
+  AppStateStatus,
 } from 'react-native';
 import {Chip, Divider} from 'react-native-paper';
 import {useTheme} from '@/assets/config/colors';
@@ -141,6 +143,24 @@ export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
     save();
     navigation.navigate('Notes');
   };
+
+  useEffect(() => {
+    const handleAppStateChange = (nextAppState: AppStateStatus) => {
+      if (nextAppState === 'background') {
+        backSave();
+        navigation.navigate('ListEdit', {listId: list.id});
+      }
+    };
+
+    const subscription = AppState.addEventListener(
+      'change',
+      handleAppStateChange,
+    );
+
+    return () => {
+      subscription.remove();
+    };
+  }, [backSave, list.id, navigation]);
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(

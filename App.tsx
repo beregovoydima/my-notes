@@ -11,7 +11,7 @@ import {Provider} from 'react-redux';
 import store from './src/framework/store/store';
 import {NavBar} from './src/components/navigation/Navbar';
 import {CalendarEvent} from './src/components/pages/calendar/CalendarEvent';
-
+import {SnackbarProvider} from './src/components/ui/snackbar/Snackbar'; // путь к вашему контексту
 // type HomeScreenProps = NativeStackScreenProps<any, 'Home'>;
 
 // const HomeScreen: React.FC<HomeScreenProps> = props => {
@@ -33,30 +33,32 @@ function App() {
     <NavigationContainer>
       <Provider store={store}>
         <PaperProvider theme={isDarkMode ? lightTheme : lightTheme}>
-          <GestureHandlerRootView style={styles.main}>
-            <Stack.Navigator>
-              <Stack.Screen
-                name="Main"
-                component={NavBar}
-                options={{headerShown: false}}
-              />
-              <Stack.Screen
-                name="NoteEdit"
-                component={NoteEditPage}
-                options={{headerShown: false}}
-              />
-              <Stack.Screen
-                name="ListEdit"
-                component={ListEditPage}
-                options={{headerShown: false}}
-              />
-              <Stack.Screen
-                name="CalendarEvent"
-                component={CalendarEvent}
-                options={{headerShown: false}}
-              />
-            </Stack.Navigator>
-          </GestureHandlerRootView>
+          <SnackbarProvider>
+            <GestureHandlerRootView style={styles.main}>
+              <Stack.Navigator>
+                <Stack.Screen
+                  name="Main"
+                  component={NavBar}
+                  options={{headerShown: false}}
+                />
+                <Stack.Screen
+                  name="NoteEdit"
+                  component={NoteEditPage}
+                  options={{headerShown: false}}
+                />
+                <Stack.Screen
+                  name="ListEdit"
+                  component={ListEditPage}
+                  options={{headerShown: false}}
+                />
+                <Stack.Screen
+                  name="CalendarEvent"
+                  component={CalendarEvent}
+                  options={{headerShown: false}}
+                />
+              </Stack.Navigator>
+            </GestureHandlerRootView>
+          </SnackbarProvider>
         </PaperProvider>
       </Provider>
     </NavigationContainer>

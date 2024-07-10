@@ -20,10 +20,10 @@ export const FabNotesPageButton = ({showFolderModal, pageType}: Props) => {
       showFolderModal();
     }
     if (pageType === 'list') {
-      navigation.navigate('ListEdit', {});
+      navigation.navigate('ListEdit', {listId: null});
     }
     if (pageType === 'notes') {
-      navigation.navigate('NoteEdit', {});
+      navigation.navigate('NoteEdit', {noteId: null});
     }
   };
 

@@ -5,9 +5,12 @@ import {
 import {asyncStorageRepository} from '@/infrastructure/storageLayer/asyncStorageRepository';
 import {AsyncStorageNotesService} from '@/infrastructure/storageLayer/services/asyncStorageNotesService';
 import {AsyncStorageSettingsService} from './asyncStorageSettingsService';
+import {AsyncStorageCalendarServiceContract} from './contracts/asyncStorageCalendarService.contract';
+import {AsyncStorageCalendarService} from './asyncStorageCalendarService';
 
 let asyncStorageServiceInstance: AsyncStorageNotesServiceContract;
 let asyncStorageSettingsServiceInstance: AsyncStorageSettingsServiceContract;
+let asyncStorageCalendarServiceInstance: AsyncStorageCalendarServiceContract;
 
 function getAsyncStorageServiceInstance(): AsyncStorageNotesServiceContract {
   if (!asyncStorageServiceInstance) {
@@ -27,7 +30,18 @@ function getAsyncStorageSettingsServiceInstance(): AsyncStorageSettingsServiceCo
   return asyncStorageSettingsServiceInstance;
 }
 
+function getAsyncStorageCalendarServiceInstance(): AsyncStorageCalendarServiceContract {
+  if (!asyncStorageCalendarServiceInstance) {
+    asyncStorageCalendarServiceInstance = new AsyncStorageCalendarService(
+      asyncStorageRepository,
+    );
+  }
+  return asyncStorageCalendarServiceInstance;
+}
+
 export const asyncStorageNotesService: AsyncStorageNotesServiceContract =
   getAsyncStorageServiceInstance();
 export const asyncStorageSettingsService: AsyncStorageSettingsServiceContract =
   getAsyncStorageSettingsServiceInstance();
+export const asyncStorageCalendarService: AsyncStorageCalendarServiceContract =
+  getAsyncStorageCalendarServiceInstance();

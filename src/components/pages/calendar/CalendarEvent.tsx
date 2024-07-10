@@ -1,6 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
+  BackHandler,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -11,47 +12,43 @@ import {useTheme} from '@/assets/config/colors';
 import {ColorPicker} from '@/components/modals/ui/ColorPicker';
 import {getUuid, hex2rgba} from '@/core/utils';
 import {ListEditMenu} from '@/components/ui/menu/ListEditMenu';
-import {
-  Divider,
-  RadioButton,
-  Button,
-  Text,
-  Icon,
-  Checkbox,
-  TextInput,
-} from 'react-native-paper';
+import {Button, Text, Icon, Checkbox, TextInput} from 'react-native-paper';
 // import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {EditableText} from '@/components/ui/list/EditableText';
 import moment from 'moment';
-import {CalendarEventType, CalendarTaskType} from '@/core/interfaces';
-import DateTimePicker, {
+import {CalendarEventTaskType, ScreenNavigationProp} from '@/core/interfaces';
+import {
   DateTimePickerAndroid,
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker';
-import RNDateTimePicker from '@react-native-community/datetimepicker';
+import {calendarService} from '@/core/services';
+import {AcceptDialog} from '@/components/modals/common/AcceptDialog';
+import {useNavigation} from '@react-navigation/native';
 
 export function CalendarEvent({route}: {route: any}) {
   const {colors} = useTheme();
 
+  const navigation: ScreenNavigationProp = useNavigation();
   // const [eventType, setEventType] = useState<CalendarEventType>('task');
 
   const [showColorPicker, setShowColorPicker] = useState(false);
-  const [event, setEvent] = useState<CalendarTaskType>({
+  const [dialogVisible, setDialogVisible] = useState(false);
+  const [event, setEvent] = useState<CalendarEventTaskType>({
     title: '',
+    created: moment().format(),
     startDate: moment().format(),
     endDate: moment().endOf('day').format(),
     type: 'task',
     color: colors.lime,
     info: '',
     id: getUuid(),
+    updated: null,
     dateType: 'day',
   });
 
-  const [date, setDate] = useState(new Date());
+  const [date] = useState(new Date());
 
   const onChange = (_: DateTimePickerEvent, selectedDate?: Date) => {
-    console.log(selectedDate);
-
     setEvent({
       ...event,
       startDate: moment(selectedDate).startOf('day').format('YYYY-MM-DD HH:mm'),
@@ -61,6 +58,37 @@ export function CalendarEvent({route}: {route: any}) {
           : moment(selectedDate).format('YYYY-MM-DD HH:mm'),
     });
   };
+
+  const saveEvent = () => {
+    if (!event.title) {
+      event.title = moment().format('YYYY-MM-DD');
+    }
+    if (route.params.noteId) {
+      calendarService.updateEvent({
+        ...event,
+        updated: moment().format(),
+      });
+    } else {
+      calendarService.addCalendarEvent({...event});
+    }
+
+    navigation.goBack();
+  };
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        setDialogVisible(!dialogVisible);
+
+        return true;
+      },
+    );
+
+    return () => {
+      backHandler.remove();
+    };
+  }, [dialogVisible]);
 
   const showMode = (currentMode: any | undefined) => {
     DateTimePickerAndroid.open({
@@ -85,135 +113,140 @@ export function CalendarEvent({route}: {route: any}) {
   };
 
   return (
-    <SafeAreaView
-      style={[styles.container, {backgroundColor: colors.background}]}>
+    <>
+      <AcceptDialog
+        visible={dialogVisible}
+        apply={() => navigation.navigate('Calendar')}
+        cancel={() => setDialogVisible(false)}
+        content={'Задача не сохранена, вы точно хотите выйти?'}
+      />
       <ColorPicker
         visible={showColorPicker}
         hideModal={() => setShowColorPicker(false)}
         changeColor={changeColor}
       />
-      <View
-        style={[
-          styles.view,
-          // {
-          //   backgroundColor: hex2rgba(
-          //     event.color ? event.color : colors.primary,
-          //     0.04,
-          //   ),
-          // },
-        ]}>
+      <SafeAreaView
+        style={[styles.container, {backgroundColor: colors.background}]}>
         <View
           style={[
-            styles.content,
-            {
-              backgroundColor: hex2rgba(
-                event.color ? event.color : colors.primary,
-                0.05,
-              ),
-            },
+            styles.view,
+            // {
+            //   backgroundColor: hex2rgba(
+            //     event.color ? event.color : colors.primary,
+            //     0.04,
+            //   ),
+            // },
           ]}>
-          <EditableText
-            style={styles.header}
-            label={event.title}
-            customText="Введите название задачи"
-            isChecked={false}
-            saveText={val => {
-              setEvent({...event, title: val});
-            }}
-          />
-          <TouchableOpacity onPress={() => setShowColorPicker(true)}>
-            <View
-              style={[
-                {
-                  backgroundColor: event.color ? event.color : colors.primary,
-                },
-                styles.colorPicker,
-              ]}
-            />
-          </TouchableOpacity>
-
-          {/* <View>
-            <Icon
-              name="share-variant"
-              size={24}
-              color={colors.greyIconColor}
-              style={styles.ml10}
-              onPress={() => {}}
-            />
-          </View> */}
-
-          <ListEditMenu deleteList={() => {}} saveList={() => {}} />
-        </View>
-        <ScrollView>
           <View
-            style={{
-              display: 'flex',
-              margin: 20,
-              marginTop: 40,
-              marginBottom: 10,
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}>
-            <Icon source="clock-outline" size={24} />
+            style={[
+              styles.content,
+              {
+                backgroundColor: hex2rgba(
+                  event.color ? event.color : colors.primary,
+                  0.05,
+                ),
+              },
+            ]}>
+            <EditableText
+              style={styles.header}
+              label={event.title}
+              customText="Введите название задачи"
+              isChecked={false}
+              saveText={val => {
+                setEvent({...event, title: val});
+              }}
+            />
+            <TouchableOpacity onPress={() => setShowColorPicker(true)}>
+              <View
+                style={[
+                  {
+                    backgroundColor: event.color ? event.color : colors.primary,
+                  },
+                  styles.colorPicker,
+                ]}
+              />
+            </TouchableOpacity>
+
+            <ListEditMenu deleteList={() => {}} saveList={saveEvent} />
+          </View>
+          <ScrollView>
             <View
               style={{
                 display: 'flex',
-                width: '90%',
-                marginLeft: 10,
-                justifyContent: 'space-between',
+                margin: 20,
+                marginTop: 40,
+                marginBottom: 10,
+                flexDirection: 'row',
                 alignItems: 'center',
+              }}>
+              <Icon source="clock-outline" size={24} />
+              <View
+                style={{
+                  display: 'flex',
+                  width: '90%',
+                  marginLeft: 10,
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                }}>
+                <Text>Весь день: </Text>
+                <Checkbox
+                  status={event.dateType === 'day' ? 'checked' : 'unchecked'}
+                  color={event.color}
+                  onPress={() =>
+                    setEvent({
+                      ...event,
+                      dateType: event.dateType === 'day' ? 'time' : 'day',
+                    })
+                  }
+                />
+              </View>
+            </View>
+            <View
+              style={{
+                display: 'flex',
+                width: '100%',
+                margin: 20,
+                marginTop: 10,
                 flexDirection: 'row',
               }}>
-              <Text>Весь день: </Text>
-              <Checkbox
-                status={event.dateType === 'day' ? 'checked' : 'unchecked'}
-                color={event.color}
-                onPress={() =>
-                  setEvent({
-                    ...event,
-                    dateType: event.dateType === 'day' ? 'time' : 'day',
-                  })
-                }
-              />
-            </View>
-          </View>
-          <View
-            style={{
-              display: 'flex',
-              width: '100%',
-              margin: 20,
-              marginTop: 10,
-              flexDirection: 'row',
-            }}>
-            <Button
-              style={{width: '45%'}}
-              textColor={event.color}
-              onPress={showDatepicker}>
-              {moment(event.startDate).locale('ru').format('ll')}
-            </Button>
-            {event.dateType === 'time' && (
               <Button
                 style={{width: '45%'}}
                 textColor={event.color}
-                onPress={showTimepicker}>
-                {moment(event.endDate).locale('ru').format('HH:mm')}
+                onPress={showDatepicker}>
+                {moment(event.startDate).locale('ru').format('ll')}
               </Button>
-            )}
-          </View>
-          <Divider />
-          <TextInput
-            label="Заметка"
-            value={event.info}
-            onChangeText={text => setEvent({...event, info: text})}
-            selectionColor={event.color}
-            underlineColor={event.color}
-            multiline
-            activeOutlineColor={event.color}
-            contentStyle={{backgroundColor: 'white', padding: 5}}
-          />
-        </ScrollView>
-      </View>
-    </SafeAreaView>
+              {event.dateType === 'time' && (
+                <Button
+                  style={{width: '45%'}}
+                  textColor={event.color}
+                  onPress={showTimepicker}>
+                  {moment(event.endDate).locale('ru').format('HH:mm')}
+                </Button>
+              )}
+            </View>
+            {/* <Divider /> */}
+            <TextInput
+              placeholder="Текст задачи:"
+              value={event.info}
+              onChangeText={text => setEvent({...event, info: text})}
+              selectionColor={event.color}
+              underlineColor={event.color}
+              activeOutlineColor={event.color}
+              activeUnderlineColor={event.color}
+              outlineColor={event.color}
+              multiline
+              style={{
+                backgroundColor: colors.background,
+              }}
+              contentStyle={{
+                padding: 5,
+              }}
+            />
+          </ScrollView>
+        </View>
+      </SafeAreaView>
+    </>
   );
 }
 

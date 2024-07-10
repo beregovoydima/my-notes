@@ -5,9 +5,19 @@ import {CalendarItem} from '@/components/calendar/CalendarItem';
 import {FabCalendarButton} from '@/components/ui/fab/FabCalendarButton';
 import {View} from 'react-native';
 import {Appbar} from 'react-native-paper';
+import {calendarService} from '@/core/services';
 
 export function CalendarPage() {
   const {colors} = useTheme();
+
+  const getEventCollection = async () => {
+    const response = await calendarService.storageGetCalendarEventCollection();
+    if (response) {
+      calendarService.storeSetCalendarEventCollection(response);
+    }
+  };
+
+  getEventCollection();
 
   return (
     <SafeAreaView style={styles.page}>

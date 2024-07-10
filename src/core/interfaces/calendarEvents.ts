@@ -2,7 +2,7 @@ export type CalendarEventType = 'task' | 'meet';
 
 export type CalnedarEventTimeType = 'day' | 'time';
 
-export type CalendarTaskType = {
+export type CalendarEventTaskType = {
   title: string;
   startDate: string;
   endDate: string;
@@ -10,5 +10,7 @@ export type CalendarTaskType = {
   type: CalendarEventType;
   color: string;
   info: string;
+  created: Date | string;
+  updated: Date | string | null;
   id: string;
 };

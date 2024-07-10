@@ -1,19 +1,24 @@
 import {lightColors, useTheme} from '@/assets/config/colors';
 import {ScreenNavigationProp} from '@/core/interfaces';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet} from 'react-native';
 import {FAB, Portal} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export const FabCalendarButton = () => {
   const [state, setState] = useState({open: false});
-  const [fabVisible] = useState(true);
   const navigation: ScreenNavigationProp = useNavigation();
   const onStateChange = ({open}: {open: boolean}) => setState({open});
 
   const {open} = state;
   const isFocused = useIsFocused();
+
+  useEffect(() => {
+    if (!isFocused) {
+      setState({open: false});
+    }
+  }, [isFocused]);
 
   const {colors} = useTheme();
 
@@ -25,7 +30,7 @@ export const FabCalendarButton = () => {
     <Portal>
       <FAB.Group
         open={open}
-        visible={fabVisible && isFocused}
+        visible={isFocused}
         icon={open ? 'close' : 'plus'}
         backdropColor={colors.background}
         variant="secondary"

@@ -65,10 +65,8 @@ export function CreateEvent() {
           <Switch value={isAllDay} onValueChange={setIsAllDay} />
         </View>
         <View>
-          <Button onPress={showDatepicker} title="Показать выбор даты">
-            {'Показать выбор даты'}
-          </Button>
-          <Button onPress={showTimepicker} title="Показать выбор времени" />
+          <Button onPress={showDatepicker}>{'Показать выбор даты'}</Button>
+          <Button onPress={showTimepicker}>{'Показать выбор времени'}</Button>
           <Text>Выбрано: {moment(date).format('LLLL')}</Text>
         </View>
         {showDatePicker && (

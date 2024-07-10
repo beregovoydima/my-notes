@@ -1,6 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import {useTheme} from '@/assets/config/colors';
-import {getUuid, hex2rgba} from '@/core/utils';
+import {calendarService} from '@/core/services';
+import {hex2rgba} from '@/core/utils';
 import moment from 'moment';
 import React, {Fragment, useCallback, useMemo, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
@@ -8,6 +9,7 @@ import {Calendar, LocaleConfig} from 'react-native-calendars';
 import {ScrollView} from 'react-native-gesture-handler';
 import {Avatar, Card, Chip, Icon, Text} from 'react-native-paper';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {useSelector} from 'react-redux';
 
 export const CalendarItem = () => {
   const {colors} = useTheme();
@@ -15,66 +17,13 @@ export const CalendarItem = () => {
   const [selected, setSelected] = useState(INITIAL_DATE);
   const [currentMonth, setCurrentMonth] = useState(INITIAL_DATE);
 
+  const calendarEvents = useSelector(() =>
+    calendarService.storeGetCalendarEventCollection(),
+  );
+
   const onDayPress = useCallback((day: any) => {
     setSelected(day.dateString);
   }, []);
-
-  const customEvents = [
-    {
-      title: 'Задача',
-      startDate: moment().format(),
-      endDate: moment().endOf('day').format(),
-      type: 'task',
-      color: colors.lime,
-      info: '',
-      id: getUuid(),
-    },
-    {
-      title: 'Задача',
-      startDate: moment().format(),
-      endDate: moment().endOf('day').format(),
-      type: 'task',
-      color: null,
-      info: '',
-      id: getUuid(),
-    },
-    {
-      title: 'Test',
-      startDate: moment().format(),
-      endDate: moment().endOf('day').format(),
-      type: 'task',
-      color: null,
-      info: '',
-      id: getUuid(),
-    },
-    {
-      title: 'Test',
-      startDate: moment().format(),
-      endDate: moment().endOf('day').format(),
-      type: 'task',
-      color: null,
-      info: '',
-      id: getUuid(),
-    },
-    {
-      title: 'Встреча',
-      startDate: moment().format(),
-      endDate: moment().endOf('day').format(),
-      type: 'meet',
-      color: colors.lime,
-      info: '',
-      id: getUuid(),
-    },
-    {
-      title: 'Test',
-      startDate: moment().format(),
-      endDate: moment().endOf('day').format(),
-      type: 'meet',
-      color: null,
-      info: '',
-      id: getUuid(),
-    },
-  ];
 
   // const events = {
   //   '2024-02-20': {
@@ -128,65 +77,110 @@ export const CalendarItem = () => {
   // };
 
   const marked = useMemo(() => {
+    if (calendarEvents.length) {
+      return calendarEvents.reduce(
+        (
+          acc: {
+            [key: string]: {
+              dots?: any[];
+              selected?: boolean;
+              selectedColor?: string;
+              disableTouchEvent?: boolean;
+            };
+          },
+          cur,
+        ) => {
+          const date = moment(cur.endDate).format('YYYY-MM-DD');
+          if (acc[date] && acc[date].dots) {
+            acc[date].dots.push({
+              key: cur.id,
+              color: hex2rgba(cur.color),
+              selectedDotColor: colors.whiteColor,
+            });
+          } else {
+            acc[date] = {
+              dots: [
+                {
+                  key: cur.title,
+                  color: hex2rgba(cur.color),
+                  selectedDotColor: colors.whiteColor,
+                },
+              ],
+            };
+          }
+          acc[selected] = {
+            selected: true,
+            selectedColor: hex2rgba(colors.primary, 0.85),
+            disableTouchEvent: true,
+          };
+
+          return acc;
+        },
+        {},
+      );
+    }
+
     return {
-      '2024-02-20': {
-        dots: [
-          {
-            key: 'vacation',
-            color: hex2rgba(colors.primary, 0.85),
-            selectedDotColor: colors.whiteColor,
-          },
-          {
-            key: 'massage',
-            color: hex2rgba(colors.primary, 0.85),
-            selectedDotColor: colors.whiteColor,
-          },
-          {
-            key: 'workout',
-            color: hex2rgba(colors.primary, 0.85),
-            selectedDotColor: colors.whiteColor,
-          },
-        ],
-      },
-      '2024-02-21': {
-        dots: [
-          {
-            key: 'vacation',
-            color: hex2rgba(colors.primary, 0.85),
-            selectedDotColor: colors.whiteColor,
-          },
-          {
-            key: 'massage',
-            color: hex2rgba(colors.primary, 0.85),
-            selectedDotColor: colors.whiteColor,
-          },
-        ],
-      },
-      '2024-02-22': {
-        dots: [
-          {
-            key: 'vacation',
-            color: hex2rgba(colors.primary, 0.85),
-            selectedDotColor: colors.whiteColor,
-          },
-          {
-            key: 'workout',
-            color: hex2rgba(colors.primary, 0.85),
-            selectedDotColor: colors.whiteColor,
-          },
-        ],
-      },
       [selected]: {
         selected: true,
         selectedColor: hex2rgba(colors.primary, 0.85),
         disableTouchEvent: true,
       },
     };
-  }, [colors.primary, colors.whiteColor, selected]);
-
-  // const selectedDayEvents = useMemo(() => {
-  //   return events[selected] || [];
-  // }, [events, selected]);
+    //   '2024-02-20': {
+    //     dots: [
+    //       {
+    //         key: 'vacation',
+    //         color: hex2rgba(colors.primary, 0.85),
+    //         selectedDotColor: colors.whiteColor,
+    //       },
+    //       {
+    //         key: 'massage',
+    //         color: hex2rgba(colors.primary, 0.85),
+    //         selectedDotColor: colors.whiteColor,
+    //       },
+    //       {
+    //         key: 'workout',
+    //         color: hex2rgba(colors.primary, 0.85),
+    //         selectedDotColor: colors.whiteColor,
+    //       },
+    //     ],
+    //   },
+    //   '2024-02-21': {
+    //     dots: [
+    //       {
+    //         key: 'vacation',
+    //         color: hex2rgba(colors.primary, 0.85),
+    //         selectedDotColor: colors.whiteColor,
+    //       },
+    //       {
+    //         key: 'massage',
+    //         color: hex2rgba(colors.primary, 0.85),
+    //         selectedDotColor: colors.whiteColor,
+    //       },
+    //     ],
+    //   },
+    //   '2024-02-22': {
+    //     dots: [
+    //       {
+    //         key: 'vacation',
+    //         color: hex2rgba(colors.primary, 0.85),
+    //         selectedDotColor: colors.whiteColor,
+    //       },
+    //       {
+    //         key: 'workout',
+    //         color: hex2rgba(colors.primary, 0.85),
+    //         selectedDotColor: colors.whiteColor,
+    //       },
+    //     ],
+    //   },
+    //   [selected]: {
+    //     selected: true,
+    //     selectedColor: hex2rgba(colors.primary, 0.85),
+    //     disableTouchEvent: true,
+    //   },
+    // };
+  }, [calendarEvents, colors.primary, colors.whiteColor, selected]);
 
   const leftContent = (props: {size: number}, item: any) => {
     return (
@@ -265,7 +259,7 @@ export const CalendarItem = () => {
         current={currentMonth}
         style={styles.calendar}
         renderArrow={renderArrow}
-        onVisibleMonthsChange={months => {
+        onVisibleMonthsChange={(months: any) => {
           console.log('now these months are visible', months);
         }}
         theme={{
@@ -304,7 +298,7 @@ export const CalendarItem = () => {
         </Chip>
       </View>
       <ScrollView style={{paddingBottom: 10}}>
-        {customEvents.map(el => {
+        {calendarEvents.map(el => {
           return (
             <Card
               key={el.id}
@@ -337,14 +331,14 @@ export const CalendarItem = () => {
                       style={{
                         color: colors.greyColor,
                       }}>
-                      {moment().format('YYYY-MM-DD HH:mm')}
+                      {moment(el.startDate).format('YYYY-MM-DD HH:mm')}
                     </Text>
                     <Text
                       variant="labelSmall"
                       style={{
                         color: colors.greyColor,
                       }}>
-                      {moment().format('YYYY-MM-DD HH:mm')}
+                      {moment(el.endDate).format('YYYY-MM-DD HH:mm')}
                     </Text>
                   </View>
                   {/* <Text

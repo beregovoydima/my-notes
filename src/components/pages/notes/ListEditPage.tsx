@@ -221,7 +221,7 @@ export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
           <EditableText
             style={styles.header}
             label={list.title}
-            customText="Введите название заметки"
+            customText="Введите название списка"
             isChecked={
               !!list.items.length && list.items.every(el => el.isChecked)
             }

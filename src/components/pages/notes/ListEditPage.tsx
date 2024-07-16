@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import {EditableText} from '@/components/ui/list/EditableText';
 import {
   ListEditScreenRouteProp,
@@ -19,7 +20,7 @@ import {
   AppState,
   AppStateStatus,
 } from 'react-native';
-import {Chip, Divider} from 'react-native-paper';
+import {Button, Chip, Divider} from 'react-native-paper';
 import {useTheme} from '@/assets/config/colors';
 import {ListModalItem} from '@/components/notes/list/ListModalItem';
 import {useNavigation} from '@react-navigation/native';
@@ -27,6 +28,7 @@ import {getUuid, handleShare, hex2rgba, parseList} from '@/core/utils';
 import {useSelector} from 'react-redux';
 import {ColorPicker} from '@/components/modals/ui/ColorPicker';
 import {ListEditMenu} from '@/components/ui/menu/ListEditMenu';
+import {AddFolderModal} from '@/components/modals/notes/AddFolderModal';
 
 export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
   const {colors} = useTheme();
@@ -44,6 +46,7 @@ export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
     items: [],
   });
   const folders = useSelector(() => notesService.storeGetFoldersCollection());
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const response = notesService.storeGetListCollection();
@@ -65,6 +68,9 @@ export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
   };
 
   const save = useCallback(() => {
+    if (!list.title && !list.items.length) {
+      return;
+    }
     if (route.params.listId) {
       const listCollection = [...notesService.storeGetListCollection()].map(
         el => {
@@ -198,6 +204,7 @@ export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
         hideModal={() => setShowColorPicker(false)}
         changeColor={changeColor}
       />
+      <AddFolderModal visible={visible} hideModal={() => setVisible(false)} />
       <View
         style={[
           styles.view,
@@ -256,21 +263,44 @@ export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
         <ScrollView>
           <ListModalItem list={list} changeList={val => changeList(val)} />
         </ScrollView>
-        <ScrollView horizontal style={[styles.chips]}>
-          {folders.map(el => {
-            return (
-              <Chip
-                key={el.id}
-                mode="outlined"
-                selected={el.id === list.folder?.id ? true : false}
-                // eslint-disable-next-line react-native/no-inline-styles
-                style={{marginRight: 4, backgroundColor: colors.whiteColor}}
-                onPress={() => handleFolderSet(el)}>
-                {el.label}
-              </Chip>
-            );
-          })}
-        </ScrollView>
+        <View
+          style={{
+            backgroundColor: hex2rgba(
+              list.color ? list.color : colors.primary,
+              0.04,
+            ),
+            padding: 4,
+          }}>
+          <ScrollView horizontal>
+            <View style={styles.chipsList}>
+              {folders.map(el => {
+                return (
+                  <Chip
+                    key={el.id}
+                    mode="outlined"
+                    selected={el.id === list.folder?.id ? true : false}
+                    style={{
+                      marginRight: 4,
+                      backgroundColor: colors.whiteColor,
+                      height: 34,
+                    }}
+                    onPress={() => handleFolderSet(el)}>
+                    {el.label}
+                  </Chip>
+                );
+              })}
+              <View>
+                <Button mode="text" onPress={() => setVisible(true)}>
+                  {folders.length === 0 ? (
+                    'Создать папку'
+                  ) : (
+                    <Icon name="plus" size={16} />
+                  )}
+                </Button>
+              </View>
+            </View>
+          </ScrollView>
+        </View>
         <Divider />
       </View>
     </SafeAreaView>
@@ -285,6 +315,13 @@ const styles = StyleSheet.create({
   view: {
     display: 'flex',
     flex: 1,
+  },
+  addBtn: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingRight: 5,
+    paddingLeft: 5,
   },
   content: {
     minHeight: 60,
@@ -315,5 +352,11 @@ const styles = StyleSheet.create({
     minHeight: 40,
     padding: 4,
     marginBottom: 10,
+  },
+  chipsList: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    maxHeight: 40,
   },
 });

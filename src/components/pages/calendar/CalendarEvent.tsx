@@ -10,8 +10,7 @@ import {
 } from 'react-native';
 import {useTheme} from '@/assets/config/colors';
 import {ColorPicker} from '@/components/modals/ui/ColorPicker';
-import {getUuid, hex2rgba} from '@/core/utils';
-import {ListEditMenu} from '@/components/ui/menu/ListEditMenu';
+import {getUuid, hex2rgba, ruMomentLocale} from '@/core/utils';
 import {Button, Text, Icon, Checkbox, TextInput} from 'react-native-paper';
 // import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {EditableText} from '@/components/ui/list/EditableText';
@@ -24,6 +23,7 @@ import {
 import {calendarService} from '@/core/services';
 import {AcceptDialog} from '@/components/modals/common/AcceptDialog';
 import {useNavigation} from '@react-navigation/native';
+import {CalendarEventEditMenu} from '@/components/ui/menu/CalendarEventMenu';
 
 export function CalendarEvent({route}: {route: any}) {
   const {colors} = useTheme();
@@ -45,8 +45,33 @@ export function CalendarEvent({route}: {route: any}) {
     updated: null,
     dateType: 'day',
   });
-
   const [date] = useState(new Date());
+
+  const setEventById = (id: string) => {
+    const data = calendarService.getEventById(id);
+
+    if (data) {
+      setEvent(data);
+    }
+  };
+
+  const deleteEvent = () => {
+    calendarService.deleteCalendarEvent(event.id);
+    navigation.goBack();
+  };
+
+  useEffect(() => {
+    if (route.params.eventId) {
+      setEventById(route.params.eventId);
+    }
+    if (route.params.selectedDate && !route.params.eventId) {
+      setEvent({
+        ...event,
+        startDate: moment(route.params.selectedDate).format(),
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onChange = (_: DateTimePickerEvent, selectedDate?: Date) => {
     setEvent({
@@ -63,7 +88,7 @@ export function CalendarEvent({route}: {route: any}) {
     if (!event.title) {
       event.title = moment().format('YYYY-MM-DD');
     }
-    if (route.params.noteId) {
+    if (route.params.eventId) {
       calendarService.updateEvent({
         ...event,
         updated: moment().format(),
@@ -111,6 +136,8 @@ export function CalendarEvent({route}: {route: any}) {
     setEvent({...event, color: color});
     setShowColorPicker(false);
   };
+
+  moment.updateLocale('ru', ruMomentLocale);
 
   return (
     <>
@@ -167,7 +194,10 @@ export function CalendarEvent({route}: {route: any}) {
               />
             </TouchableOpacity>
 
-            <ListEditMenu deleteList={() => {}} saveList={saveEvent} />
+            <CalendarEventEditMenu
+              deleteEvent={deleteEvent}
+              saveEvent={saveEvent}
+            />
           </View>
           <ScrollView>
             <View
@@ -221,7 +251,7 @@ export function CalendarEvent({route}: {route: any}) {
                   style={{width: '45%'}}
                   textColor={event.color}
                   onPress={showTimepicker}>
-                  {moment(event.endDate).locale('ru').format('HH:mm')}
+                  {moment(event.endDate).format('HH:mm')}
                 </Button>
               )}
             </View>

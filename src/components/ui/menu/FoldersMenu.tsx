@@ -50,8 +50,8 @@ export const FoldersMenu = memo(({editFolder, deleteFolder, folder}: Props) => {
         )}
 
         <Menu.Item onPress={() => changeFolder()} title="Редактировать" />
-        <Divider />
-        <Menu.Item onPress={() => {}} title="To do" />
+        {/* <Divider />
+        <Menu.Item onPress={() => {}} title="To do" /> */}
       </Menu>
     </View>
   );

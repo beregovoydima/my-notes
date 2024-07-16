@@ -55,4 +55,17 @@ export class CalendarService implements CalendarServiceContract {
   > {
     return await this.asyncStorageCalendarService.getCollectionEvents();
   }
+
+  public getEventById(id: string): CalendarEventTaskType | undefined {
+    const response = this.storeGetCalendarEventCollection();
+
+    return response.find(el => el.id === id);
+  }
+
+  public deleteCalendarEvent(id: string): void {
+    const response = this.storeGetCalendarEventCollection();
+    const filteredEvents = response.filter(el => el.id !== id);
+    this.storeSetCalendarEventCollection(filteredEvents);
+    this.storageSetCalendarEvent(filteredEvents);
+  }
 }

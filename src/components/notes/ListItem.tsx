@@ -87,6 +87,5 @@ const styles = StyleSheet.create({
   emptyText: {
     textAlign: 'center',
     marginTop: 8,
-    color: 'black',
   },
 });

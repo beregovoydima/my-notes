@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Text} from 'react-native';
+import {StyleSheet, Text} from 'react-native';
 import {notesService} from '@/core/services';
 import {FolderModal} from '@/components/modals/notes/FolderModal';
 import moment from 'moment';
@@ -110,8 +110,17 @@ export const FoldersItem = ({
         renderItem={({item}) => getFolderCard(item)}
         keyExtractor={keyExtractor}
         estimatedItemSize={113}
-        ListEmptyComponent={<Text>Список заметок пуст.</Text>}
+        ListEmptyComponent={
+          <Text style={styles.emptyText}>Список заметок пуст.</Text>
+        }
       />
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  emptyText: {
+    textAlign: 'center',
+    marginTop: 8,
+  },
+});

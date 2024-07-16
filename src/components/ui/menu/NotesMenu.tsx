@@ -43,8 +43,8 @@ export const NotesMenu = memo(({editNote, deleteNote, notes}: Props) => {
         />
         <Divider />
         <Menu.Item onPress={() => changeFolder()} title="Редактировать" />
-        <Divider />
-        <Menu.Item onPress={() => {}} title="To do" />
+        {/* <Divider />
+        <Menu.Item onPress={() => {}} title="To do" /> */}
       </Menu>
     </View>
   );

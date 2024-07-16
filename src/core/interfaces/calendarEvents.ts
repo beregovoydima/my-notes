@@ -14,3 +14,18 @@ export type CalendarEventTaskType = {
   updated: Date | string | null;
   id: string;
 };
+
+export type CalendarEventDotType = {
+  [key: string]: {
+    dots?: CalendarDotsType[];
+    selected?: boolean;
+    selectedColor?: string;
+    disableTouchEvent?: boolean;
+  };
+};
+
+export type CalendarDotsType = {
+  key: string;
+  color: string;
+  selectedDotColor: string;
+};

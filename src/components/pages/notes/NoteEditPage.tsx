@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import {EditableText} from '@/components/ui/list/EditableText';
 import {
   NoteEditScreenRouteProp,
@@ -30,12 +31,13 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Octicons from 'react-native-vector-icons/Octicons';
 import {useTheme} from '@/assets/config/colors';
-import {Chip, Divider} from 'react-native-paper';
+import {Button, Chip, Divider} from 'react-native-paper';
 import {useSelector} from 'react-redux';
 import {getUuid, handleShare, hex2rgba, parseNoteLabel} from '@/core/utils';
 import {ColorPicker} from '@/components/modals/ui/ColorPicker';
 import {NotesEditMenu} from '@/components/ui/menu/NotesEditMenu';
 import {useNavigation} from '@react-navigation/native';
+import {AddFolderModal} from '@/components/modals/notes/AddFolderModal';
 
 export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
   const navigation: ScreenNavigationProp = useNavigation();
@@ -57,6 +59,7 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
   const richTextRef = useRef<RichEditor | null>(null);
   const scroll = useRef<ScrollView | null>(null);
   const folders = useSelector(() => notesService.storeGetFoldersCollection());
+  const [visible, setVisible] = useState(false);
 
   const {colors} = useTheme();
 
@@ -73,6 +76,10 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
   };
 
   const backSave = useCallback(() => {
+    if (!note.title && !note.label) {
+      return false;
+    }
+
     if (!note.title) {
       note.title = moment().format('YYYY-MM-DD');
     }
@@ -279,6 +286,7 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
           ),
         },
       ]}>
+      <AddFolderModal visible={visible} hideModal={() => setVisible(false)} />
       <ColorPicker
         visible={showColorPicker}
         hideModal={() => setShowColorPicker(false)}
@@ -342,33 +350,45 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
         />
       </ScrollView>
 
-      <View>
-        <ScrollView
-          horizontal
-          style={[
-            styles.chips,
-            {
-              backgroundColor: hex2rgba(
-                note.color ? note.color : colors.primary,
-                0.04,
-              ),
-            },
-          ]}>
-          {folders.map(el => {
-            return (
-              <Chip
-                key={el.id}
-                mode="outlined"
-                selected={el.id === note.folder?.id ? true : false}
-                // eslint-disable-next-line react-native/no-inline-styles
-                style={{marginRight: 4, backgroundColor: colors.whiteColor}}
-                onPress={() => handleFolderSet(el)}>
-                {el.label}
-              </Chip>
-            );
-          })}
+      <View
+        style={{
+          backgroundColor: hex2rgba(
+            note.color ? note.color : colors.primary,
+            0.04,
+          ),
+          padding: 4,
+        }}>
+        <ScrollView horizontal>
+          <View style={styles.chips}>
+            {folders.map(el => {
+              return (
+                <Chip
+                  key={el.id}
+                  mode="outlined"
+                  selected={el.id === note.folder?.id ? true : false}
+                  style={{
+                    marginRight: 4,
+                    backgroundColor: colors.whiteColor,
+                    height: 34,
+                  }}
+                  onPress={() => handleFolderSet(el)}>
+                  {el.label}
+                </Chip>
+              );
+            })}
+            <View>
+              <Button mode="text" onPress={() => setVisible(true)}>
+                {folders.length === 0 ? (
+                  'Создать папку'
+                ) : (
+                  <Icon name="plus" size={16} />
+                )}
+              </Button>
+            </View>
+          </View>
         </ScrollView>
-
+      </View>
+      <View>
         <RichToolbar
           editor={richTextRef}
           actions={[
@@ -412,6 +432,13 @@ const styles = StyleSheet.create({
   view: {
     flex: 1,
   },
+  addBtn: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingRight: 5,
+    paddingLeft: 5,
+  },
   header: {
     fontSize: 20,
     fontWeight: '500',
@@ -435,9 +462,10 @@ const styles = StyleSheet.create({
     width: 8,
   },
   chips: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
     maxHeight: 40,
-    minHeight: 40,
-    padding: 4,
   },
   icon: {
     display: 'flex',

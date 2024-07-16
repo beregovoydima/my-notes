@@ -4,7 +4,11 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 export type RootStackParamList = {
   NoteEdit: {noteId?: null | string};
   ListEdit: {listId?: null | string};
-  CalendarEvent: {type?: 'meet' | 'task'; eventId?: null | string};
+  CalendarEvent: {
+    type?: 'meet' | 'task';
+    eventId?: null | string;
+    selectedDate?: string;
+  };
   Notes: undefined;
   Calendar: undefined;
   Tasks: undefined;

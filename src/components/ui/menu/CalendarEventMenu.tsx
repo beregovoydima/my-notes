@@ -4,26 +4,16 @@ import {StyleSheet, View} from 'react-native';
 import {Divider, IconButton, Menu} from 'react-native-paper';
 
 interface Props {
-  editList: (id: string) => void;
-  deleteList: (id: string) => void;
-  listId: string;
+  deleteEvent: () => void;
+  saveEvent: () => void;
 }
 
-export const ListMenu = memo(({editList, deleteList, listId}: Props) => {
+export const CalendarEventEditMenu = memo(({deleteEvent, saveEvent}: Props) => {
   const {colors} = useTheme();
   const [visible, setVisible] = useState(false);
 
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
-
-  const changeFolder = () => {
-    closeMenu();
-    editList(listId);
-  };
-
-  const delFolder = () => {
-    deleteList(listId);
-  };
 
   return (
     <View>
@@ -33,23 +23,25 @@ export const ListMenu = memo(({editList, deleteList, listId}: Props) => {
         contentStyle={[{backgroundColor: colors.whiteColor}, styles.content]}
         anchor={
           <IconButton
-            style={styles.icon}
-            size={26}
+            size={24}
             icon="dots-vertical"
-            iconColor={colors.greyColor}
+            iconColor={colors.greyIconColor}
             onPress={openMenu}
           />
         }>
         <Menu.Item
           onPress={() => {
-            delFolder();
+            saveEvent();
+          }}
+          title="Сохранить"
+        />
+        <Divider />
+        <Menu.Item
+          onPress={() => {
+            deleteEvent();
           }}
           title="Удалить"
         />
-        <Divider />
-        <Menu.Item onPress={() => changeFolder()} title="Редактировать" />
-        {/* <Divider />
-        <Menu.Item onPress={() => {}} title="To do" /> */}
       </Menu>
     </View>
   );
@@ -59,8 +51,5 @@ const styles = StyleSheet.create({
   content: {
     top: 16,
     right: 16,
-  },
-  icon: {
-    margin: 0,
   },
 });

@@ -20,7 +20,7 @@ import {
   DateTimePickerAndroid,
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker';
-import {calendarService} from '@/core/services';
+import {calendarService, notificationService} from '@/core/services';
 import {AcceptDialog} from '@/components/modals/common/AcceptDialog';
 import {useNavigation} from '@react-navigation/native';
 import {CalendarEventEditMenu} from '@/components/ui/menu/CalendarEventMenu';
@@ -96,6 +96,16 @@ export function CalendarEvent({route}: {route: any}) {
     } else {
       calendarService.addCalendarEvent({...event});
     }
+
+    notificationService.sendSheduleNotification({
+      title: event.title,
+      message: event.info,
+      date:
+        event.dateType === 'day'
+          ? moment(event.startDate).subtract(12, 'hour').toDate()
+          : moment(event.startDate).subtract(2, 'hour').toDate(),
+      id: event.id,
+    });
 
     navigation.goBack();
   };
@@ -244,7 +254,7 @@ export function CalendarEvent({route}: {route: any}) {
                 style={{width: '45%'}}
                 textColor={event.color}
                 onPress={showDatepicker}>
-                {moment(event.startDate).locale('ru').format('ll')}
+                {moment(event.startDate).format('ll')}
               </Button>
               {event.dateType === 'time' && (
                 <Button

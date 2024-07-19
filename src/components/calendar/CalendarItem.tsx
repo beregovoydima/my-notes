@@ -41,13 +41,15 @@ export const CalendarItem = () => {
   const marked = useMemo(() => {
     if (calendarEvents.length) {
       return calendarEvents.reduce((acc: CalendarEventDotType, cur) => {
-        const date = moment(cur.endDate).format('YYYY-MM-DD');
+        const date = moment(cur.startDate).format('YYYY-MM-DD');
         if (acc[date] && acc[date].dots) {
-          acc[date].dots.push({
-            key: cur.id,
-            color: hex2rgba(cur.color),
-            selectedDotColor: colors.whiteColor,
-          });
+          if (acc[date].dots.length < 2) {
+            acc[date].dots.push({
+              key: cur.id,
+              color: hex2rgba(cur.color),
+              selectedDotColor: colors.whiteColor,
+            });
+          }
         } else {
           acc[date] = {
             dots: [

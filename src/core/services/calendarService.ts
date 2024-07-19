@@ -2,7 +2,6 @@ import {CalendarEventTaskType} from '../interfaces';
 import {CalendarServiceContract} from '../contracts/calendarService.contract';
 import {AsyncStorageCalendarServiceContract} from '@/infrastructure/storageLayer/services/contracts/asyncStorageCalendarService.contract';
 import {CalendarStoreServiceContract} from '@/infrastructure/storeLayer/services/contracts/calendarStoreService.contract';
-
 export class CalendarService implements CalendarServiceContract {
   constructor(
     private readonly asyncStorageCalendarService: AsyncStorageCalendarServiceContract,

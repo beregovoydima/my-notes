@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {PaperProvider} from 'react-native-paper';
 import {NavigationContainer} from '@react-navigation/native';
 import {lightTheme} from './src/assets/config/colors';
@@ -12,22 +12,16 @@ import store from './src/framework/store/store';
 import {NavBar} from './src/components/navigation/Navbar';
 import {CalendarEvent} from './src/components/pages/calendar/CalendarEvent';
 import {SnackbarProvider} from './src/components/ui/snackbar/Snackbar'; // путь к вашему контексту
-// type HomeScreenProps = NativeStackScreenProps<any, 'Home'>;
-
-// const HomeScreen: React.FC<HomeScreenProps> = props => {
-//   console.log(props);
-
-//   return (
-//     <SafeAreaView>
-//       <Text>qweqweqwe</Text>
-//     </SafeAreaView>
-//   );
-// };
+import {notificationService} from './src/core/services';
 
 const Stack = createNativeStackNavigator();
 
 function App() {
   const isDarkMode = Appearance.getColorScheme() === 'dark';
+
+  useEffect(() => {
+    notificationService.existCalendarChanelChanel();
+  }, []);
 
   return (
     <NavigationContainer>

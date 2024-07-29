@@ -1,10 +1,10 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {SafeAreaView, StyleSheet} from 'react-native';
 import {useTheme} from '@/assets/config/colors';
 import {CalendarItem} from '@/components/calendar/CalendarItem';
 import {View} from 'react-native';
-import {Appbar} from 'react-native-paper';
-import {calendarService} from '@/core/services';
+import {Appbar, Button, Dialog, Portal, Text} from 'react-native-paper';
+import {calendarService, notificationService} from '@/core/services';
 
 export function CalendarPage() {
   const {colors} = useTheme();
@@ -18,12 +18,28 @@ export function CalendarPage() {
 
   getEventCollection();
 
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    notificationService.existCalendarChanel();
+  }, []);
+
   return (
     <SafeAreaView style={styles.page}>
+      <Portal>
+        <Dialog visible={visible} onDismiss={() => {}}>
+          <Dialog.Content>
+            <Text variant="titleSmall">{'Отменить?'}</Text>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={() => setVisible(false)}>Выйти</Button>
+            <Button onPress={() => {}}>Продолжить</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
       <Appbar.Header
         style={[styles.header, {backgroundColor: colors.background}]}>
         <Appbar.Content title={'Календарь'} />
-        <Appbar.Action icon="magnify" onPress={() => {}} />
+        <Appbar.Action icon="magnify" />
       </Appbar.Header>
       <View style={[styles.container, {backgroundColor: colors.background}]}>
         <CalendarItem />

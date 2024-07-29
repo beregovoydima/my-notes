@@ -1,5 +1,7 @@
+import {PermissionStatus} from 'react-native-permissions';
+
 export interface NotificationServiceContract {
-  existCalendarChanelChanel(): void;
+  existCalendarChanel(): void;
   sendLocalNotification(info: {title: string; message: string}): void;
   sendSheduleNotification(info: {
     title: string;
@@ -7,4 +9,6 @@ export interface NotificationServiceContract {
     date: Date;
     id: string;
   }): void;
+  requestNotificationPermission(): Promise<PermissionStatus | undefined>;
+  cancelSheduleNotifications(notificationIds: string[]): void;
 }

@@ -81,7 +81,7 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
     }
 
     if (!note.title) {
-      note.title = moment().format('YYYY-MM-DD');
+      note.title = '(Без названия)';
     }
     if (route.params.noteId) {
       notesService.updateNote({

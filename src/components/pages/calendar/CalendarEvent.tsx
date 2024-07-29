@@ -10,8 +10,15 @@ import {
 } from 'react-native';
 import {useTheme} from '@/assets/config/colors';
 import {ColorPicker} from '@/components/modals/ui/ColorPicker';
-import {getUuid, hex2rgba, ruMomentLocale} from '@/core/utils';
-import {Button, Text, Icon, Checkbox, TextInput} from 'react-native-paper';
+import {getUuid, hex2rgba} from '@/core/utils';
+import {
+  Button,
+  Text,
+  Icon,
+  Checkbox,
+  TextInput,
+  Divider,
+} from 'react-native-paper';
 // import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {EditableText} from '@/components/ui/list/EditableText';
 import moment from 'moment';
@@ -22,8 +29,16 @@ import {
 } from '@react-native-community/datetimepicker';
 import {calendarService, notificationService} from '@/core/services';
 import {AcceptDialog} from '@/components/modals/common/AcceptDialog';
+import {NotificationDialog} from '@/components/modals/calendar/NotificationDialog';
 import {useNavigation} from '@react-navigation/native';
 import {CalendarEventEditMenu} from '@/components/ui/menu/CalendarEventMenu';
+import {
+  PermissionStatus,
+  RESULTS,
+  openSettings,
+} from 'react-native-permissions';
+import {OpenNotificationSettings} from '@/components/modals/common/OpenNotificationSettings';
+import PushNotification from 'react-native-push-notification';
 
 export function CalendarEvent({route}: {route: any}) {
   const {colors} = useTheme();
@@ -33,6 +48,9 @@ export function CalendarEvent({route}: {route: any}) {
 
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
+  const [settigsVisible, setSettigsVisible] = useState(false);
+  const [notificationDialogVisible, setNotificationDialogVisible] =
+    useState(false);
   const [event, setEvent] = useState<CalendarEventTaskType>({
     title: '',
     created: moment().format(),
@@ -45,7 +63,7 @@ export function CalendarEvent({route}: {route: any}) {
     updated: null,
     dateType: 'day',
   });
-  const [date] = useState(new Date());
+  const [notificationTime, setNotificationTime] = useState<Date[]>([]);
 
   const setEventById = (id: string) => {
     const data = calendarService.getEventById(id);
@@ -53,10 +71,53 @@ export function CalendarEvent({route}: {route: any}) {
     if (data) {
       setEvent(data);
     }
+
+    if (data?.notificationIds?.length) {
+      PushNotification.getScheduledLocalNotifications(notification => {
+        const searchNotification: Date[] = [];
+        data.notificationIds?.forEach(el => {
+          const findNotification = notification.find(n => n.id === el);
+          if (findNotification) {
+            searchNotification.push(new Date(findNotification.date));
+          }
+        });
+        setNotificationTime([...searchNotification]);
+      });
+    }
+  };
+
+  const handleResult = (result: PermissionStatus | undefined) => {
+    switch (result) {
+      case RESULTS.GRANTED:
+        setNotificationDialogVisible(true);
+        break;
+      case RESULTS.DENIED:
+        setSettigsVisible(true);
+        break;
+      case RESULTS.BLOCKED:
+        setSettigsVisible(true);
+        break;
+    }
+  };
+
+  const openMobileSettings = () => {
+    setSettigsVisible(false);
+    openSettings();
+  };
+
+  const addNotification = async () => {
+    const result = await notificationService.requestNotificationPermission();
+
+    handleResult(result);
   };
 
   const deleteEvent = () => {
     calendarService.deleteCalendarEvent(event.id);
+
+    if (event.notificationIds) {
+      notificationService.cancelSheduleNotifications(event.notificationIds);
+    }
+
     navigation.goBack();
   };
 
@@ -76,39 +137,103 @@ export function CalendarEvent({route}: {route: any}) {
   const onChange = (_: DateTimePickerEvent, selectedDate?: Date) => {
     setEvent({
       ...event,
-      startDate: moment(selectedDate).startOf('day').format('YYYY-MM-DD HH:mm'),
-      endDate:
-        event.dateType === 'day'
-          ? moment(selectedDate).endOf('day').format('YYYY-MM-DD HH:mm')
-          : moment(selectedDate).format('YYYY-MM-DD HH:mm'),
+      startDate: moment(event.startDate)
+        .set({
+          year: new Date(
+            selectedDate ? selectedDate : new Date(),
+          ).getFullYear(),
+          month: new Date(selectedDate ? selectedDate : new Date()).getMonth(),
+          date: new Date(selectedDate ? selectedDate : new Date()).getDate(),
+        })
+        .format('YYYY-MM-DD HH:mm'),
+      endDate: moment(event.endDate)
+        .set({
+          year: new Date(
+            selectedDate ? selectedDate : new Date(),
+          ).getFullYear(),
+          month: new Date(selectedDate ? selectedDate : new Date()).getMonth(),
+          date: new Date(selectedDate ? selectedDate : new Date()).getDate(),
+        })
+        .format('YYYY-MM-DD HH:mm'),
+    });
+  };
+
+  const onStartTimeChange = (_: DateTimePickerEvent, selectedDate?: Date) => {
+    setEvent({
+      ...event,
+      startDate: moment(event.startDate)
+        .set({
+          hours: new Date(selectedDate ? selectedDate : new Date()).getHours(),
+          minutes: new Date(
+            selectedDate ? selectedDate : new Date(),
+          ).getMinutes(),
+        })
+        .format('YYYY-MM-DD HH:mm'),
+    });
+  };
+
+  const onEndTimeChange = (_: DateTimePickerEvent, selectedDate?: Date) => {
+    setEvent({
+      ...event,
+      endDate: moment(event.endDate)
+        .set({
+          hours: new Date(selectedDate ? selectedDate : new Date()).getHours(),
+          minutes: new Date(
+            selectedDate ? selectedDate : new Date(),
+          ).getMinutes(),
+        })
+        .format('YYYY-MM-DD HH:mm'),
     });
   };
 
   const saveEvent = () => {
     if (!event.title) {
-      event.title = moment().format('YYYY-MM-DD');
+      event.title = '(Без названия)';
     }
+
+    if (event.dateType === 'day') {
+      setEvent({
+        ...event,
+        startDate: moment(event.startDate).format('YYYY-MM-DD HH:mm'),
+        endDate: moment(event.endDate).endOf('day').format('YYYY-MM-DD HH:mm'),
+      });
+    }
+
+    const updateEvent = {
+      ...event,
+      notificationIds: [
+        ...notificationTime.map((el, i) =>
+          (Date.now() + i).toString().slice(7),
+        ),
+      ],
+    };
+
+    setEvent(updateEvent);
+
+    notificationTime.forEach((el, i) => {
+      if (updateEvent.notificationIds) {
+        notificationService.sendSheduleNotification({
+          title: event.title,
+          message: event.info,
+          date: el,
+          id: updateEvent.notificationIds[i],
+        });
+      }
+    });
+
     if (route.params.eventId) {
       calendarService.updateEvent({
-        ...event,
+        ...updateEvent,
         updated: moment().format(),
       });
     } else {
-      calendarService.addCalendarEvent({...event});
+      calendarService.addCalendarEvent({...updateEvent});
     }
-
-    notificationService.sendSheduleNotification({
-      title: event.title,
-      message: event.info,
-      date:
-        event.dateType === 'day'
-          ? moment(event.startDate).subtract(12, 'hour').toDate()
-          : moment(event.startDate).subtract(2, 'hour').toDate(),
-      id: event.id,
-    });
 
     navigation.goBack();
   };
+
+  // PushNotification.cancelAllLocalNotifications();
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
@@ -125,21 +250,31 @@ export function CalendarEvent({route}: {route: any}) {
     };
   }, [dialogVisible]);
 
-  const showMode = (currentMode: any | undefined) => {
+  const showStartTimePicker = () => {
     DateTimePickerAndroid.open({
-      value: date,
-      onChange,
-      mode: currentMode,
+      value: new Date(event.startDate),
+      onChange: onStartTimeChange,
+      mode: 'time',
       is24Hour: true,
     });
   };
 
-  const showDatepicker = () => {
-    showMode('date');
+  const showEndTimePicker = () => {
+    DateTimePickerAndroid.open({
+      value: new Date(event.startDate),
+      onChange: onEndTimeChange,
+      mode: 'time',
+      is24Hour: true,
+    });
   };
 
-  const showTimepicker = () => {
-    showMode('time');
+  const showDatePicker = () => {
+    DateTimePickerAndroid.open({
+      value: new Date(event.startDate),
+      onChange,
+      mode: 'date',
+      is24Hour: true,
+    });
   };
 
   const changeColor = (color: string) => {
@@ -147,7 +282,10 @@ export function CalendarEvent({route}: {route: any}) {
     setShowColorPicker(false);
   };
 
-  moment.updateLocale('ru', ruMomentLocale);
+  const setNotification = (time: Date) => {
+    setNotificationTime([...notificationTime, time]);
+    setNotificationDialogVisible(false);
+  };
 
   return (
     <>
@@ -156,6 +294,20 @@ export function CalendarEvent({route}: {route: any}) {
         apply={() => navigation.navigate('Calendar')}
         cancel={() => setDialogVisible(false)}
         content={'Задача не сохранена, вы точно хотите выйти?'}
+      />
+      {notificationDialogVisible && (
+        <NotificationDialog
+          visible={notificationDialogVisible}
+          apply={setNotification}
+          cancel={() => setNotificationDialogVisible(false)}
+          startTime={event.startDate}
+          eventType={event.dateType}
+        />
+      )}
+      <OpenNotificationSettings
+        visible={settigsVisible}
+        cancel={() => setSettigsVisible(false)}
+        apply={openMobileSettings}
       />
       <ColorPicker
         visible={showColorPicker}
@@ -253,28 +405,104 @@ export function CalendarEvent({route}: {route: any}) {
               <Button
                 style={{width: '45%'}}
                 textColor={event.color}
-                onPress={showDatepicker}>
+                onPress={showDatePicker}>
                 {moment(event.startDate).format('ll')}
               </Button>
               {event.dateType === 'time' && (
                 <Button
-                  style={{width: '45%'}}
+                  style={{width: '22%'}}
                   textColor={event.color}
-                  onPress={showTimepicker}>
+                  onPress={showStartTimePicker}>
+                  {moment(event.startDate).format('HH:mm')}
+                </Button>
+              )}
+              {event.dateType === 'time' && (
+                <Button
+                  style={{width: '22%'}}
+                  textColor={event.color}
+                  onPress={showEndTimePicker}>
                   {moment(event.endDate).format('HH:mm')}
                 </Button>
               )}
             </View>
+
+            <Divider />
+            <View
+              style={{
+                display: 'flex',
+                margin: 20,
+                flexDirection: 'row',
+                // alignItems: 'center',
+              }}>
+              <Icon source="bell-outline" size={24} />
+              <View
+                style={{
+                  display: 'flex',
+                  width: '90%',
+                  marginLeft: 10,
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                }}>
+                <View style={{display: 'flex'}}>
+                  {!!notificationTime.length &&
+                    notificationTime.map(el => (
+                      <View
+                        style={{
+                          display: 'flex',
+                          width: '100%',
+                          // borderWidth: 1,
+                          flexDirection: 'row',
+                          alignItems: 'baseline',
+                          justifyContent: 'space-between',
+                        }}>
+                        <Text
+                          key={el.toISOString()}
+                          variant="titleMedium"
+                          style={{
+                            padding: 5,
+                            paddingTop: 0,
+                            paddingBottom: 15,
+                          }}>
+                          {moment(el).format('DD.MM.YY HH:mm')}
+                        </Text>
+                        <TouchableOpacity
+                          onPress={() =>
+                            setNotificationTime(
+                              notificationTime.filter(val => val !== el),
+                            )
+                          }>
+                          <Icon source="close" size={18} />
+                        </TouchableOpacity>
+                      </View>
+                    ))}
+
+                  <TouchableOpacity onPress={addNotification}>
+                    <Text
+                      variant="titleMedium"
+                      style={{padding: 5, paddingTop: 0}}>
+                      Добавить уведомление
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              {/* <View>
+                <Text>qweqwe</Text>
+                <Text>qweqwe</Text>
+                <Text>qweqwe</Text>
+              </View> */}
+            </View>
+            <Divider />
             {/* <Divider /> */}
             <TextInput
               placeholder="Текст задачи:"
               value={event.info}
               onChangeText={text => setEvent({...event, info: text})}
-              selectionColor={event.color}
-              underlineColor={event.color}
-              activeOutlineColor={event.color}
-              activeUnderlineColor={event.color}
-              outlineColor={event.color}
+              selectionColor={colors.greyColor}
+              underlineColor={colors.outlineVariant}
+              activeOutlineColor={colors.greyColor}
+              activeUnderlineColor={colors.greyColor}
+              outlineColor={colors.outlineVariant}
               multiline
               style={{
                 backgroundColor: colors.background,

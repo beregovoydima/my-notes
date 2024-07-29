@@ -13,6 +13,12 @@ PushNotification.configure({
   },
 
   requestPermissions: Platform.OS === 'ios',
+
+  permissions: {
+    alert: true,
+    badge: true,
+    sound: true,
+  },
 });
 
 AppRegistry.registerComponent(appName, () => App);

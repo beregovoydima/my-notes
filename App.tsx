@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {PaperProvider} from 'react-native-paper';
 import {NavigationContainer} from '@react-navigation/native';
 import {lightTheme} from './src/assets/config/colors';
@@ -11,53 +11,59 @@ import {Provider} from 'react-redux';
 import store from './src/framework/store/store';
 import {NavBar} from './src/components/navigation/Navbar';
 import {CalendarEvent} from './src/components/pages/calendar/CalendarEvent';
-import {SnackbarProvider} from './src/components/ui/snackbar/Snackbar'; // путь к вашему контексту
-import {notificationService} from './src/core/services';
+import {SnackbarProvider} from './src/components/ui/snackbar/Snackbar';
+import {ModalProvider} from './src/components/context/modals/ModalProvider'; // путь к вашему контексту
+// import moment from 'moment';
+// import {ruMomentLocale} from './src/core/utils/calendar';
 
 const Stack = createNativeStackNavigator();
 
-function App() {
+const App: React.FC = () => {
   const isDarkMode = Appearance.getColorScheme() === 'dark';
 
-  useEffect(() => {
-    notificationService.existCalendarChanelChanel();
-  }, []);
+  // try {
+  //   moment.updateLocale('ru', ruMomentLocale);
+  // } catch (e) {
+  //   Alert.alert(e);
+  // }
 
   return (
     <NavigationContainer>
       <Provider store={store}>
         <PaperProvider theme={isDarkMode ? lightTheme : lightTheme}>
           <SnackbarProvider>
-            <GestureHandlerRootView style={styles.main}>
-              <Stack.Navigator>
-                <Stack.Screen
-                  name="Main"
-                  component={NavBar}
-                  options={{headerShown: false}}
-                />
-                <Stack.Screen
-                  name="NoteEdit"
-                  component={NoteEditPage}
-                  options={{headerShown: false}}
-                />
-                <Stack.Screen
-                  name="ListEdit"
-                  component={ListEditPage}
-                  options={{headerShown: false}}
-                />
-                <Stack.Screen
-                  name="CalendarEvent"
-                  component={CalendarEvent}
-                  options={{headerShown: false}}
-                />
-              </Stack.Navigator>
-            </GestureHandlerRootView>
+            <ModalProvider>
+              <GestureHandlerRootView style={styles.main}>
+                <Stack.Navigator>
+                  <Stack.Screen
+                    name="Main"
+                    component={NavBar}
+                    options={{headerShown: false}}
+                  />
+                  <Stack.Screen
+                    name="NoteEdit"
+                    component={NoteEditPage}
+                    options={{headerShown: false}}
+                  />
+                  <Stack.Screen
+                    name="ListEdit"
+                    component={ListEditPage}
+                    options={{headerShown: false}}
+                  />
+                  <Stack.Screen
+                    name="CalendarEvent"
+                    component={CalendarEvent}
+                    options={{headerShown: false}}
+                  />
+                </Stack.Navigator>
+              </GestureHandlerRootView>
+            </ModalProvider>
           </SnackbarProvider>
         </PaperProvider>
       </Provider>
     </NavigationContainer>
   );
-}
+};
 
 const styles = StyleSheet.create({
   main: {

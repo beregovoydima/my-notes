@@ -1,6 +1,8 @@
 import {NotificationServiceContract} from '../contracts/notificationService';
 import PushNotification from 'react-native-push-notification';
 import {CALENDAR_CHANEL_ID} from '@/core/utils';
+import {Platform} from 'react-native';
+import {PERMISSIONS, request} from 'react-native-permissions';
 
 export class NotificationService implements NotificationServiceContract {
   constructor() {}
@@ -19,21 +21,37 @@ export class NotificationService implements NotificationServiceContract {
     date: Date;
     id: string;
   }): void {
+    const {message, title, date, id} = info;
+
     PushNotification.localNotificationSchedule({
-      message: info.message,
-      title: info.title,
+      message: message,
+      title: title,
       channelId: CALENDAR_CHANEL_ID,
-      date: info.date,
-      id: info.id,
+      date: date,
+      id: id,
     });
   }
 
-  public existCalendarChanelChanel(): void {
+  public existCalendarChanel(): void {
     PushNotification.channelExists(CALENDAR_CHANEL_ID, exist => {
       if (exist) {
         return;
       }
       this.createChanel();
+    });
+  }
+
+  public async requestNotificationPermission() {
+    if (Platform.OS === 'android') {
+      const result = await request(PERMISSIONS.ANDROID.POST_NOTIFICATIONS);
+
+      return result;
+    }
+  }
+
+  public cancelSheduleNotifications(notificationIds: string[]): void {
+    notificationIds.forEach(el => {
+      PushNotification.cancelLocalNotification(el);
     });
   }
 

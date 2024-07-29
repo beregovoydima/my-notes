@@ -13,6 +13,7 @@ export type CalendarEventTaskType = {
   created: Date | string;
   updated: Date | string | null;
   id: string;
+  notificationIds?: string[];
 };
 
 export type CalendarEventDotType = {

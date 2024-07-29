@@ -86,7 +86,7 @@ export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
 
             return {
               ...list,
-              title: list.title ? list.title : new Date().toDateString(),
+              title: list.title ? list.title : '(Без названия)',
               items: filterEmptyItems,
               updated: moment().format(),
             };
@@ -108,7 +108,7 @@ export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
         });
 
       const lists = notesService.storeGetListCollection();
-      list.title = list.title ? list.title : moment().format('YYYY-MM-DD');
+      list.title = list.title ? list.title : '(Без названия)';
       notesService.storageSetLists([
         ...lists,
         {

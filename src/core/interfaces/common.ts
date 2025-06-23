@@ -15,3 +15,8 @@ export type PagesType =
   | 'More';
 
 export type SortDirection = 'asc' | 'desc';
+
+export interface HighlightedPart {
+  text: string;
+  highlight: boolean;
+}

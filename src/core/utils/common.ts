@@ -1,6 +1,6 @@
 import {Share, ShareContent} from 'react-native';
 import uuid from 'react-native-uuid';
-import {NotesListItem} from '../interfaces';
+import {HighlightedPart, NotesListItem} from '../interfaces';
 
 export const getUuid = () => {
   return uuid.v4().toString();
@@ -33,8 +33,11 @@ export const parseNoteLabel = (htmlString: string) => {
     .replace(/<u>/g, '__')
     .replace(/<\/u>/g, '__');
 
+  // Заменяем &nbsp; на пробелы
+  const stringWithSpaces = stringWithUnderlineText.replace(/&nbsp;/g, ' ');
+
   // Удаляем все остальные HTML-теги
-  const stringWithoutTags = stringWithUnderlineText.replace(/<[^>]*>/g, '');
+  const stringWithoutTags = stringWithSpaces.replace(/<[^>]*>/g, '');
 
   return stringWithoutTags;
 };
@@ -68,4 +71,25 @@ export const handleShare = async (options: ShareContent) => {
   } catch (error) {
     console.log(error);
   }
+};
+
+export const getHighlightedParts = (
+  text: string,
+  query: string,
+): HighlightedPart[] => {
+  if (!query || query.trim() === '') {
+    return [{text, highlight: false}];
+  }
+  const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  if (escapedQuery === '') {
+    return [{text, highlight: false}];
+  }
+  const parts = text.split(new RegExp(`(${escapedQuery})`, 'gi'));
+
+  return parts
+    .filter(part => part)
+    .map(part => ({
+      text: part,
+      highlight: part.toLowerCase() === query.toLowerCase(),
+    }));
 };

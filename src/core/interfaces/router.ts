@@ -23,7 +23,7 @@ export type ScreenNavigationProp =
   NativeStackNavigationProp<RootStackParamList>;
 
 export type ExtendedScreenNavigationProp = ScreenNavigationProp & {
-  getCurrentRoute: () => RouteProp<ParamListBase> | undefined; // Замените any на фактический тип, который возвращает getCurrentRoute
+  getCurrentRoute: () => RouteProp<ParamListBase> | undefined;
 };
 
 export type NoteEditScreenRouteProp = RouteProp<RootStackParamList, 'NoteEdit'>;

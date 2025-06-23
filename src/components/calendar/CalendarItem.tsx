@@ -9,11 +9,11 @@ import {StyleSheet, View} from 'react-native';
 import {Calendar, CalendarProvider, LocaleConfig} from 'react-native-calendars';
 import {Positions} from 'react-native-calendars/src/expandableCalendar';
 import {ScrollView} from 'react-native-gesture-handler';
-import {Avatar, Card, Chip, Icon, Text} from 'react-native-paper';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {Chip, Icon, Text} from 'react-native-paper';
 import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import {FabAddCalendarEventButton} from '../ui/fab/FabAddCalendarEventButton';
+import {CalendarEventCard} from './CalendarEventCard';
 
 export const CalendarItem = () => {
   const {colors} = useTheme();
@@ -32,10 +32,6 @@ export const CalendarItem = () => {
 
   const onDayLongPress = (day: any) => {
     navigation.push('CalendarEvent', {selectedDate: day.dateString});
-  };
-
-  const openCalendarEvent = (id: string) => {
-    navigation.push('CalendarEvent', {eventId: id});
   };
 
   const marked = useMemo(() => {
@@ -80,24 +76,6 @@ export const CalendarItem = () => {
       },
     };
   }, [calendarEvents, colors.primary, colors.whiteColor, selected]);
-
-  const leftContent = (props: {size: number}, item: any) => {
-    return (
-      <Avatar.Icon
-        {...props}
-        style={{backgroundColor: item.color ? item.color : colors.primary}}
-        color={colors.whiteColor}
-        // eslint-disable-next-line react/no-unstable-nested-components
-        icon={() => (
-          <MaterialIcons
-            size={26}
-            color={colors.whiteColor}
-            name={item.type === 'task' ? 'task-alt' : 'event'}
-          />
-        )}
-      />
-    );
-  };
 
   const renderArrow = (direction: 'left' | 'right') => {
     return (
@@ -171,62 +149,7 @@ export const CalendarItem = () => {
               el => moment(el.startDate).format('YYYY-MM-DD') === selected,
             )
             .map(el => {
-              return (
-                <Card
-                  key={el.id}
-                  style={{backgroundColor: colors.whiteColor, margin: 4}}
-                  onPress={() => openCalendarEvent(el.id)}>
-                  <Card.Title
-                    title={el.title}
-                    left={props => leftContent(props, el)}
-                  />
-                  <Card.Content>
-                    <View style={styles.footer}>
-                      <View style={styles.item}>
-                        <Text
-                          variant="labelSmall"
-                          style={{
-                            color: colors.greyColor,
-                          }}>
-                          Начало
-                        </Text>
-                        <Text
-                          variant="labelSmall"
-                          style={{
-                            color: colors.greyColor,
-                          }}>
-                          Конец
-                        </Text>
-                      </View>
-                      <View style={styles.item}>
-                        <Text
-                          variant="labelSmall"
-                          style={{
-                            color: colors.greyColor,
-                          }}>
-                          {moment(el.startDate).format('YYYY-MM-DD HH:mm')}
-                        </Text>
-                        <Text
-                          variant="labelSmall"
-                          style={{
-                            color: colors.greyColor,
-                          }}>
-                          {moment(el.endDate).format('YYYY-MM-DD HH:mm')}
-                        </Text>
-                      </View>
-                      {/* <Text
-              variant="labelSmall"
-              // eslint-disable-next-line react-native/no-inline-styles
-              style={{
-                color: colors.greyColor,
-                marginLeft: item.updated ? 4 : 0,
-              }}>
-              {item.folder?.name}
-            </Text> */}
-                    </View>
-                  </Card.Content>
-                </Card>
-              );
+              return <CalendarEventCard key={el.id} item={el} />;
             })}
         </ScrollView>
       </CalendarProvider>

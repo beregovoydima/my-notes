@@ -5,6 +5,7 @@ import {
   NotesListItemChildren,
   ScreenNavigationProp,
 } from '@/core/interfaces';
+import {getHighlightedParts} from '@/core/utils';
 import React, {memo, useCallback, useMemo, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Avatar, Card, Icon, Text} from 'react-native-paper';
@@ -16,9 +17,10 @@ import {useNavigation} from '@react-navigation/native';
 
 interface Props {
   list: NotesListItem;
+  searchQuery?: string;
 }
 
-export const ListCard = memo(({list}: Props) => {
+export const ListCard = memo(({list, searchQuery}: Props) => {
   const {colors} = useTheme();
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -111,7 +113,27 @@ export const ListCard = memo(({list}: Props) => {
         style={[{backgroundColor: colors.whiteColor}]}
         onPress={() => editList(list.id)}>
         <Card.Title
-          title={list.title}
+          title={
+            searchQuery ? (
+              <Text>
+                {getHighlightedParts(list.title, searchQuery).map(
+                  (part, index) => (
+                    <Text
+                      key={index}
+                      style={
+                        part.highlight
+                          ? {backgroundColor: colors.primaryContainer}
+                          : {}
+                      }>
+                      {part.text}
+                    </Text>
+                  ),
+                )}
+              </Text>
+            ) : (
+              list.title
+            )
+          }
           titleStyle={[
             isChecked && styles.checkedText,
             {color: isChecked ? colors.greyColor : colors.text},

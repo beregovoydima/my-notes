@@ -11,6 +11,7 @@ import {
   getFocusedRouteNameFromRoute,
 } from '@react-navigation/native';
 import {CalendarPage} from '../pages/calendar/CalendarPage';
+import {SearchPage} from '../pages/search/SearchPage';
 
 const Tab = createBottomTabNavigator();
 
@@ -88,27 +89,27 @@ export function NavBar({route}: {route: RouteProp<ParamListBase>}) {
     );
   };
 
-  const getTasksIcon = (focused: boolean) => {
-    return (
-      <SimpleIcon
-        name="notebook"
-        color={focused ? colors.primary : colors.greyIconColor}
-        size={20}
-      />
-    );
-  };
+  // const getTasksIcon = (focused: boolean) => {
+  //   return (
+  //     <SimpleIcon
+  //       name="notebook"
+  //       color={focused ? colors.primary : colors.greyIconColor}
+  //       size={20}
+  //     />
+  //   );
+  // };
 
-  const getTasksLabel = (focused: boolean) => {
-    return (
-      <Text
-        style={[
-          {color: focused ? colors.primary : colors.greyIconColor},
-          styles.navbarLabel,
-        ]}>
-        Задачи
-      </Text>
-    );
-  };
+  // const getTasksLabel = (focused: boolean) => {
+  //   return (
+  //     <Text
+  //       style={[
+  //         {color: focused ? colors.primary : colors.greyIconColor},
+  //         styles.navbarLabel,
+  //       ]}>
+  //       Задачи
+  //     </Text>
+  //   );
+  // };
 
   const getSearchIcon = (item: any) => {
     const {focused} = item;
@@ -177,7 +178,7 @@ export function NavBar({route}: {route: RouteProp<ParamListBase>}) {
           },
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Tasks"
         component={SettingsPage}
         options={{
@@ -192,10 +193,10 @@ export function NavBar({route}: {route: RouteProp<ParamListBase>}) {
                 : 'transparent',
           },
         }}
-      />
+      /> */}
       <Tab.Screen
         name="Search"
-        component={SettingsPage}
+        component={SearchPage}
         options={{
           tabBarLabel: ({focused}) => getSearchLabel(focused),
           tabBarIcon: item => getSearchIcon(item),

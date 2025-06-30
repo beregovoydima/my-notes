@@ -5,6 +5,7 @@ import {StyleSheet, View, TouchableOpacity} from 'react-native';
 import DragList, {DragListRenderItemInfo} from 'react-native-draglist';
 import {Modal, Portal, Text} from 'react-native-paper';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {useTranslation} from '@/core/i18n';
 
 interface Props {
   visible: boolean;
@@ -16,6 +17,7 @@ const keyExtractor = (el: {color: string; id: string}) => el?.id;
 
 export const ColorPicker = ({visible, hideModal, changeColor}: Props) => {
   const {colors} = useTheme();
+  const {t} = useTranslation();
 
   const [data, setData] = useState<{color: string; id: string}[]>(
     [...styleColorArr].map(el => ({color: el, id: getUuid()})),
@@ -80,7 +82,7 @@ export const ColorPicker = ({visible, hideModal, changeColor}: Props) => {
           renderItem={renderItem}
         />
         <Text variant="labelMedium" style={[{color: colors.greyColor}]}>
-          Порядок сортировки зависит от номера вибраного цвета
+          {t('sorting.colorOrderInfo')}
         </Text>
       </Modal>
     </Portal>

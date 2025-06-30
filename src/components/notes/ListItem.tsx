@@ -6,6 +6,8 @@ import {notesService} from '@/core/services';
 import {useSelector} from 'react-redux';
 import {styleColorArr} from '@/core/utils';
 import {FlashList} from '@shopify/flash-list';
+import {useTranslation} from '@/core/i18n';
+
 interface Props {
   sortedType: NotesSortType;
   sortDirection: SortDirection;
@@ -16,6 +18,7 @@ const renderItem = ({item}: {item: NotesListItem}) => <ListCard list={item} />;
 
 export const ListItem = memo(({sortedType, sortDirection}: Props) => {
   const allList = useSelector(() => notesService.storeGetListCollection());
+  const {t} = useTranslation();
 
   const sortedList = useMemo(() => {
     if (sortedType === 'created') {
@@ -77,7 +80,7 @@ export const ListItem = memo(({sortedType, sortDirection}: Props) => {
       renderItem={renderItem}
       estimatedItemSize={114}
       ListEmptyComponent={
-        <Text style={styles.emptyText}>Список заметок пуст.</Text>
+        <Text style={styles.emptyText}>{t('notes.emptyNotesList')}</Text>
       }
     />
   );

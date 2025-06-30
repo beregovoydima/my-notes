@@ -1,7 +1,8 @@
-import {useTheme} from '@/assets/config/colors';
 import React, {memo, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Divider, IconButton, Menu} from 'react-native-paper';
+import {useTheme} from '@/assets/config/colors';
+import {useTranslation} from '@/core/i18n';
 
 interface Props {
   deleteEvent: () => void;
@@ -10,6 +11,7 @@ interface Props {
 
 export const CalendarEventEditMenu = memo(({deleteEvent, saveEvent}: Props) => {
   const {colors} = useTheme();
+  const {t} = useTranslation();
   const [visible, setVisible] = useState(false);
 
   const openMenu = () => setVisible(true);
@@ -33,14 +35,14 @@ export const CalendarEventEditMenu = memo(({deleteEvent, saveEvent}: Props) => {
           onPress={() => {
             saveEvent();
           }}
-          title="Сохранить"
+          title={t('common.save')}
         />
         <Divider />
         <Menu.Item
           onPress={() => {
             deleteEvent();
           }}
-          title="Удалить"
+          title={t('common.delete')}
         />
       </Menu>
     </View>

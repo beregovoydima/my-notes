@@ -6,6 +6,7 @@ import {FlashList} from '@shopify/flash-list';
 import {useSelector} from 'react-redux';
 import {notesService} from '@/core/services';
 import {StyleSheet} from 'react-native';
+import {useTranslation} from '@/core/i18n';
 
 interface Props {
   sortedType: NotesSortType;
@@ -17,6 +18,7 @@ const renderItem = ({item}: {item: NotesItems}) => <NoteCard item={item} />;
 
 export const NotesItem = ({sortedType, sortDirection}: Props) => {
   const notes = useSelector(() => notesService.storeGetCollectionNote());
+  const {t} = useTranslation();
   const sortedNotes = useMemo(() => {
     if (sortedType === 'created') {
       return [...notes].sort((a, b) => {
@@ -54,7 +56,7 @@ export const NotesItem = ({sortedType, sortDirection}: Props) => {
       keyExtractor={keyExtractor}
       estimatedItemSize={110}
       ListEmptyComponent={
-        <Text style={styles.emptyText}>Список заметок пуст.</Text>
+        <Text style={styles.emptyText}>{t('notes.emptyNotesList')}</Text>
       }
     />
   );

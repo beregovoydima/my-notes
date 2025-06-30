@@ -3,8 +3,9 @@ import {useTheme} from '@/assets/config/colors';
 import {CalendarEventDotType, ScreenNavigationProp} from '@/core/interfaces';
 import {calendarService} from '@/core/services';
 import {hex2rgba, ruCalendarLocale} from '@/core/utils';
+import {calendarLocales} from '@/core/utils/calendarLocales';
 import moment from 'moment';
-import React, {Fragment, useMemo, useState} from 'react';
+import React, {Fragment, useMemo, useState, useEffect} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Calendar, CalendarProvider, LocaleConfig} from 'react-native-calendars';
 import {Positions} from 'react-native-calendars/src/expandableCalendar';
@@ -14,9 +15,11 @@ import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import {FabAddCalendarEventButton} from '../ui/fab/FabAddCalendarEventButton';
 import {CalendarEventCard} from './CalendarEventCard';
+import {useTranslation} from '@/core/i18n';
 
 export const CalendarItem = () => {
   const {colors} = useTheme();
+  const {t, locale} = useTranslation();
   const INITIAL_DATE = moment().format('YYYY-MM-DD');
   const [selected, setSelected] = useState(INITIAL_DATE);
   const [currentMonth, setCurrentMonth] = useState(INITIAL_DATE);
@@ -25,6 +28,20 @@ export const CalendarItem = () => {
   const calendarEvents = useSelector(() =>
     calendarService.storeGetCalendarEventCollection(),
   );
+
+  // Динамическая локализация календаря
+  useEffect(() => {
+    if (locale === 'uk') {
+      LocaleConfig.locales.uk = calendarLocales.uk;
+      LocaleConfig.defaultLocale = 'uk';
+    } else if (locale === 'ru') {
+      LocaleConfig.locales.ru = ruCalendarLocale;
+      LocaleConfig.defaultLocale = 'ru';
+    } else {
+      LocaleConfig.locales.en = calendarLocales.en;
+      LocaleConfig.defaultLocale = 'en';
+    }
+  }, [locale]);
 
   const onDayPress = (day: any) => {
     setSelected(day.dateString);
@@ -87,9 +104,6 @@ export const CalendarItem = () => {
     );
   };
 
-  LocaleConfig.locales.ru = ruCalendarLocale;
-  LocaleConfig.defaultLocale = 'ru';
-
   return (
     <Fragment>
       <CalendarProvider date={selected}>
@@ -140,7 +154,7 @@ export const CalendarItem = () => {
               setSelected(INITIAL_DATE);
               setCurrentMonth(INITIAL_DATE);
             }}>
-            Сегодня
+            {t('calendar.today')}
           </Chip>
         </View>
         <ScrollView style={{paddingBottom: 10}}>

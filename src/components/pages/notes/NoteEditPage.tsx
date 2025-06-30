@@ -38,9 +38,11 @@ import {ColorPicker} from '@/components/modals/ui/ColorPicker';
 import {NotesEditMenu} from '@/components/ui/menu/NotesEditMenu';
 import {useNavigation} from '@react-navigation/native';
 import {AddFolderModal} from '@/components/modals/notes/AddFolderModal';
+import {useTranslation} from '@/core/i18n';
 
 export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
   const navigation: ScreenNavigationProp = useNavigation();
+  const {t} = useTranslation();
 
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [text, setDescription] = useState<string>('');
@@ -80,9 +82,6 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
       return false;
     }
 
-    if (!note.title) {
-      note.title = '(Без названия)';
-    }
     if (route.params.noteId) {
       notesService.updateNote({
         ...note,
@@ -305,7 +304,7 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
         <EditableText
           style={styles.header}
           label={note.title}
-          customText="Введите название заметки"
+          customText={t('notes.enterNoteTitle')}
           saveText={e => setNote({...note, title: e})}
           isChecked={false}
         />
@@ -341,7 +340,7 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
         <RichEditor
           useContainer={true}
           ref={ref => (richTextRef.current = ref)}
-          placeholder={'Текст заметки'}
+          placeholder={t('notes.noteText')}
           onChange={changeDescription}
           autoCapitalize="sentences"
           initialContentHTML={note.label}
@@ -379,7 +378,7 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
             <View>
               <Button mode="text" onPress={() => setVisible(true)}>
                 {folders.length === 0 ? (
-                  'Создать папку'
+                  t('folders.createFolder')
                 ) : (
                   <Icon name="plus" size={16} />
                 )}

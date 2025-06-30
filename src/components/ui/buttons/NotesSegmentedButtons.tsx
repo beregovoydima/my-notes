@@ -1,8 +1,9 @@
-import {NotesPageType} from '@/core/interfaces/notes';
 import React from 'react';
 import {View} from 'react-native';
 import {StyleSheet} from 'react-native';
 import {SegmentedButtons} from 'react-native-paper';
+import {NotesPageType} from '@/core/interfaces';
+import {useTranslation} from '@/core/i18n';
 
 interface Props {
   changePageType: (val: string) => void;
@@ -10,6 +11,8 @@ interface Props {
 }
 
 export const NotesSegmentedButtons = ({changePageType, page}: Props) => {
+  const {t} = useTranslation();
+
   return (
     <View style={styles.container}>
       <SegmentedButtons
@@ -20,22 +23,22 @@ export const NotesSegmentedButtons = ({changePageType, page}: Props) => {
           {
             icon: 'note-multiple',
             value: 'all',
-            label: 'Все',
+            label: t('filters.all'),
           },
           {
             icon: 'note-multiple',
             value: 'notes',
-            label: 'Заметки',
+            label: t('filters.notes'),
           },
           {
             icon: 'clipboard-list',
             value: 'list',
-            label: 'Списки',
+            label: t('filters.lists'),
           },
           {
             icon: 'folder',
             value: 'folders',
-            label: 'Папки',
+            label: t('filters.folders'),
           },
         ]}
       />

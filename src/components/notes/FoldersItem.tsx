@@ -9,6 +9,7 @@ import {NotesFolderItem, NotesFolderItemKey} from '@/core/interfaces';
 import {FolderCard} from './card/FolderCard';
 import uuid from 'react-native-uuid';
 import {FlashList} from '@shopify/flash-list';
+import {useTranslation} from '@/core/i18n';
 
 const keyExtractor = (item: NotesFolderItem) => item?.id;
 interface Props {
@@ -28,6 +29,7 @@ export const FoldersItem = ({
   const [editFolderData, setEditFolder] = useState<NotesFolderItem | null>(
     null,
   );
+  const {t} = useTranslation();
 
   const hideFollderModal = () => {
     setEditFolder(null);
@@ -111,7 +113,7 @@ export const FoldersItem = ({
         keyExtractor={keyExtractor}
         estimatedItemSize={113}
         ListEmptyComponent={
-          <Text style={styles.emptyText}>Список заметок пуст.</Text>
+          <Text style={styles.emptyText}>{t('notes.emptyNotesList')}</Text>
         }
       />
     </>

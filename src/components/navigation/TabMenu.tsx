@@ -9,6 +9,7 @@ import {useNavigation} from '@react-navigation/native';
 import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import SimpleIcon from 'react-native-vector-icons/SimpleLineIcons';
+import {useTranslation} from '@/core/i18n';
 
 interface Props {
   activePage: PagesType;
@@ -16,12 +17,13 @@ interface Props {
 }
 
 export const TabMenu = ({changeActivePage, activePage}: Props) => {
+  const {t} = useTranslation();
   const [item] = useState<MenuTab[]>([
-    {label: 'Заметки', icon: 'note', name: 'Notes'},
-    {label: 'Календарь', icon: 'calendar', name: 'Calendar'},
-    {label: 'Задачи', icon: 'notebook', name: 'Tasks'},
-    {label: 'Поиск', icon: 'magnifier', name: 'Search'},
-    {label: 'Больше', icon: 'menu', name: 'More'},
+    {label: t('navigation.notes'), icon: 'note', name: 'Notes'},
+    {label: t('navigation.calendar'), icon: 'calendar', name: 'Calendar'},
+    {label: t('navigation.tasks'), icon: 'notebook', name: 'Tasks'},
+    {label: t('navigation.search'), icon: 'magnifier', name: 'Search'},
+    {label: t('navigation.more'), icon: 'menu', name: 'More'},
   ]);
   const {colors} = useTheme();
 

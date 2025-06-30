@@ -5,6 +5,7 @@ import React, {useState} from 'react';
 import {StyleSheet} from 'react-native';
 import {FAB, Portal} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useTranslation} from '@/core/i18n';
 
 interface Props {
   showFolderModal: () => void;
@@ -13,6 +14,7 @@ interface Props {
 export const FabButton = ({showFolderModal}: Props) => {
   const [state, setState] = useState({open: false});
   const navigation: ScreenNavigationProp = useNavigation();
+  const {t} = useTranslation();
   const onStateChange = ({open}: {open: boolean}) => setState({open});
 
   const {open} = state;
@@ -38,19 +40,19 @@ export const FabButton = ({showFolderModal}: Props) => {
         actions={[
           {
             icon: ({size}) => getIcon(size, 'note'),
-            label: 'Создать заметку',
+            label: t('notes.createNote'),
             labelTextColor: colors.text,
             onPress: () => navigation.navigate('NoteEdit', {noteId: null}),
           },
           {
             icon: ({size}) => getIcon(size, 'clipboard-list'),
-            label: 'Создать список',
+            label: t('lists.createList'),
             labelTextColor: colors.text,
             onPress: () => navigation.navigate('ListEdit', {listId: null}),
           },
           {
             icon: ({size}) => getIcon(size, 'folder'),
-            label: 'Создать папку',
+            label: t('folders.createFolder'),
             labelTextColor: colors.text,
             onPress: () => showFolderModal(),
           },

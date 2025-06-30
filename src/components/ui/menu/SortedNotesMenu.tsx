@@ -1,8 +1,11 @@
+import React from 'react';
+import {Menu} from 'react-native-paper';
 import {useTheme} from '@/assets/config/colors';
 import {NotesSortType, SortDirection} from '@/core/interfaces';
-import React, {memo, useState} from 'react';
+import {useTranslation} from '@/core/i18n';
+import {memo, useState} from 'react';
 import {StyleSheet} from 'react-native';
-import {Divider, IconButton, Menu} from 'react-native-paper';
+import {Divider, IconButton} from 'react-native-paper';
 
 interface Props {
   sortType: NotesSortType;
@@ -11,6 +14,7 @@ interface Props {
 
 export const SortedNotesMenu = memo(({changeSort}: Props) => {
   const {colors} = useTheme();
+  const {t} = useTranslation();
   const [visible, setVisible] = useState(false);
 
   const openMenu = () => setVisible(true);
@@ -40,61 +44,61 @@ export const SortedNotesMenu = memo(({changeSort}: Props) => {
       <Menu.Item
         leadingIcon="sort-clock-ascending-outline"
         onPress={() => change('created', 'asc')}
-        title="По дате создания"
+        title={t('sorting.byCreationDate')}
       />
       <Divider />
       <Menu.Item
         leadingIcon="sort-clock-descending-outline"
         onPress={() => change('created', 'desc')}
-        title="По дате создания"
+        title={t('sorting.byCreationDate')}
       />
       <Divider />
       <Menu.Item
         leadingIcon="sort-clock-ascending"
         onPress={() => change('updated', 'asc')}
-        title="По дате изменения"
+        title={t('sorting.byUpdateDate')}
       />
       <Divider />
       <Menu.Item
         leadingIcon="sort-clock-descending"
         onPress={() => change('updated', 'desc')}
-        title="По дате изменения"
+        title={t('sorting.byUpdateDate')}
       />
       <Divider />
       <Menu.Item
         leadingIcon="sort-bool-ascending"
         onPress={() => change('color', 'asc')}
-        title="По цвету"
+        title={t('sorting.byColor')}
       />
       <Divider />
       <Menu.Item
         leadingIcon="sort-bool-descending"
         onPress={() => change('color', 'desc')}
-        title="По цвету"
+        title={t('sorting.byColor')}
       />
       <Divider />
       <Menu.Item
         leadingIcon="sort-alphabetical-ascending"
         onPress={() => change('title', 'asc')}
-        title="По названию"
+        title={t('sorting.byTitle')}
       />
       <Divider />
       <Menu.Item
         leadingIcon="sort-alphabetical-descending"
         onPress={() => change('title', 'desc')}
-        title="По названию"
+        title={t('sorting.byTitle')}
       />
       <Divider />
       <Menu.Item
         leadingIcon="sort-alphabetical-ascending"
         onPress={() => change('folder', 'asc')}
-        title="По названию папки"
+        title={t('sorting.byFolderName')}
       />
       <Divider />
       <Menu.Item
         leadingIcon="sort-alphabetical-descending"
         onPress={() => change('folder', 'desc')}
-        title="По названию папки"
+        title={t('sorting.byFolderName')}
       />
     </Menu>
   );

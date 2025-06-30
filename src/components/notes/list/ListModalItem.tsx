@@ -1,9 +1,10 @@
 /* eslint-disable react-native/no-inline-styles */
 import {useTheme} from '@/assets/config/colors';
 import {NotesListItem, NotesListItemChildren} from '@/core/interfaces';
-import React from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Button, Divider} from 'react-native-paper';
+import {useTranslation} from '@/core/i18n';
 import {ListModalItemCildren} from './ListModalItemChildren';
 import {getUuid} from '@/core/utils';
 
@@ -14,6 +15,7 @@ interface Props {
 
 export const ListModalItem = ({list, changeList}: Props) => {
   const {colors} = useTheme();
+  const {t} = useTranslation();
 
   const addList = () => {
     const listItem: NotesListItem = {
@@ -68,7 +70,7 @@ export const ListModalItem = ({list, changeList}: Props) => {
         textColor={list.color ? list.color : colors.primary}
         icon="plus"
         onPress={() => addList()}>
-        Добавить
+        {t('lists.addItem')}
       </Button>
     </View>
   );

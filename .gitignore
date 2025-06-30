@@ -39,6 +39,9 @@ local.properties
 node_modules/
 npm-debug.log
 yarn-error.log
+MONETIZATION_PLAN.md
+RELEASE_PLAN.md
+I18N_GUIDE.md
 
 # fastlane
 #

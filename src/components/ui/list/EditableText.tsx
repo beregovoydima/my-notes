@@ -1,4 +1,3 @@
-import {useTheme} from '@/assets/config/colors';
 import React, {useEffect, useState} from 'react';
 import {
   NativeSyntheticEvent,
@@ -10,6 +9,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {useTheme} from '@/assets/config/colors';
+import {useTranslation} from '@/core/i18n';
+
 interface Props {
   isChecked: boolean;
   label: string;
@@ -32,6 +34,7 @@ export const EditableText = ({
   autofocus,
 }: Props) => {
   const {colors} = useTheme();
+  const {t} = useTranslation();
 
   const [isEditing, setIsEditing] = useState(false);
   const [text, setText] = useState('');
@@ -103,7 +106,7 @@ export const EditableText = ({
                   ...style,
                 },
               ]}>
-              {text || customText || 'Введите текст'}
+              {text || customText || t('common.enterText')}
             </Text>
           </View>
         </TouchableOpacity>

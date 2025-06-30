@@ -5,10 +5,12 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet} from 'react-native';
 import {FAB, Portal} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {useTranslation} from '@/core/i18n';
 
 export const FabCalendarButton = () => {
   const [state, setState] = useState({open: false});
   const navigation: ScreenNavigationProp = useNavigation();
+  const {t} = useTranslation();
   const onStateChange = ({open}: {open: boolean}) => setState({open});
 
   const {open} = state;
@@ -40,7 +42,7 @@ export const FabCalendarButton = () => {
         actions={[
           {
             icon: ({size}) => getIcon(size, 'add-task'),
-            label: 'Создать задачу',
+            label: t('tasks.createTask'),
             labelTextColor: colors.text,
             onPress: () => navigation.navigate('CalendarEvent', {}),
           },

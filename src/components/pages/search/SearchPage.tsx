@@ -1,9 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
+import React, {useEffect, useState, useRef} from 'react';
+import {ScrollView, StyleSheet, View, Keyboard} from 'react-native';
 import {Searchbar, Text, Chip} from 'react-native-paper';
 import {useTheme} from '@/assets/config/colors';
 import {useSelector} from 'react-redux';
 import {RootState} from '@/framework/store/store';
+import {useTranslation} from '@/core/i18n';
 import {
   CalendarEventTaskType,
   NotesItems,
@@ -12,6 +13,7 @@ import {
 import {NoteCard} from '../../notes/card/NoteCard';
 import {ListCard} from '../../notes/card/ListCard';
 import {CalendarEventCard} from '../../calendar/CalendarEventCard';
+import {FabSearchButton} from '../../ui/fab';
 
 type SearchResult =
   | {type: 'note'; item: NotesItems}
@@ -22,10 +24,13 @@ type FilterType = 'note' | 'list' | 'event';
 
 export function SearchPage() {
   const {colors} = useTheme();
+  const {t} = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [activeFilters, setActiveFilters] = useState<FilterType[]>([]);
   const [visibleTypes, setVisibleTypes] = useState<Set<FilterType>>(new Set());
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const searchbarRef = useRef<any>(null);
 
   const notes = useSelector((state: RootState) => state.notes.notes);
   const lists = useSelector((state: RootState) => state.list.list);
@@ -38,6 +43,39 @@ export function SearchPage() {
         : [...prev, filter],
     );
   };
+
+  const focusSearchInput = () => {
+    searchbarRef.current?.focus();
+  };
+
+  const handleSearchFocus = () => {
+    setIsSearchFocused(true);
+  };
+
+  const handleSearchBlur = () => {
+    setIsSearchFocused(false);
+  };
+
+  const handleKeyboardHide = () => {
+    setIsSearchFocused(false);
+  };
+
+  // Обработка закрытия клавиатуры
+  useEffect(() => {
+    const keyboardWillHideListener = Keyboard.addListener(
+      'keyboardWillHide',
+      handleKeyboardHide,
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      handleKeyboardHide,
+    );
+
+    return () => {
+      keyboardWillHideListener?.remove();
+      keyboardDidHideListener?.remove();
+    };
+  }, []);
 
   useEffect(() => {
     if (!searchQuery) {
@@ -94,16 +132,14 @@ export function SearchPage() {
   return (
     <>
       <View style={[styles.page, {backgroundColor: colors.background}]}>
-        {/* <Appbar.Header
-          style={[styles.header, {backgroundColor: colors.background}]}>
-          <Appbar.Content title={'Поиск'} />
-        </Appbar.Header> */}
-
         <Searchbar
+          ref={searchbarRef}
           style={styles.searchbar}
-          placeholder="Поиск"
+          placeholder={t('common.search')}
           onChangeText={setSearchQuery}
           value={searchQuery}
+          onFocus={handleSearchFocus}
+          onBlur={handleSearchBlur}
         />
         {visibleTypes.size > 1 && (
           <View style={styles.filterContainer}>
@@ -122,7 +158,7 @@ export function SearchPage() {
                 },
               ]}
               onPress={() => toggleFilter('note')}>
-              Заметки
+              {t('filters.notes')}
             </Chip>
             <Chip
               icon="clipboard-list"
@@ -139,7 +175,7 @@ export function SearchPage() {
                 },
               ]}
               onPress={() => toggleFilter('list')}>
-              Списки
+              {t('filters.lists')}
             </Chip>
             <Chip
               icon="calendar"
@@ -156,7 +192,7 @@ export function SearchPage() {
                 },
               ]}
               onPress={() => toggleFilter('event')}>
-              События
+              {t('calendar.title')}
             </Chip>
           </View>
         )}
@@ -193,11 +229,16 @@ export function SearchPage() {
           })}
           {searchQuery.length > 0 && searchResults.length === 0 ? (
             <View style={styles.noResults}>
-              <Text>Нет результатов</Text>
+              <Text>{t('common.emptyList')}</Text>
             </View>
           ) : null}
         </ScrollView>
       </View>
+
+      <FabSearchButton
+        onPress={focusSearchInput}
+        isVisible={!isSearchFocused}
+      />
     </>
   );
 }
@@ -225,6 +266,7 @@ const styles = StyleSheet.create({
     paddingLeft: 4,
     paddingRight: 4,
     flex: 1,
+    marginBottom: 10,
   },
   list: {
     flex: 1,

@@ -1,6 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {Portal, Text, Dialog, Button} from 'react-native-paper';
+import {useTranslation} from '@/core/i18n';
 
 export const OpenNotificationSettings = ({
   visible,
@@ -13,20 +14,20 @@ export const OpenNotificationSettings = ({
   apply: () => void;
   content?: string;
 }) => {
+  const {t} = useTranslation();
+
   return (
     <Portal>
       <Dialog visible={visible} onDismiss={cancel}>
         {/* <Dialog.Icon icon="information-outline" size={30} /> */}
         <Dialog.Content style={{marginTop: 30}}>
           <Text variant="titleSmall">
-            {content
-              ? content
-              : 'Для работы уведомлений необходимо разрешить их в настройках приложения. Перейти в настройки?'}
+            {content ? content : t('notifications.permissionRequired')}
           </Text>
         </Dialog.Content>
         <Dialog.Actions>
-          <Button onPress={cancel}>Отмена</Button>
-          <Button onPress={apply}>Перейти</Button>
+          <Button onPress={cancel}>{t('common.cancel')}</Button>
+          <Button onPress={apply}>{t('common.goTo')}</Button>
         </Dialog.Actions>
       </Dialog>
     </Portal>

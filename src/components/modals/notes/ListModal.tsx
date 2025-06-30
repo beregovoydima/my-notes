@@ -6,6 +6,7 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, ScrollView} from 'react-native';
 import {Modal, Portal, Text, Button} from 'react-native-paper';
 import uuid from 'react-native-uuid';
+import {useTranslation} from '@/core/i18n';
 
 interface Props {
   visible: boolean;
@@ -14,6 +15,7 @@ interface Props {
 }
 
 export const ListModal = ({visible, hideModal, editListData}: Props) => {
+  const {t} = useTranslation();
   const [list, setList] = useState<NotesListItem>({
     id: uuid.v4().toString(),
     title: '',
@@ -99,17 +101,17 @@ export const ListModal = ({visible, hideModal, editListData}: Props) => {
           onDismiss={closeModal}
           contentContainerStyle={styles.containerStyle}>
           <Text variant="titleLarge" style={styles.modal}>
-            {editListData ? 'Редактировать' : 'Создать'}
+            {editListData ? t('common.edit') : t('common.create')}
           </Text>
           <ScrollView>
             <ListModalItem list={list} changeList={val => changeList(val)} />
           </ScrollView>
           <View style={styles.footer}>
             <Button style={[styles.button]} onPress={() => closeModal()}>
-              Отмена
+              {t('common.cancel')}
             </Button>
             <Button style={[styles.button]} onPress={() => save()}>
-              Сохранить
+              {t('common.save')}
             </Button>
           </View>
         </Modal>

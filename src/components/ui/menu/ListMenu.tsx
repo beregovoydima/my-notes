@@ -2,6 +2,7 @@ import {useTheme} from '@/assets/config/colors';
 import React, {memo, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Divider, IconButton, Menu} from 'react-native-paper';
+import {useTranslation} from '@/core/i18n';
 
 interface Props {
   editList: (id: string) => void;
@@ -11,6 +12,7 @@ interface Props {
 
 export const ListMenu = memo(({editList, deleteList, listId}: Props) => {
   const {colors} = useTheme();
+  const {t} = useTranslation();
   const [visible, setVisible] = useState(false);
 
   const openMenu = () => setVisible(true);
@@ -44,10 +46,10 @@ export const ListMenu = memo(({editList, deleteList, listId}: Props) => {
           onPress={() => {
             delFolder();
           }}
-          title="Удалить"
+          title={t('common.delete')}
         />
         <Divider />
-        <Menu.Item onPress={() => changeFolder()} title="Редактировать" />
+        <Menu.Item onPress={() => changeFolder()} title={t('common.edit')} />
         {/* <Divider />
         <Menu.Item onPress={() => {}} title="To do" /> */}
       </Menu>

@@ -14,6 +14,7 @@ import moment from 'moment';
 import {ListCardItemCildren} from '../list/ListCardItemChildren';
 import {notesService} from '@/core/services';
 import {useNavigation} from '@react-navigation/native';
+import {useTranslation} from '@/core/i18n';
 
 interface Props {
   list: NotesListItem;
@@ -23,7 +24,7 @@ interface Props {
 export const ListCard = memo(({list, searchQuery}: Props) => {
   const {colors} = useTheme();
   const [isExpanded, setIsExpanded] = useState(false);
-
+  const {t} = useTranslation();
   const navigation: ScreenNavigationProp = useNavigation();
 
   const getLeftIcon = (props: any) => {
@@ -131,7 +132,7 @@ export const ListCard = memo(({list, searchQuery}: Props) => {
                 )}
               </Text>
             ) : (
-              list.title
+              list.title || t('lists.noTitle')
             )
           }
           titleStyle={[

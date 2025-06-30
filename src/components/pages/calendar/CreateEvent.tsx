@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -9,10 +9,17 @@ import {
   TextInput,
 } from 'react-native';
 import {Button, Divider, RadioButton, Text} from 'react-native-paper';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import {useTheme} from '@/assets/config/colors';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {CalendarEventTaskType} from '@/core/interfaces';
+import {calendarService} from '@/core/services';
+import {getUuid} from '@/core/utils';
 import moment from 'moment';
+import {DateTimePickerAndroid} from '@react-native-community/datetimepicker';
+import {useTranslation} from '@/core/i18n';
 
 export function CreateEvent() {
+  const {t} = useTranslation();
   const [eventType, setEventType] = useState('task');
   const [isAllDay, setIsAllDay] = useState(true);
   const [date, setDate] = useState(new Date());
@@ -45,15 +52,15 @@ export function CreateEvent() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
-        <TextInput style={styles.input} placeholder="Добавьте название" />
+        <TextInput style={styles.input} placeholder={t('calendar.addTitle')} />
         <View style={styles.row}>
-          <Text style={styles.label}>Задача</Text>
+          <Text style={styles.label}>{t('tasks.title')}</Text>
           <RadioButton
             value="task"
             status={eventType === 'task' ? 'checked' : 'unchecked'}
             onPress={() => setEventType('task')}
           />
-          <Text style={styles.label}>Мероприятие</Text>
+          <Text style={styles.label}>{t('calendar.title')}</Text>
           <RadioButton
             value="meet"
             status={eventType === 'meet' ? 'checked' : 'unchecked'}
@@ -61,13 +68,15 @@ export function CreateEvent() {
           />
         </View>
         <View style={styles.row}>
-          <Text style={styles.label}>Весь день</Text>
+          <Text style={styles.label}>{t('calendar.allDay')}</Text>
           <Switch value={isAllDay} onValueChange={setIsAllDay} />
         </View>
         <View>
-          <Button onPress={showDatepicker}>{'Показать выбор даты'}</Button>
-          <Button onPress={showTimepicker}>{'Показать выбор времени'}</Button>
-          <Text>Выбрано: {moment(date).format('LLLL')}</Text>
+          <Button onPress={showDatepicker}>{t('calendar.eventDate')}</Button>
+          <Button onPress={showTimepicker}>{t('calendar.eventTime')}</Button>
+          <Text>
+            {t('common.selected')}: {moment(date).format('LLLL')}
+          </Text>
         </View>
         {showDatePicker && (
           <DateTimePicker

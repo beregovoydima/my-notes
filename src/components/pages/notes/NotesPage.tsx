@@ -18,6 +18,7 @@ import {ListItem} from '@/components/notes/ListItem';
 import {SortedNotesMenu} from '@/components/ui/menu/SortedNotesMenu';
 import {AllNotesItem} from '@/components/notes/AllNotesItem';
 import {FabNotesPageButton} from '@/components/ui/fab/FabNotesPageButton';
+import {useTranslation} from '@/core/i18n';
 
 export function NotesPage({}: {route: any; navigation: any}) {
   const [isFolderModalVisible, setVisibleFolderModal] = useState(false);
@@ -36,6 +37,7 @@ export function NotesPage({}: {route: any; navigation: any}) {
   const hideModal = () => setVisibleFolderModal(false);
 
   const {colors} = useTheme();
+  const {t} = useTranslation();
 
   const changeValue = (val: string) => {
     if (
@@ -87,7 +89,7 @@ export function NotesPage({}: {route: any; navigation: any}) {
     <SafeAreaView style={styles.page}>
       <Appbar.Header
         style={[styles.header, {backgroundColor: colors.background}]}>
-        <Appbar.Content title={'Заметки'} />
+        <Appbar.Content title={t('navigation.notes')} />
         {filterFolder ? (
           <Chip
             icon="folder"

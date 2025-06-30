@@ -2,6 +2,7 @@ import {NotesFolderItem} from '@/core/interfaces';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Modal, Portal, Text, TextInput, Button} from 'react-native-paper';
+import {useTranslation} from '@/core/i18n';
 
 interface Props {
   visible: boolean;
@@ -16,6 +17,7 @@ export const FolderModal = ({
   saveFolder,
   editFolderData,
 }: Props) => {
+  const {t} = useTranslation();
   const [text, setText] = useState('');
 
   const closeModal = () => {
@@ -47,21 +49,21 @@ export const FolderModal = ({
           onDismiss={closeModal}
           contentContainerStyle={styles.containerStyle}>
           <Text variant="titleLarge" style={styles.modal}>
-            {editFolderData ? 'Редактировать' : 'Создать'}
+            {editFolderData ? t('common.edit') : t('common.create')}
           </Text>
           <TextInput
-            label="Название"
-            placeholder="Введите название папки"
+            label={t('common.name')}
+            placeholder={t('folders.enterFolderName')}
             mode="outlined"
             value={text}
             onChangeText={val => setText(val)}
           />
           <View style={styles.footer}>
             <Button style={[styles.button]} onPress={() => closeModal()}>
-              Отмена
+              {t('common.cancel')}
             </Button>
             <Button style={[styles.button]} onPress={() => save()}>
-              Сохранить
+              {t('common.save')}
             </Button>
           </View>
         </Modal>

@@ -1,7 +1,10 @@
+import React from 'react';
+import {Menu} from 'react-native-paper';
 import {useTheme} from '@/assets/config/colors';
-import React, {memo, useState} from 'react';
+import {useTranslation} from '@/core/i18n';
 import {StyleSheet, View} from 'react-native';
-import {IconButton, Menu} from 'react-native-paper';
+import {IconButton} from 'react-native-paper';
+import {memo, useState} from 'react';
 
 interface Props {
   deleteNote: () => void;
@@ -9,6 +12,7 @@ interface Props {
 
 export const NotesEditMenu = memo(({deleteNote}: Props) => {
   const {colors} = useTheme();
+  const {t} = useTranslation();
   const [visible, setVisible] = useState(false);
 
   const openMenu = () => setVisible(true);
@@ -32,7 +36,7 @@ export const NotesEditMenu = memo(({deleteNote}: Props) => {
           onPress={() => {
             deleteNote();
           }}
-          title="Удалить"
+          title={t('common.delete')}
         />
       </Menu>
     </View>

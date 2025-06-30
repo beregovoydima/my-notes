@@ -9,6 +9,7 @@ import moment from 'moment';
 import React, {useState} from 'react';
 import {TouchableOpacity, View} from 'react-native';
 import {Portal, Text, Dialog, Button, Icon} from 'react-native-paper';
+import {useTranslation} from '@/core/i18n';
 
 export const NotificationDialog = ({
   visible,
@@ -24,6 +25,7 @@ export const NotificationDialog = ({
   eventType: CalnedarEventTimeType;
 }) => {
   const {colors} = useTheme();
+  const {t} = useTranslation();
   const [isCustomDate, setIsCustomDate] = useState(false);
   const [customDate, setCustomDate] = useState(moment(startTime).format());
 
@@ -31,28 +33,28 @@ export const NotificationDialog = ({
     eventType === 'day'
       ? [
           {
-            name: 'За день',
+            name: t('notifications.dayBefore'),
             value: moment(startTime)
               .set({hours: 9, minute: 0})
               .subtract(1, 'day')
               .toDate(),
           },
           {
-            name: 'За 2 дня',
+            name: t('notifications.twoDaysBefore'),
             value: moment(startTime)
               .set({hours: 9, minute: 0})
               .subtract(2, 'day')
               .toDate(),
           },
           {
-            name: 'За 3 дня',
+            name: t('notifications.threeDaysBefore'),
             value: moment(startTime)
               .set({hours: 9, minute: 0})
               .subtract(3, 'day')
               .toDate(),
           },
           {
-            name: 'За 1 неделю',
+            name: t('notifications.weekBefore'),
             value: moment(startTime)
               .set({hours: 9, minute: 0})
               .subtract(1, 'week')
@@ -61,23 +63,23 @@ export const NotificationDialog = ({
         ]
       : [
           {
-            name: 'За 30 минут',
+            name: t('notifications.thirtyMinutesBefore'),
             value: moment(startTime).subtract(30, 'minute').toDate(),
           },
           {
-            name: 'За 1 час',
+            name: t('notifications.hourBefore'),
             value: moment(startTime).subtract(1, 'hour').toDate(),
           },
           {
-            name: 'За 2 часа',
+            name: t('notifications.twoHoursBefore'),
             value: moment(startTime).subtract(2, 'hour').toDate(),
           },
           {
-            name: 'За 1 день',
+            name: t('notifications.dayBefore'),
             value: moment(startTime).subtract(1, 'day').toDate(),
           },
           {
-            name: 'За 1 неделю',
+            name: t('notifications.weekBefore'),
             value: moment(startTime).subtract(1, 'week').toDate(),
           },
         ];
@@ -137,7 +139,9 @@ export const NotificationDialog = ({
   return (
     <Portal>
       <Dialog visible={visible} onDismiss={closeDialog}>
-        <Dialog.Title style={{fontSize: 20}}>Выберите время</Dialog.Title>
+        <Dialog.Title style={{fontSize: 20}}>
+          {t('notifications.selectTime')}
+        </Dialog.Title>
 
         {isCustomDate && (
           <Dialog.Content style={{paddingBottom: 0}}>
@@ -210,7 +214,7 @@ export const NotificationDialog = ({
                   }}>
                   <Icon source="checkbox-blank-circle-outline" size={18} />
                   <Text variant="titleMedium" style={{marginLeft: 10}}>
-                    Другое
+                    {t('notifications.custom')}
                   </Text>
                 </View>
               </TouchableOpacity>
@@ -220,9 +224,11 @@ export const NotificationDialog = ({
 
         {isCustomDate && (
           <Dialog.Actions>
-            <Button onPress={() => setIsCustomDate(false)}>Отмена</Button>
+            <Button onPress={() => setIsCustomDate(false)}>
+              {t('common.cancel')}
+            </Button>
             <Button onPress={() => updateTime(moment(customDate).toDate())}>
-              Применить
+              {t('common.apply')}
             </Button>
           </Dialog.Actions>
         )}

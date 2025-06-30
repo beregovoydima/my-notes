@@ -29,10 +29,12 @@ import {useSelector} from 'react-redux';
 import {ColorPicker} from '@/components/modals/ui/ColorPicker';
 import {ListEditMenu} from '@/components/ui/menu/ListEditMenu';
 import {AddFolderModal} from '@/components/modals/notes/AddFolderModal';
+import {useTranslation} from '@/core/i18n';
 
 export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
   const {colors} = useTheme();
   const navigation: ScreenNavigationProp = useNavigation();
+  const {t} = useTranslation();
 
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [list, setList] = useState<NotesListItem>({
@@ -86,7 +88,7 @@ export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
 
             return {
               ...list,
-              title: list.title ? list.title : '(Без названия)',
+              title: list.title,
               items: filterEmptyItems,
               updated: moment().format(),
             };
@@ -108,7 +110,6 @@ export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
         });
 
       const lists = notesService.storeGetListCollection();
-      list.title = list.title ? list.title : '(Без названия)';
       notesService.storageSetLists([
         ...lists,
         {
@@ -228,7 +229,7 @@ export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
           <EditableText
             style={styles.header}
             label={list.title}
-            customText="Введите название списка"
+            customText={t('lists.enterListTitle')}
             isChecked={
               !!list.items.length && list.items.every(el => el.isChecked)
             }
@@ -292,7 +293,7 @@ export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
               <View>
                 <Button mode="text" onPress={() => setVisible(true)}>
                   {folders.length === 0 ? (
-                    'Создать папку'
+                    t('folders.createFolder')
                   ) : (
                     <Icon name="plus" size={16} />
                   )}

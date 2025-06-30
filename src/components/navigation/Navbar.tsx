@@ -12,14 +12,14 @@ import {
 } from '@react-navigation/native';
 import {CalendarPage} from '../pages/calendar/CalendarPage';
 import {SearchPage} from '../pages/search/SearchPage';
+import {MorePage} from '../pages/more/MorePage';
+import {useTranslation} from '@/core/i18n';
 
 const Tab = createBottomTabNavigator();
 
-const SettingsPage = ({route}: {route: RouteProp<ParamListBase>}) => {
-  return <Text>{route.name}</Text>;
-};
 export function NavBar({route}: {route: RouteProp<ParamListBase>}) {
   const {colors} = useTheme();
+  const {t} = useTranslation();
 
   const focusedRouteName = getFocusedRouteNameFromRoute(route);
 
@@ -40,7 +40,7 @@ export function NavBar({route}: {route: RouteProp<ParamListBase>}) {
           {color: focused ? colors.primary : colors.greyIconColor},
           styles.navbarLabel,
         ]}>
-        Заметки
+        {t('navigation.notes')}
       </Text>
     );
   };
@@ -62,7 +62,7 @@ export function NavBar({route}: {route: RouteProp<ParamListBase>}) {
           {color: focused ? colors.primary : colors.greyIconColor},
           styles.navbarLabel,
         ]}>
-        Календарь
+        {t('navigation.calendar')}
       </Text>
     );
   };
@@ -84,7 +84,7 @@ export function NavBar({route}: {route: RouteProp<ParamListBase>}) {
           {color: focused ? colors.primary : colors.greyIconColor},
           styles.navbarLabel,
         ]}>
-        Больше
+        {t('navigation.more')}
       </Text>
     );
   };
@@ -129,7 +129,7 @@ export function NavBar({route}: {route: RouteProp<ParamListBase>}) {
           {color: focused ? colors.primary : colors.greyIconColor},
           styles.navbarLabel,
         ]}>
-        Поиск
+        {t('navigation.search')}
       </Text>
     );
   };
@@ -212,7 +212,7 @@ export function NavBar({route}: {route: RouteProp<ParamListBase>}) {
       />
       <Tab.Screen
         name="Settings"
-        component={SettingsPage}
+        component={MorePage}
         options={{
           tabBarLabel: ({focused}) => getProfileLabel(focused),
           tabBarIcon: ({focused}) => getProfileIcon(focused),

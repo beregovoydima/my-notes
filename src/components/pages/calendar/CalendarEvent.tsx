@@ -39,9 +39,11 @@ import {
 } from 'react-native-permissions';
 import {OpenNotificationSettings} from '@/components/modals/common/OpenNotificationSettings';
 import PushNotification from 'react-native-push-notification';
+import {useTranslation} from '@/core/i18n';
 
 export function CalendarEvent({route}: {route: any}) {
   const {colors} = useTheme();
+  const {t} = useTranslation();
 
   const navigation: ScreenNavigationProp = useNavigation();
   // const [eventType, setEventType] = useState<CalendarEventType>('task');
@@ -187,10 +189,6 @@ export function CalendarEvent({route}: {route: any}) {
   };
 
   const saveEvent = () => {
-    if (!event.title) {
-      event.title = '(Без названия)';
-    }
-
     if (event.dateType === 'day') {
       setEvent({
         ...event,
@@ -381,7 +379,7 @@ export function CalendarEvent({route}: {route: any}) {
                   alignItems: 'center',
                   flexDirection: 'row',
                 }}>
-                <Text>Весь день: </Text>
+                <Text>{t('calendar.allDay')}: </Text>
                 <Checkbox
                   status={event.dateType === 'day' ? 'checked' : 'unchecked'}
                   color={event.color}
@@ -481,7 +479,7 @@ export function CalendarEvent({route}: {route: any}) {
                     <Text
                       variant="titleMedium"
                       style={{padding: 5, paddingTop: 0}}>
-                      Добавить уведомление
+                      {t('calendar.addNotification')}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -495,7 +493,7 @@ export function CalendarEvent({route}: {route: any}) {
             <Divider />
             {/* <Divider /> */}
             <TextInput
-              placeholder="Текст задачи:"
+              placeholder={t('tasks.taskText')}
               value={event.info}
               onChangeText={text => setEvent({...event, info: text})}
               selectionColor={colors.greyColor}

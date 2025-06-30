@@ -7,6 +7,7 @@ import {useTheme} from '@/assets/config/colors';
 import {CalendarEventTaskType, ScreenNavigationProp} from '@/core/interfaces';
 import {useNavigation} from '@react-navigation/native';
 import {getHighlightedParts} from '@/core/utils';
+import {useTranslation} from '@/core/i18n';
 
 interface CalendarEventCardProps {
   item: CalendarEventTaskType;
@@ -18,6 +19,7 @@ export const CalendarEventCard = ({
   searchQuery,
 }: CalendarEventCardProps) => {
   const {colors} = useTheme();
+  const {t} = useTranslation();
   const navigation: ScreenNavigationProp = useNavigation();
 
   const openCalendarEvent = (id: string) => {
@@ -44,6 +46,7 @@ export const CalendarEventCard = ({
 
   return (
     <Card
+      // eslint-disable-next-line react-native/no-inline-styles
       style={{backgroundColor: colors.whiteColor, margin: 4}}
       onPress={() => openCalendarEvent(item.id)}>
       <Card.Title
@@ -65,7 +68,7 @@ export const CalendarEventCard = ({
               )}
             </Text>
           ) : (
-            item.title
+            item.title || t('lists.noTitle')
           )
         }
         left={props => leftContent(props)}
@@ -97,7 +100,9 @@ export const CalendarEventCard = ({
               style={{
                 color: colors.greyColor,
               }}>
-              {item.dateType === 'day' ? 'Дата' : 'Время'}
+              {item.dateType === 'day'
+                ? t('calendar.date')
+                : t('calendar.time')}
             </Text>
           </View>
           <View style={styles.item}>

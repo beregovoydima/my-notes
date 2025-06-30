@@ -1,8 +1,11 @@
+import React from 'react';
+import {Menu} from 'react-native-paper';
 import {useTheme} from '@/assets/config/colors';
 import {NotesItems} from '@/core/interfaces';
-import React, {memo, useState} from 'react';
+import {useTranslation} from '@/core/i18n';
 import {StyleSheet, View} from 'react-native';
-import {Divider, IconButton, Menu} from 'react-native-paper';
+import {Divider, IconButton} from 'react-native-paper';
+import {memo, useState} from 'react';
 
 interface Props {
   editNote: (id: string) => void;
@@ -12,6 +15,7 @@ interface Props {
 
 export const NotesMenu = memo(({editNote, deleteNote, notes}: Props) => {
   const {colors} = useTheme();
+  const {t} = useTranslation();
   const [visible, setVisible] = useState(false);
 
   const openMenu = () => setVisible(true);
@@ -39,10 +43,10 @@ export const NotesMenu = memo(({editNote, deleteNote, notes}: Props) => {
           onPress={() => {
             delFolder();
           }}
-          title="Удалить"
+          title={t('common.delete')}
         />
         <Divider />
-        <Menu.Item onPress={() => changeFolder()} title="Редактировать" />
+        <Menu.Item onPress={() => changeFolder()} title={t('common.edit')} />
         {/* <Divider />
         <Menu.Item onPress={() => {}} title="To do" /> */}
       </Menu>

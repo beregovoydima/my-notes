@@ -23,10 +23,7 @@ import {
 import {EditableText} from '@/components/ui/list/EditableText';
 import moment from 'moment';
 import {CalendarEventTaskType, ScreenNavigationProp} from '@/core/interfaces';
-import {
-  DateTimePickerAndroid,
-  DateTimePickerEvent,
-} from '@react-native-community/datetimepicker';
+import {DatePickerModal, TimePickerModal} from 'react-native-paper-dates';
 import {calendarService, notificationService} from '@/core/services';
 import {AcceptDialog} from '@/components/modals/common/AcceptDialog';
 import {NotificationDialog} from '@/components/modals/calendar/NotificationDialog';
@@ -43,7 +40,7 @@ import {useTranslation} from '@/core/i18n';
 
 export function CalendarEvent({route}: {route: any}) {
   const {colors} = useTheme();
-  const {t} = useTranslation();
+  const {t, locale} = useTranslation();
 
   const navigation: ScreenNavigationProp = useNavigation();
   // const [eventType, setEventType] = useState<CalendarEventType>('task');
@@ -53,6 +50,9 @@ export function CalendarEvent({route}: {route: any}) {
   const [settigsVisible, setSettigsVisible] = useState(false);
   const [notificationDialogVisible, setNotificationDialogVisible] =
     useState(false);
+  const [datePickerVisible, setDatePickerVisible] = useState(false);
+  const [startTimePickerVisible, setStartTimePickerVisible] = useState(false);
+  const [endTimePickerVisible, setEndTimePickerVisible] = useState(false);
   const [event, setEvent] = useState<CalendarEventTaskType>({
     title: '',
     created: moment().format(),
@@ -136,53 +136,45 @@ export function CalendarEvent({route}: {route: any}) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const onChange = (_: DateTimePickerEvent, selectedDate?: Date) => {
+  const onDateChange = (selectedDate: Date) => {
     setEvent({
       ...event,
       startDate: moment(event.startDate)
         .set({
-          year: new Date(
-            selectedDate ? selectedDate : new Date(),
-          ).getFullYear(),
-          month: new Date(selectedDate ? selectedDate : new Date()).getMonth(),
-          date: new Date(selectedDate ? selectedDate : new Date()).getDate(),
+          year: selectedDate.getFullYear(),
+          month: selectedDate.getMonth(),
+          date: selectedDate.getDate(),
         })
         .format('YYYY-MM-DD HH:mm'),
       endDate: moment(event.endDate)
         .set({
-          year: new Date(
-            selectedDate ? selectedDate : new Date(),
-          ).getFullYear(),
-          month: new Date(selectedDate ? selectedDate : new Date()).getMonth(),
-          date: new Date(selectedDate ? selectedDate : new Date()).getDate(),
+          year: selectedDate.getFullYear(),
+          month: selectedDate.getMonth(),
+          date: selectedDate.getDate(),
         })
         .format('YYYY-MM-DD HH:mm'),
     });
   };
 
-  const onStartTimeChange = (_: DateTimePickerEvent, selectedDate?: Date) => {
+  const onStartTimeChange = (selectedDate: Date) => {
     setEvent({
       ...event,
       startDate: moment(event.startDate)
         .set({
-          hours: new Date(selectedDate ? selectedDate : new Date()).getHours(),
-          minutes: new Date(
-            selectedDate ? selectedDate : new Date(),
-          ).getMinutes(),
+          hours: selectedDate.getHours(),
+          minutes: selectedDate.getMinutes(),
         })
         .format('YYYY-MM-DD HH:mm'),
     });
   };
 
-  const onEndTimeChange = (_: DateTimePickerEvent, selectedDate?: Date) => {
+  const onEndTimeChange = (selectedDate: Date) => {
     setEvent({
       ...event,
       endDate: moment(event.endDate)
         .set({
-          hours: new Date(selectedDate ? selectedDate : new Date()).getHours(),
-          minutes: new Date(
-            selectedDate ? selectedDate : new Date(),
-          ).getMinutes(),
+          hours: selectedDate.getHours(),
+          minutes: selectedDate.getMinutes(),
         })
         .format('YYYY-MM-DD HH:mm'),
     });
@@ -215,6 +207,7 @@ export function CalendarEvent({route}: {route: any}) {
           message: event.info,
           date: el,
           id: updateEvent.notificationIds[i],
+          eventDate: moment(event.startDate).format('YYYY-MM-DD'),
         });
       }
     });
@@ -249,30 +242,15 @@ export function CalendarEvent({route}: {route: any}) {
   }, [dialogVisible]);
 
   const showStartTimePicker = () => {
-    DateTimePickerAndroid.open({
-      value: new Date(event.startDate),
-      onChange: onStartTimeChange,
-      mode: 'time',
-      is24Hour: true,
-    });
+    setStartTimePickerVisible(true);
   };
 
   const showEndTimePicker = () => {
-    DateTimePickerAndroid.open({
-      value: new Date(event.startDate),
-      onChange: onEndTimeChange,
-      mode: 'time',
-      is24Hour: true,
-    });
+    setEndTimePickerVisible(true);
   };
 
   const showDatePicker = () => {
-    DateTimePickerAndroid.open({
-      value: new Date(event.startDate),
-      onChange,
-      mode: 'date',
-      is24Hour: true,
-    });
+    setDatePickerVisible(true);
   };
 
   const changeColor = (color: string) => {
@@ -444,8 +422,9 @@ export function CalendarEvent({route}: {route: any}) {
                 }}>
                 <View style={{display: 'flex'}}>
                   {!!notificationTime.length &&
-                    notificationTime.map(el => (
+                    notificationTime.map((el, index) => (
                       <View
+                        key={el.toISOString() + index}
                         style={{
                           display: 'flex',
                           width: '100%',
@@ -455,7 +434,6 @@ export function CalendarEvent({route}: {route: any}) {
                           justifyContent: 'space-between',
                         }}>
                         <Text
-                          key={el.toISOString()}
                           variant="titleMedium"
                           style={{
                             padding: 5,
@@ -512,6 +490,61 @@ export function CalendarEvent({route}: {route: any}) {
           </ScrollView>
         </View>
       </SafeAreaView>
+
+      {/* Date Picker Modal */}
+      <DatePickerModal
+        locale={locale}
+        mode="single"
+        visible={datePickerVisible}
+        onDismiss={() => setDatePickerVisible(false)}
+        date={new Date(event.startDate)}
+        onConfirm={params => {
+          if (params.date) {
+            onDateChange(params.date);
+          }
+          setDatePickerVisible(false);
+        }}
+        label={t('calendar.selectDate')}
+        saveLabel={t('common.confirm')}
+      />
+
+      {/* Start Time Picker Modal */}
+      <TimePickerModal
+        locale={locale}
+        visible={startTimePickerVisible}
+        onDismiss={() => setStartTimePickerVisible(false)}
+        onConfirm={({hours, minutes}) => {
+          const date = new Date(event.startDate);
+          date.setHours(hours);
+          date.setMinutes(minutes);
+          onStartTimeChange(date);
+          setStartTimePickerVisible(false);
+        }}
+        hours={new Date(event.startDate).getHours()}
+        minutes={new Date(event.startDate).getMinutes()}
+        label={t('calendar.selectStartTime')}
+        confirmLabel={t('datePicker.confirm')}
+        cancelLabel={t('datePicker.cancel')}
+      />
+
+      {/* End Time Picker Modal */}
+      <TimePickerModal
+        locale={locale}
+        visible={endTimePickerVisible}
+        onDismiss={() => setEndTimePickerVisible(false)}
+        onConfirm={({hours, minutes}) => {
+          const date = new Date(event.endDate);
+          date.setHours(hours);
+          date.setMinutes(minutes);
+          onEndTimeChange(date);
+          setEndTimePickerVisible(false);
+        }}
+        hours={new Date(event.endDate).getHours()}
+        minutes={new Date(event.endDate).getMinutes()}
+        label={t('calendar.selectEndTime')}
+        confirmLabel={t('datePicker.confirm')}
+        cancelLabel={t('datePicker.cancel')}
+      />
     </>
   );
 }

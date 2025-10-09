@@ -140,6 +140,9 @@ export const uk = {
     date: 'Дата',
     time: 'Час',
     addNotification: 'Додати сповіщення',
+    selectDate: 'Оберіть дату',
+    selectStartTime: 'Оберіть час початку',
+    selectEndTime: 'Оберіть час закінчення',
   },
 
   // Задачи
@@ -227,6 +230,30 @@ export const uk = {
     twoHoursBefore: 'За 2 години',
   },
 
+  // Date Picker (react-native-paper-dates)
+  datePicker: {
+    save: 'Зберегти',
+    selectSingle: 'Оберіть дату',
+    selectMultiple: 'Оберіть дати',
+    selectRange: 'Оберіть період',
+    notAccordingToDateFormat: (input: string) =>
+      `Формат дати має бути: ${input}`,
+    mustBeHigherThan: (date: string) => `Має бути пізніше ${date}`,
+    mustBeLowerThan: (date: string) => `Має бути раніше ${date}`,
+    mustBeBetween: (startDate: string, endDate: string) =>
+      `Має бути між ${startDate} - ${endDate}`,
+    dateIsDisabled: 'День недоступний',
+    previous: 'Попередній',
+    next: 'Наступний',
+    typeInDate: 'Введіть дату',
+    pickDateFromCalendar: 'Оберіть дату з календаря',
+    close: 'Закрити',
+    cancel: 'Скасувати',
+    confirm: 'Підтвердити',
+    hour: 'Година',
+    minute: 'Хвилина',
+  },
+
   // Валидация
   validation: {
     required: "Це поле обов'язкове",
@@ -272,5 +299,7 @@ export const uk = {
     language: 'Мова',
     selectLanguage: 'Виберіть мову',
     cancel: 'Скасувати',
+    showCardBackground: 'Показувати фон карток',
+    showCardBackgroundDescription: 'Відображати кольоровий фон',
   },
 };

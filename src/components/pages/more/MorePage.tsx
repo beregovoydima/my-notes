@@ -1,22 +1,45 @@
 /* eslint-disable react/no-unstable-nested-components */
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, StyleSheet} from 'react-native';
-import {Appbar, Card, Text, List, Divider} from 'react-native-paper';
+import {Appbar, Card, Text, List, Divider, Switch} from 'react-native-paper';
 import {useTheme} from '@/assets/config/colors';
 import {useTranslation} from '@/core/i18n';
 import {getAppVersion} from '@/core/utils';
 import {LanguageModal} from '@/components/modals/common/LanguageModal';
+import {appService} from '@/core/services';
 
 export function MorePage() {
   const {colors} = useTheme();
   const {t} = useTranslation();
   const [languageModalVisible, setLanguageModalVisible] = useState(false);
+  const [showCardBackground, setShowCardBackground] = useState(true);
 
   // Получаем версию приложения
   const appVersion = getAppVersion();
 
   const showLanguageModal = () => setLanguageModalVisible(true);
   const hideLanguageModal = () => setLanguageModalVisible(false);
+
+  // Загружаем настройки при монтировании компонента
+  useEffect(() => {
+    const loadSettings = async () => {
+      const settings = await appService.getStorageSettings();
+      if (settings) {
+        setShowCardBackground(settings.showCardBackground);
+      } else {
+        // Если настроек нет, используем значение из store
+        const storeSettings = appService.getStoreSettings();
+        setShowCardBackground(storeSettings.showCardBackground);
+      }
+    };
+    loadSettings();
+  }, []);
+
+  const handleShowCardBackgroundChange = async (value: boolean) => {
+    setShowCardBackground(value);
+    appService.setStoreShowCardBackground(value);
+    await appService.setStorageShowCardBackground(value);
+  };
 
   return (
     <>
@@ -55,6 +78,21 @@ export function MorePage() {
               right={props => <List.Icon {...props} icon="chevron-right" />}
               onPress={showLanguageModal}
               titleStyle={{color: colors.text}}
+            />
+            <Divider />
+            <List.Item
+              title={t('more.showCardBackground')}
+              description={t('more.showCardBackgroundDescription')}
+              left={props => <List.Icon {...props} icon="palette" />}
+              right={() => (
+                <Switch
+                  value={showCardBackground}
+                  onValueChange={handleShowCardBackgroundChange}
+                  color={colors.primary}
+                />
+              )}
+              titleStyle={{color: colors.text}}
+              descriptionStyle={{color: colors.greyColor}}
             />
             {/* <Divider />
             <List.Item

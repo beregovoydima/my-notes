@@ -16,10 +16,17 @@ export const CheckBoxListTitle = ({list, checkList, color}: Props) => {
     return list.isChecked;
   }, [list.children, list.isChecked]);
 
+  const childChecked = () => {
+    if (list.children.length) {
+      return list.children.every(el => el.isChecked);
+    }
+    return list.isChecked;
+  };
+
   return (
     <Checkbox.Android
       color={color ? color : undefined}
-      status={allChildChecked ? 'checked' : 'unchecked'}
+      status={childChecked() ? 'checked' : 'unchecked'}
       onPress={() => checkList(allChildChecked)}
     />
   );

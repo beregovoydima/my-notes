@@ -17,20 +17,25 @@ import {FabAddCalendarEventButton} from '../ui/fab/FabAddCalendarEventButton';
 import {CalendarEventCard} from './CalendarEventCard';
 import {useTranslation} from '@/core/i18n';
 
-export const CalendarItem = () => {
+export const CalendarItem = ({
+  initialSelectedDate,
+}: {
+  initialSelectedDate?: string;
+}) => {
   const {colors} = useTheme();
   const {t, locale} = useTranslation();
   const INITIAL_DATE = moment().format('YYYY-MM-DD');
-  const [selected, setSelected] = useState(INITIAL_DATE);
-  const [currentMonth, setCurrentMonth] = useState(INITIAL_DATE);
+  const [selected, setSelected] = useState(initialSelectedDate || INITIAL_DATE);
+  const [currentMonth, setCurrentMonth] = useState(
+    initialSelectedDate || INITIAL_DATE,
+  );
   const navigation: ScreenNavigationProp = useNavigation();
 
   const calendarEvents = useSelector(() =>
     calendarService.storeGetCalendarEventCollection(),
   );
 
-  // Динамическая локализация календаря
-  useEffect(() => {
+  useMemo(() => {
     if (locale === 'uk') {
       LocaleConfig.locales.uk = calendarLocales.uk;
       LocaleConfig.defaultLocale = 'uk';
@@ -42,6 +47,13 @@ export const CalendarItem = () => {
       LocaleConfig.defaultLocale = 'en';
     }
   }, [locale]);
+
+  useEffect(() => {
+    if (initialSelectedDate) {
+      setSelected(initialSelectedDate);
+      setCurrentMonth(initialSelectedDate);
+    }
+  }, [initialSelectedDate]);
 
   const onDayPress = (day: any) => {
     setSelected(day.dateString);
@@ -108,6 +120,7 @@ export const CalendarItem = () => {
     <Fragment>
       <CalendarProvider date={selected}>
         <Calendar
+          key={locale}
           initialPosition={Positions.OPEN}
           closeOnDayPress={false}
           enableSwipeMonths

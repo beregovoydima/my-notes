@@ -12,4 +12,12 @@ export class SettingsStoreService implements SettingsStoreServiceContract {
   public setStoreColors(colors: string[]): void {
     this.storeRepository.set('settings', 'setColors', colors);
   }
+
+  public setStoreShowCardBackground(showCardBackground: boolean): void {
+    this.storeRepository.set(
+      'settings',
+      'setShowCardBackground',
+      showCardBackground,
+    );
+  }
 }

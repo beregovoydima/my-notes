@@ -6,8 +6,9 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useTheme} from '@/assets/config/colors';
 import {CalendarEventTaskType, ScreenNavigationProp} from '@/core/interfaces';
 import {useNavigation} from '@react-navigation/native';
-import {getHighlightedParts} from '@/core/utils';
+import {getHighlightedParts, hex2rgba} from '@/core/utils';
 import {useTranslation} from '@/core/i18n';
+import {useCardBackground} from '@/core/hooks';
 
 interface CalendarEventCardProps {
   item: CalendarEventTaskType;
@@ -21,6 +22,7 @@ export const CalendarEventCard = ({
   const {colors} = useTheme();
   const {t} = useTranslation();
   const navigation: ScreenNavigationProp = useNavigation();
+  const showCardBackground = useCardBackground();
 
   const openCalendarEvent = (id: string) => {
     navigation.push('CalendarEvent', {eventId: id});
@@ -50,6 +52,12 @@ export const CalendarEventCard = ({
       style={{backgroundColor: colors.whiteColor, margin: 4}}
       onPress={() => openCalendarEvent(item.id)}>
       <Card.Title
+        style={[
+          showCardBackground && {
+            backgroundColor: hex2rgba(item.color || colors.primary, 0.05),
+          },
+          styles.topBorder,
+        ]}
         title={
           searchQuery ? (
             <Text>
@@ -73,7 +81,13 @@ export const CalendarEventCard = ({
         }
         left={props => leftContent(props)}
       />
-      <Card.Content>
+      <Card.Content
+        style={[
+          showCardBackground && {
+            backgroundColor: hex2rgba(item.color || colors.primary, 0.05),
+          },
+          styles.bottomBorder,
+        ]}>
         {item.info ? (
           <Text>
             {searchQuery
@@ -138,5 +152,13 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-start',
+  },
+  topBorder: {
+    borderTopEndRadius: 12,
+    borderTopLeftRadius: 12,
+  },
+  bottomBorder: {
+    borderBottomLeftRadius: 12,
+    borderBottomRightRadius: 12,
   },
 });

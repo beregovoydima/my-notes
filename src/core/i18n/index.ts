@@ -5,6 +5,7 @@ import {
 } from 'react-i18next';
 import {getLocales} from 'react-native-localize';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {registerTranslation} from 'react-native-paper-dates';
 
 // Импорт переводов
 import {uk} from './locales/uk';
@@ -240,6 +241,28 @@ export interface TranslationKeys {
     twoHoursBefore: string;
   };
 
+  // Date Picker (react-native-paper-dates)
+  datePicker: {
+    save: string;
+    selectSingle: string;
+    selectMultiple: string;
+    selectRange: string;
+    notAccordingToDateFormat: (input: string) => string;
+    mustBeHigherThan: (date: string) => string;
+    mustBeLowerThan: (date: string) => string;
+    mustBeBetween: (startDate: string, endDate: string) => string;
+    dateIsDisabled: string;
+    previous: string;
+    next: string;
+    typeInDate: string;
+    pickDateFromCalendar: string;
+    close: string;
+    cancel: string;
+    confirm: string;
+    hour: string;
+    minute: string;
+  };
+
   // Валидация
   validation: {
     required: string;
@@ -305,39 +328,52 @@ export const getCurrentLocale = async (): Promise<SupportedLocale> => {
   }
 };
 
+// Регистрация переводов для react-native-paper-dates
+const registerDatePickerTranslations = () => {
+  // Регистрируем переводы для всех поддерживаемых языков
+  registerTranslation('en', en.datePicker as any);
+  registerTranslation('ru', ru.datePicker as any);
+  registerTranslation('uk', uk.datePicker as any);
+};
+
 // Инициализация i18next
 const initializeI18n = async () => {
   const currentLocale = await getCurrentLocale();
 
   return new Promise<void>((resolve, reject) => {
-    i18n.use(initReactI18next).init({
-      resources: {
-        uk: {
-          translation: uk,
+    i18n.use(initReactI18next).init(
+      {
+        resources: {
+          uk: {
+            translation: uk,
+          },
+          ru: {
+            translation: ru,
+          },
+          en: {
+            translation: en,
+          },
         },
-        ru: {
-          translation: ru,
+        lng: currentLocale, // используем сохраненную локаль
+        fallbackLng: 'en',
+        interpolation: {
+          escapeValue: false, // React уже экранирует значения
         },
-        en: {
-          translation: en,
+        react: {
+          useSuspense: false, // Отключаем Suspense для React Native
         },
+        compatibilityJSON: 'v3', // Добавляем для совместимости
       },
-      lng: currentLocale, // используем сохраненную локаль
-      fallbackLng: 'en',
-      interpolation: {
-        escapeValue: false, // React уже экранирует значения
+      err => {
+        if (err) {
+          reject(err);
+        } else {
+          // Регистрируем переводы для date picker после успешной инициализации
+          registerDatePickerTranslations();
+          resolve();
+        }
       },
-      react: {
-        useSuspense: false, // Отключаем Suspense для React Native
-      },
-      compatibilityJSON: 'v3', // Добавляем для совместимости
-    }, (err) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve();
-      }
-    });
+    );
   });
 };
 
@@ -350,16 +386,17 @@ export const initI18n = async (): Promise<void> => {
   if (initPromise) {
     return initPromise;
   }
-  
+
   initPromise = initializeI18n()
-    .then(() => {
+    .then(async () => {
       isInitialized = true;
+      setMomentLocale(await getCurrentLocale());
     })
-    .catch((error) => {
+    .catch(error => {
       console.error('i18n initialization failed:', error);
       throw error;
     });
-    
+
   return initPromise;
 };
 
@@ -376,7 +413,9 @@ export const setLocale = async (locale: SupportedLocale): Promise<void> => {
   try {
     await i18n.changeLanguage(locale);
     await AsyncStorage.setItem('userLocale', locale);
-    await setMomentLocale(locale);
+    setMomentLocale(locale);
+    // Регистрируем переводы для date picker при смене языка
+    registerDatePickerTranslations();
   } catch (error) {
     console.warn('Error setting locale:', error);
   }

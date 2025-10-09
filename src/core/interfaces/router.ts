@@ -10,11 +10,12 @@ export type RootStackParamList = {
     selectedDate?: string;
   };
   Notes: undefined;
-  Calendar: undefined;
+  Calendar: {selectedDate?: string} | undefined;
   Tasks: undefined;
   Search: undefined;
   More: undefined;
   Settings: undefined;
+  Main: {screen?: string; params?: any} | undefined;
 
   // Другие экраны
 };

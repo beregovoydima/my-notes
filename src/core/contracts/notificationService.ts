@@ -8,6 +8,7 @@ export interface NotificationServiceContract {
     message: string;
     date: Date;
     id: string;
+    eventDate?: string;
   }): void;
   requestNotificationPermission(): Promise<PermissionStatus | undefined>;
   cancelSheduleNotifications(notificationIds: string[]): void;

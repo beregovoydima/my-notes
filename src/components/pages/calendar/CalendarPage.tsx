@@ -5,10 +5,15 @@ import {CalendarItem} from '@/components/calendar/CalendarItem';
 import {Button, Dialog, Portal, Text} from 'react-native-paper';
 import {calendarService, notificationService} from '@/core/services';
 import {useTranslation} from '@/core/i18n';
+import {RouteProp} from '@react-navigation/native';
+import {RootStackParamList} from '@/core/interfaces';
 
-export function CalendarPage() {
+type CalendarPageRouteProp = RouteProp<RootStackParamList, 'Calendar'>;
+
+export function CalendarPage({route}: {route?: CalendarPageRouteProp}) {
   const {colors} = useTheme();
   const {t} = useTranslation();
+  const selectedDate = route?.params?.selectedDate;
 
   const getEventCollection = async () => {
     const response = await calendarService.storageGetCalendarEventCollection();
@@ -45,7 +50,7 @@ export function CalendarPage() {
         <Appbar.Action icon="magnify" />
       </Appbar.Header> */}
       <View style={[styles.container, {backgroundColor: colors.background}]}>
-        <CalendarItem />
+        <CalendarItem initialSelectedDate={selectedDate} />
       </View>
     </SafeAreaView>
   );

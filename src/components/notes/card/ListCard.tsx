@@ -5,7 +5,7 @@ import {
   NotesListItemChildren,
   ScreenNavigationProp,
 } from '@/core/interfaces';
-import {getHighlightedParts} from '@/core/utils';
+import {getHighlightedParts, hex2rgba} from '@/core/utils';
 import React, {memo, useCallback, useMemo, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Avatar, Card, Icon, Text} from 'react-native-paper';
@@ -15,6 +15,7 @@ import {ListCardItemCildren} from '../list/ListCardItemChildren';
 import {notesService} from '@/core/services';
 import {useNavigation} from '@react-navigation/native';
 import {useTranslation} from '@/core/i18n';
+import {useCardBackground} from '@/core/hooks';
 
 interface Props {
   list: NotesListItem;
@@ -26,6 +27,7 @@ export const ListCard = memo(({list, searchQuery}: Props) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const {t} = useTranslation();
   const navigation: ScreenNavigationProp = useNavigation();
+  const showCardBackground = useCardBackground();
 
   const getLeftIcon = (props: any) => {
     return (
@@ -114,6 +116,13 @@ export const ListCard = memo(({list, searchQuery}: Props) => {
         style={[{backgroundColor: colors.whiteColor}]}
         onPress={() => editList(list.id)}>
         <Card.Title
+          style={[
+            showCardBackground && {
+              backgroundColor: hex2rgba(list.color || colors.primary, 0.08),
+              borderBottomColor: hex2rgba(list.color || colors.primary, 0.08),
+            },
+            styles.topBorder,
+          ]}
           title={
             searchQuery ? (
               <Text>
@@ -142,7 +151,13 @@ export const ListCard = memo(({list, searchQuery}: Props) => {
           left={getLeftIcon}
           right={() => getMoreIcon(list)}
         />
-        <Card.Content>
+        <Card.Content
+          style={[
+            showCardBackground && {
+              backgroundColor: hex2rgba(list.color || colors.primary, 0.08),
+            },
+            styles.bottomBorder,
+          ]}>
           <View style={styles.footer}>
             <View style={styles.footer}>
               {list.updated ? (
@@ -204,5 +219,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  topBorder: {
+    borderTopEndRadius: 12,
+    borderTopLeftRadius: 12,
+  },
+  bottomBorder: {
+    borderBottomLeftRadius: 12,
+    borderBottomRightRadius: 12,
   },
 });

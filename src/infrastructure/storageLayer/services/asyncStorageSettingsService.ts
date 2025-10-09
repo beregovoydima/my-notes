@@ -27,4 +27,17 @@ export class AsyncStorageSettingsService
     }
     return null;
   }
+
+  public async setShowCardBackground(
+    showCardBackground: boolean,
+  ): Promise<void> {
+    const settings = await this.getSettings();
+    if (settings) {
+      const updatedSettings = {
+        ...settings,
+        showCardBackground,
+      };
+      return await this.setSettings(updatedSettings);
+    }
+  }
 }

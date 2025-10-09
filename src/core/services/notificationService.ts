@@ -20,8 +20,9 @@ export class NotificationService implements NotificationServiceContract {
     message: string;
     date: Date;
     id: string;
+    eventDate?: string;
   }): void {
-    const {message, title, date, id} = info;
+    const {message, title, date, id, eventDate} = info;
 
     PushNotification.localNotificationSchedule({
       message: message,
@@ -29,6 +30,7 @@ export class NotificationService implements NotificationServiceContract {
       channelId: CALENDAR_CHANEL_ID,
       date: date,
       id: id,
+      userInfo: {eventDate: eventDate || date.toISOString().split('T')[0]},
     });
   }
 

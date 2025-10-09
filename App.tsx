@@ -3,7 +3,7 @@ import {PaperProvider} from 'react-native-paper';
 import {NavigationContainer} from '@react-navigation/native';
 import {lightTheme} from './src/assets/config/colors';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {Appearance, StyleSheet, View, Text} from 'react-native';
+import {Appearance, StyleSheet, View, ActivityIndicator} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {NoteEditPage} from './src/components/pages/notes/NoteEditPage';
 import {ListEditPage} from './src/components/pages/notes/ListEditPage';
@@ -13,16 +13,18 @@ import {NavBar} from './src/components/navigation/Navbar';
 import {CalendarEvent} from './src/components/pages/calendar/CalendarEvent';
 import {SnackbarProvider} from './src/components/ui/snackbar/Snackbar';
 import {ModalProvider} from './src/components/context/modals/ModalProvider';
-// Импорт i18n для инициализации переводов
 import './src/core/i18n';
-import {initI18n, isI18nReady} from './src/core/i18n';
-// import moment from 'moment';
-// import {ruMomentLocale} from './src/core/utils/calendar';
-
+import {appService} from './src/core/services';
+import {initI18n} from './src/core/i18n';
 const Stack = createNativeStackNavigator();
 
+export const navigationRef = React.createRef<any>();
+
+export function navigate(name: string, params?: any) {
+  navigationRef.current?.navigate(name, params);
+}
+
 const App: React.FC = () => {
-  const [isI18nReady, setIsI18nReady] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const isDarkMode = Appearance.getColorScheme() === 'dark';
 
@@ -30,11 +32,9 @@ const App: React.FC = () => {
     const initializeApp = async () => {
       try {
         await initI18n();
-        setIsI18nReady(true);
+        await appService.initializeApp();
       } catch (error) {
-        console.error('Failed to initialize i18n:', error);
-        // Даже если i18n не инициализировался, продолжаем работу
-        setIsI18nReady(true);
+        console.error('Failed to initialize app:', error);
       } finally {
         setIsLoading(false);
       }
@@ -47,19 +47,13 @@ const App: React.FC = () => {
   if (isLoading) {
     return (
       <View style={styles.loadingContainer}>
-        <Text style={styles.loadingText}>Loading translations...</Text>
+        <ActivityIndicator size={60} color="#3F51B5" />
       </View>
     );
   }
 
-  // try {
-  //   moment.updateLocale('ru', ruMomentLocale);
-  // } catch (e) {
-  //   Alert.alert(e);
-  // }
-
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <Provider store={store}>
         <PaperProvider theme={isDarkMode ? lightTheme : lightTheme}>
           <SnackbarProvider>
@@ -107,11 +101,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f5f5f5',
-  },
-  loadingText: {
-    fontSize: 16,
-    color: '#666',
+    backgroundColor: '#ffffff',
   },
 });
 

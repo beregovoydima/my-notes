@@ -77,7 +77,7 @@ export const lightColors = {
   greyDarkFill: '#F0F2F5',
   greyIconColor: '#6D7693',
   primaryContainer: '#E8EAF6',
-  onPrimaryContainer: '#DEE4F0',
+  // onPrimaryContainer: '#DEE4F0',
   purpleDeep: '#673AB7',
   yellowAccent: '#FFD600',
   cian: '#00BCD4',

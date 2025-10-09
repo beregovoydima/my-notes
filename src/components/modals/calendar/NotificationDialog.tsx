@@ -1,10 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import {useTheme} from '@/assets/config/colors';
 import {CalnedarEventTimeType} from '@/core/interfaces';
-import {
-  DateTimePickerAndroid,
-  DateTimePickerEvent,
-} from '@react-native-community/datetimepicker';
+import {DatePickerModal, TimePickerModal} from 'react-native-paper-dates';
 import moment from 'moment';
 import React, {useState} from 'react';
 import {TouchableOpacity, View} from 'react-native';
@@ -25,9 +22,11 @@ export const NotificationDialog = ({
   eventType: CalnedarEventTimeType;
 }) => {
   const {colors} = useTheme();
-  const {t} = useTranslation();
+  const {t, locale} = useTranslation();
   const [isCustomDate, setIsCustomDate] = useState(false);
   const [customDate, setCustomDate] = useState(moment(startTime).format());
+  const [datePickerVisible, setDatePickerVisible] = useState(false);
+  const [timePickerVisible, setTimePickerVisible] = useState(false);
 
   const timeType =
     eventType === 'day'
@@ -84,49 +83,35 @@ export const NotificationDialog = ({
           },
         ];
 
-  const onChange = (_: DateTimePickerEvent, selectedDate?: Date) => {
+  const onDateChange = (selectedDate: Date) => {
     setCustomDate(
       moment(customDate)
         .set({
-          year: new Date(
-            selectedDate ? selectedDate : new Date(),
-          ).getFullYear(),
-          month: new Date(selectedDate ? selectedDate : new Date()).getMonth(),
-          date: new Date(selectedDate ? selectedDate : new Date()).getDate(),
+          year: selectedDate.getFullYear(),
+          month: selectedDate.getMonth(),
+          date: selectedDate.getDate(),
         })
         .format('YYYY-MM-DD HH:mm'),
     );
   };
 
-  const onStartTimeChange = (_: DateTimePickerEvent, selectedDate?: Date) => {
+  const onTimeChange = (selectedDate: Date) => {
     setCustomDate(
       moment(customDate)
         .set({
-          hours: new Date(selectedDate ? selectedDate : new Date()).getHours(),
-          minutes: new Date(
-            selectedDate ? selectedDate : new Date(),
-          ).getMinutes(),
+          hours: selectedDate.getHours(),
+          minutes: selectedDate.getMinutes(),
         })
         .format('YYYY-MM-DD HH:mm'),
     );
   };
 
   const showDatePicker = () => {
-    DateTimePickerAndroid.open({
-      value: new Date(customDate),
-      onChange,
-      mode: 'date',
-      is24Hour: true,
-    });
+    setDatePickerVisible(true);
   };
 
   const showTimePicker = () => {
-    DateTimePickerAndroid.open({
-      value: new Date(customDate),
-      onChange: onStartTimeChange,
-      mode: 'time',
-      is24Hour: true,
-    });
+    setTimePickerVisible(true);
   };
 
   const updateTime = (time: Date) => {
@@ -233,6 +218,42 @@ export const NotificationDialog = ({
           </Dialog.Actions>
         )}
       </Dialog>
+
+      {/* Date Picker Modal */}
+      <DatePickerModal
+        locale={locale}
+        mode="single"
+        visible={datePickerVisible}
+        onDismiss={() => setDatePickerVisible(false)}
+        date={new Date(customDate)}
+        onConfirm={params => {
+          if (params.date) {
+            onDateChange(params.date);
+          }
+          setDatePickerVisible(false);
+        }}
+        label={t('notifications.selectDate')}
+        saveLabel={t('common.confirm')}
+      />
+
+      {/* Time Picker Modal */}
+      <TimePickerModal
+        locale={locale}
+        visible={timePickerVisible}
+        onDismiss={() => setTimePickerVisible(false)}
+        onConfirm={({hours, minutes}) => {
+          const date = new Date(customDate);
+          date.setHours(hours);
+          date.setMinutes(minutes);
+          onTimeChange(date);
+          setTimePickerVisible(false);
+        }}
+        hours={new Date(customDate).getHours()}
+        minutes={new Date(customDate).getMinutes()}
+        label={t('notifications.selectTime')}
+        confirmLabel={t('datePicker.confirm')}
+        cancelLabel={t('datePicker.cancel')}
+      />
     </Portal>
   );
 };

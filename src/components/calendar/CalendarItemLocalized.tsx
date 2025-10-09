@@ -156,8 +156,8 @@ export const CalendarItemLocalized = () => {
     calendarService.storeGetCalendarEventCollection(),
   );
 
-  // Установка локали для moment и календаря
-  useEffect(() => {
+  // Настройка локализации календаря ДО рендера
+  React.useMemo(() => {
     setMomentLocale(locale);
 
     // Настройка локали для react-native-calendars
@@ -230,6 +230,7 @@ export const CalendarItemLocalized = () => {
     <Fragment>
       <CalendarProvider date={selected}>
         <Calendar
+          key={locale}
           initialPosition={Positions.OPEN}
           closeOnDayPress={false}
           enableSwipeMonths

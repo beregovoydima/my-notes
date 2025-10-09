@@ -140,6 +140,9 @@ export const ru = {
     date: 'Дата',
     time: 'Время',
     addNotification: 'Добавить уведомление',
+    selectDate: 'Выберите дату',
+    selectStartTime: 'Выберите время начала',
+    selectEndTime: 'Выберите время окончания',
   },
 
   // Задачи
@@ -227,6 +230,30 @@ export const ru = {
     twoHoursBefore: 'За 2 часа',
   },
 
+  // Date Picker (react-native-paper-dates)
+  datePicker: {
+    save: 'Сохранить',
+    selectSingle: 'Выберите дату',
+    selectMultiple: 'Выберите даты',
+    selectRange: 'Выберите период',
+    notAccordingToDateFormat: (input: string) =>
+      `Формат даты должен быть: ${input}`,
+    mustBeHigherThan: (date: string) => `Должно быть позже ${date}`,
+    mustBeLowerThan: (date: string) => `Должно быть раньше ${date}`,
+    mustBeBetween: (startDate: string, endDate: string) =>
+      `Должно быть между ${startDate} - ${endDate}`,
+    dateIsDisabled: 'День недоступен',
+    previous: 'Предыдущий',
+    next: 'Следующий',
+    typeInDate: 'Введите дату',
+    pickDateFromCalendar: 'Выберите дату из календаря',
+    close: 'Закрыть',
+    cancel: 'Отмена',
+    confirm: 'Подтвердить',
+    hour: 'Час',
+    minute: 'Минута',
+  },
+
   // Валидация
   validation: {
     required: 'Это поле обязательно',
@@ -272,5 +299,7 @@ export const ru = {
     language: 'Язык',
     selectLanguage: 'Выберите язык',
     cancel: 'Отмена',
+    showCardBackground: 'Показывать фон карточек',
+    showCardBackgroundDescription: 'Отображать цветной фон на карточках',
   },
 };

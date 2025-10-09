@@ -120,7 +120,7 @@ Object.entries(momentLocales).forEach(([locale, config]) => {
 
 // Функция для установки локали moment
 export const setMomentLocale = (locale: SupportedLocale): void => {
-  moment.locale(locale);
+  moment.updateLocale(locale, momentLocales[locale]);
 };
 
 // Функция для форматирования даты

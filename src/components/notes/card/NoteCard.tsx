@@ -2,17 +2,19 @@ import {useTheme} from '@/assets/config/colors';
 import {NotesMenu} from '@/components/ui/menu/NotesMenu';
 import {NotesItems, ScreenNavigationProp} from '@/core/interfaces';
 import {notesService} from '@/core/services';
-import {getHighlightedParts} from '@/core/utils';
+import {getHighlightedParts, hex2rgba} from '@/core/utils';
 import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 import React, {useCallback} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Avatar, Card, Icon, Text} from 'react-native-paper';
+import {useCardBackground} from '@/core/hooks';
 
 export const NoteCard = React.memo(
   ({item, searchQuery}: {item: NotesItems; searchQuery?: string}) => {
     const {colors} = useTheme();
     const navigation: ScreenNavigationProp = useNavigation();
+    const showCardBackground = useCardBackground();
 
     const stripHtmlTags = (htmlString: string) => {
       const stringWithLineBreaks = htmlString.replace(/<li>/g, '\n');
@@ -60,10 +62,19 @@ export const NoteCard = React.memo(
 
     return (
       <View style={styles.item}>
-        <Card
-          style={{backgroundColor: colors.whiteColor}}
-          onPress={() => editNote(item.id)}>
+        <Card onPress={() => editNote(item.id)}>
           <Card.Title
+            style={[
+              styles.topBorder,
+              showCardBackground && {
+                backgroundColor: hex2rgba(item.color || colors.primary, 0.08),
+                borderBottomColor: hex2rgba(item.color || colors.primary, 0.08),
+              },
+              !showCardBackground && {
+                backgroundColor: colors.whiteColor,
+                borderBottomColor: colors.whiteColor,
+              },
+            ]}
             title={
               searchQuery ? (
                 <Text>
@@ -89,7 +100,17 @@ export const NoteCard = React.memo(
             left={props => leftContent(props)}
             right={getMoreIcon}
           />
-          <Card.Content>
+          <Card.Content
+            style={[
+              styles.bottomBorder,
+              showCardBackground && {
+                backgroundColor: hex2rgba(item.color || colors.primary, 0.08),
+              },
+              !showCardBackground && {
+                backgroundColor: colors.whiteColor,
+                borderTopColor: colors.whiteColor,
+              },
+            ]}>
             <View style={styles.footer}>
               <View style={styles.footer}>
                 {item.updated ? (
@@ -137,5 +158,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  topBorder: {
+    borderTopEndRadius: 12,
+    borderTopLeftRadius: 12,
+  },
+  bottomBorder: {
+    borderBottomLeftRadius: 12,
+    borderBottomRightRadius: 12,
   },
 });

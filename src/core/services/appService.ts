@@ -29,4 +29,34 @@ export class AppService implements AppServiceContract {
       colors: [...colors],
     });
   }
+
+  public setStoreShowCardBackground(showCardBackground: boolean): void {
+    return this.settingsStoreService.setStoreShowCardBackground(
+      showCardBackground,
+    );
+  }
+
+  public async setStorageShowCardBackground(
+    showCardBackground: boolean,
+  ): Promise<void> {
+    const settings = this.getStoreSettings();
+
+    return await this.asyncStorageSettingsService.setSettings({
+      ...settings,
+      showCardBackground,
+    });
+  }
+
+  public async initializeSettings(): Promise<void> {
+    const settings = await this.getStorageSettings();
+    if (settings) {
+      // Загружаем настройки в Redux store
+      this.setStoreColors(settings.colors);
+      this.setStoreShowCardBackground(settings.showCardBackground);
+    }
+  }
+
+  public async initializeApp(): Promise<void> {
+    await this.initializeSettings();
+  }
 }

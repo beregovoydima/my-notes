@@ -3,6 +3,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 export interface StateSettings {
   colors: string[];
+  showCardBackground: boolean;
 }
 
 const initialState: StateSettings = {
@@ -17,6 +18,7 @@ const initialState: StateSettings = {
     lightColors.orangeColor,
     lightColors.blueGrey,
   ],
+  showCardBackground: true,
 };
 
 const settingsSlice = createSlice({
@@ -26,8 +28,11 @@ const settingsSlice = createSlice({
     setColors: (state, action: PayloadAction<string[]>) => {
       state.colors = [...action.payload];
     },
+    setShowCardBackground: (state, action: PayloadAction<boolean>) => {
+      state.showCardBackground = action.payload;
+    },
   },
 });
 
-export const {setColors} = settingsSlice.actions;
+export const {setColors, setShowCardBackground} = settingsSlice.actions;
 export default settingsSlice.reducer;

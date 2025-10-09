@@ -142,6 +142,9 @@ export const en = {
     date: 'Date',
     time: 'Time',
     addNotification: 'Add Notification',
+    selectDate: 'Select Date',
+    selectStartTime: 'Select Start Time',
+    selectEndTime: 'Select End Time',
   },
 
   // Tasks
@@ -219,6 +222,7 @@ export const en = {
     permissionRequired:
       'To work with notifications, you need to allow them in the app settings. Go to settings?',
     selectTime: 'Select time',
+    selectDate: 'Select date',
     custom: 'Custom',
     dayBefore: 'Day before',
     twoDaysBefore: '2 days before',
@@ -227,6 +231,30 @@ export const en = {
     thirtyMinutesBefore: '30 minutes before',
     hourBefore: 'Hour before',
     twoHoursBefore: '2 hours before',
+  },
+
+  // Date Picker (react-native-paper-dates)
+  datePicker: {
+    save: 'Save',
+    selectSingle: 'Select date',
+    selectMultiple: 'Select dates',
+    selectRange: 'Select period',
+    notAccordingToDateFormat: (input: string) =>
+      `Date format must be: ${input}`,
+    mustBeHigherThan: (date: string) => `Must be later than ${date}`,
+    mustBeLowerThan: (date: string) => `Must be earlier than ${date}`,
+    mustBeBetween: (startDate: string, endDate: string) =>
+      `Must be between ${startDate} - ${endDate}`,
+    dateIsDisabled: 'Day is not allowed',
+    previous: 'Previous',
+    next: 'Next',
+    typeInDate: 'Type in date',
+    pickDateFromCalendar: 'Pick date from calendar',
+    close: 'Close',
+    cancel: 'Cancel',
+    confirm: 'Confirm',
+    hour: 'Hour',
+    minute: 'Minute',
   },
 
   // Validation
@@ -274,5 +302,7 @@ export const en = {
     language: 'Language',
     selectLanguage: 'Select Language',
     cancel: 'Cancel',
+    showCardBackground: 'Show card background',
+    showCardBackgroundDescription: 'Display colored background',
   },
 };

@@ -6,12 +6,14 @@ import {useTheme} from '@/assets/config/colors';
 import {useTranslation} from '@/core/i18n';
 import {getAppVersion} from '@/core/utils';
 import {LanguageModal} from '@/components/modals/common/LanguageModal';
+import {ColorPicker} from '@/components/modals/ui/ColorPicker';
 import {appService} from '@/core/services';
 
 export function MorePage() {
   const {colors} = useTheme();
   const {t} = useTranslation();
   const [languageModalVisible, setLanguageModalVisible] = useState(false);
+  const [colorPickerVisible, setColorPickerVisible] = useState(false);
   const [showCardBackground, setShowCardBackground] = useState(true);
 
   // Получаем версию приложения
@@ -19,6 +21,8 @@ export function MorePage() {
 
   const showLanguageModal = () => setLanguageModalVisible(true);
   const hideLanguageModal = () => setLanguageModalVisible(false);
+  const showColorPicker = () => setColorPickerVisible(true);
+  const hideColorPicker = () => setColorPickerVisible(false);
 
   // Загружаем настройки при монтировании компонента
   useEffect(() => {
@@ -94,14 +98,14 @@ export function MorePage() {
               titleStyle={{color: colors.text}}
               descriptionStyle={{color: colors.greyColor}}
             />
-            {/* <Divider />
+            <Divider />
             <List.Item
-              title={t('more.settings')}
-              left={props => <List.Icon {...props} icon="cog" />}
+              title={t('sorting.colorSortOrder')}
+              left={props => <List.Icon {...props} icon="sort" />}
               right={props => <List.Icon {...props} icon="chevron-right" />}
-              onPress={() => {}}
+              onPress={showColorPicker}
               titleStyle={{color: colors.text}}
-            /> */}
+            />
           </Card.Content>
         </Card>
 
@@ -141,6 +145,13 @@ export function MorePage() {
       <LanguageModal
         visible={languageModalVisible}
         onDismiss={hideLanguageModal}
+      />
+
+      {/* Модальное окно порядка сортировки цветов */}
+      <ColorPicker
+        visible={colorPickerVisible}
+        hideModal={hideColorPicker}
+        changeColor={() => {}}
       />
     </>
   );

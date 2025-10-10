@@ -21,22 +21,22 @@ export const NotesSegmentedButtons = ({changePageType, page}: Props) => {
         style={styles.buttons}
         buttons={[
           {
-            icon: 'note-multiple',
+            icon: page === 'all' ? 'note-multiple' : 'note-multiple-outline',
             value: 'all',
             label: t('filters.all'),
           },
           {
-            icon: 'note-multiple',
+            icon: page === 'notes' ? 'note-multiple' : 'note-multiple-outline',
             value: 'notes',
             label: t('filters.notes'),
           },
           {
-            icon: 'clipboard-list',
+            icon: page === 'list' ? 'clipboard-list' : 'clipboard-list-outline',
             value: 'list',
             label: t('filters.lists'),
           },
           {
-            icon: 'folder',
+            icon: page === 'folders' ? 'folder' : 'folder-outline',
             value: 'folders',
             label: t('filters.folders'),
           },

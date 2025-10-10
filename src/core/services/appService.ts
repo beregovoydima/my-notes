@@ -2,6 +2,7 @@ import {AsyncStorageSettingsServiceContract} from '@/infrastructure/storageLayer
 import {SettingsStoreServiceContract} from '@/infrastructure/storeLayer/services/contracts';
 import {AppServiceContract} from '../contracts/appService.contract';
 import {StateSettings} from '@/framework/store/settings';
+import {styleColorArr} from '@/core/utils';
 
 export class AppService implements AppServiceContract {
   constructor(
@@ -11,6 +12,11 @@ export class AppService implements AppServiceContract {
 
   public getStoreSettings(): StateSettings {
     return this.settingsStoreService.getSettings();
+  }
+
+  public getStoreColors(): string[] {
+    const settings = this.settingsStoreService.getSettings();
+    return settings?.colors || styleColorArr;
   }
 
   public setStoreColors(colors: string[]): void {

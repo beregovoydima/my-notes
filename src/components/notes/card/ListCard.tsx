@@ -5,7 +5,12 @@ import {
   NotesListItemChildren,
   ScreenNavigationProp,
 } from '@/core/interfaces';
-import {getHighlightedParts, hex2rgba} from '@/core/utils';
+import {
+  getHighlightedParts,
+  handleShare,
+  hex2rgba,
+  parseList,
+} from '@/core/utils';
 import React, {memo, useCallback, useMemo, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Avatar, Card, Icon, Text} from 'react-native-paper';
@@ -55,6 +60,13 @@ export const ListCard = memo(({list, searchQuery}: Props) => {
     navigation.navigate('ListEdit', {listId: id});
   };
 
+  const shareListFunc = () => {
+    handleShare({
+      title: list.title,
+      message: parseList(list),
+    });
+  };
+
   const getMoreIcon = (el: NotesListItem) => {
     return (
       <View style={styles.buttons}>
@@ -71,6 +83,7 @@ export const ListCard = memo(({list, searchQuery}: Props) => {
         <ListMenu
           editList={() => editList(list.id)}
           deleteList={id => deleteList(id)}
+          shareList={shareListFunc}
           listId={el.id}
         />
       </View>
@@ -180,15 +193,24 @@ export const ListCard = memo(({list, searchQuery}: Props) => {
               </Text>
             </View>
 
-            <Text
-              variant="labelSmall"
-              // eslint-disable-next-line react-native/no-inline-styles
-              style={{
-                color: colors.greyColor,
-                marginLeft: list.updated ? 4 : 0,
-              }}>
-              {list.folder?.name}
-            </Text>
+            <View style={styles.footer}>
+              {list.folder?.name ? (
+                <Icon
+                  source="folder-outline"
+                  size={12}
+                  color={colors.greyColor}
+                />
+              ) : null}
+              <Text
+                variant="labelSmall"
+                // eslint-disable-next-line react-native/no-inline-styles
+                style={{
+                  color: colors.greyColor,
+                  marginLeft: list.folder?.name ? 4 : 0,
+                }}>
+                {list.folder?.name}
+              </Text>
+            </View>
           </View>
           {isExpanded
             ? list.items.map(el => {

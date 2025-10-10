@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native';
 import {useTheme} from '@/assets/config/colors';
-import {ColorPicker} from '@/components/modals/ui/ColorPicker';
+import {ColorMenu} from '@/components/ui/menu/ColorMenu';
 import {getUuid, hex2rgba} from '@/core/utils';
 import {
   Button,
@@ -269,7 +269,7 @@ export function CalendarEvent({route}: {route: any}) {
         visible={dialogVisible}
         apply={() => navigation.navigate('Calendar')}
         cancel={() => setDialogVisible(false)}
-        content={'Задача не сохранена, вы точно хотите выйти?'}
+        content={t('calendar.unsavedChangesWarning')}
       />
       {notificationDialogVisible && (
         <NotificationDialog
@@ -284,11 +284,6 @@ export function CalendarEvent({route}: {route: any}) {
         visible={settigsVisible}
         cancel={() => setSettigsVisible(false)}
         apply={openMobileSettings}
-      />
-      <ColorPicker
-        visible={showColorPicker}
-        hideModal={() => setShowColorPicker(false)}
-        changeColor={changeColor}
       />
       <SafeAreaView
         style={[styles.container, {backgroundColor: colors.background}]}>
@@ -315,22 +310,31 @@ export function CalendarEvent({route}: {route: any}) {
             <EditableText
               style={styles.header}
               label={event.title}
-              customText="Введите название задачи"
+              customText={t('tasks.enterTaskTitle')}
               isChecked={false}
               saveText={val => {
                 setEvent({...event, title: val});
               }}
             />
-            <TouchableOpacity onPress={() => setShowColorPicker(true)}>
-              <View
-                style={[
-                  {
-                    backgroundColor: event.color ? event.color : colors.primary,
-                  },
-                  styles.colorPicker,
-                ]}
-              />
-            </TouchableOpacity>
+            <ColorMenu
+              visible={showColorPicker}
+              onDismiss={() => setShowColorPicker(false)}
+              onSelectColor={changeColor}
+              anchorComponent={
+                <TouchableOpacity onPress={() => setShowColorPicker(true)}>
+                  <View
+                    style={[
+                      {
+                        backgroundColor: event.color
+                          ? event.color
+                          : colors.primary,
+                      },
+                      styles.colorPicker,
+                    ]}
+                  />
+                </TouchableOpacity>
+              }
+            />
 
             <CalendarEventEditMenu
               deleteEvent={deleteEvent}

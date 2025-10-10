@@ -60,7 +60,7 @@ export const CalendarEventCard = ({
         ]}
         title={
           searchQuery ? (
-            <Text>
+            <Text numberOfLines={2} ellipsizeMode="tail">
               {getHighlightedParts(item.title, searchQuery).map(
                 (part, index) => (
                   <Text
@@ -79,6 +79,7 @@ export const CalendarEventCard = ({
             item.title || t('lists.noTitle')
           )
         }
+        titleNumberOfLines={2}
         left={props => leftContent(props)}
       />
       <Card.Content
@@ -89,7 +90,7 @@ export const CalendarEventCard = ({
           styles.bottomBorder,
         ]}>
         {item.info ? (
-          <Text>
+          <Text numberOfLines={2} ellipsizeMode="tail">
             {searchQuery
               ? getHighlightedParts(item.info, searchQuery).map(
                   (part, index) => (

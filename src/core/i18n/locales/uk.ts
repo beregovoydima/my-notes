@@ -6,6 +6,7 @@ export const uk = {
     delete: 'Видалити',
     edit: 'Редагувати',
     add: 'Додати',
+    share: 'Поділитися',
     search: 'Пошук',
     loading: 'Завантаження...',
     error: 'Помилка',
@@ -143,6 +144,7 @@ export const uk = {
     selectDate: 'Оберіть дату',
     selectStartTime: 'Оберіть час початку',
     selectEndTime: 'Оберіть час закінчення',
+    unsavedChangesWarning: 'Завдання не збережено, ви точно хочете вийти?',
   },
 
   // Задачи
@@ -278,6 +280,7 @@ export const uk = {
     zToA: 'Від Я до А',
     byColorIndex: 'По індексу кольору',
     colorOrderInfo: 'Порядок сортування залежить від номера вибраного кольору',
+    colorSortOrder: 'Порядок сортування кольорів',
   },
 
   // Фильтры

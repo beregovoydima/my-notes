@@ -25,6 +25,7 @@ export const FabAddCalendarEventButton = ({
         icon={'plus'}
         onPress={() => onButtonPress()}
         style={[fabStyle.button]}
+        color={lightColors.whiteColor}
       />
     </Portal>
   );

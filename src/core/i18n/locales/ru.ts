@@ -6,6 +6,7 @@ export const ru = {
     delete: 'Удалить',
     edit: 'Редактировать',
     add: 'Добавить',
+    share: 'Поделиться',
     search: 'Поиск',
     loading: 'Загрузка...',
     error: 'Ошибка',
@@ -143,6 +144,7 @@ export const ru = {
     selectDate: 'Выберите дату',
     selectStartTime: 'Выберите время начала',
     selectEndTime: 'Выберите время окончания',
+    unsavedChangesWarning: 'Задача не сохранена, вы точно хотите выйти?',
   },
 
   // Задачи
@@ -278,6 +280,7 @@ export const ru = {
     zToA: 'От Я до А',
     byColorIndex: 'По индексу цвета',
     colorOrderInfo: 'Порядок сортировки зависит от номера выбранного цвета',
+    colorSortOrder: 'Порядок сортировки цветов',
   },
 
   // Фильтры

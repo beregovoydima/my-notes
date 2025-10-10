@@ -45,6 +45,9 @@ export function SearchPage() {
   };
 
   const focusSearchInput = () => {
+    if (searchbarRef.current?.isFocused()) {
+      searchbarRef.current?.blur();
+    }
     searchbarRef.current?.focus();
   };
 

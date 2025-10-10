@@ -8,9 +8,8 @@ import {
   SortDirection,
 } from '@/core/interfaces';
 import {ListCard} from './card/ListCard';
-import {notesService} from '@/core/services';
+import {notesService, appService} from '@/core/services';
 import {useSelector} from 'react-redux';
-import {styleColorArr} from '@/core/utils';
 import {NoteCard} from './card/NoteCard';
 import {FlashList} from '@shopify/flash-list';
 import {useTranslation} from '@/core/i18n';
@@ -33,6 +32,7 @@ export const AllNotesItem = memo(
   ({sortedType, sortDirection, filterFolder}: Props) => {
     const allList = useSelector(() => notesService.storeGetListCollection());
     const allNotes = useSelector(() => notesService.storeGetCollectionNote());
+    const storeColors = useSelector(() => appService.getStoreColors());
     const {t} = useTranslation();
 
     const sortedItems = useMemo(() => {
@@ -78,7 +78,7 @@ export const AllNotesItem = memo(
       }
 
       if (sortedType === 'color') {
-        const colors: Record<string, number> = styleColorArr.reduce(
+        const colors: Record<string, number> = storeColors.reduce(
           (acc: Record<string, number>, cur, i) => {
             acc[cur] = i;
             return acc;
@@ -95,7 +95,7 @@ export const AllNotesItem = memo(
       }
 
       return [...allList, ...allNotes];
-    }, [allList, allNotes, sortedType]);
+    }, [allList, allNotes, sortedType, storeColors]);
 
     const sortedItemsWithDiraction = useMemo(() => {
       if (sortDirection === 'asc') {

@@ -10,49 +10,64 @@ import {memo, useState} from 'react';
 interface Props {
   editNote: (id: string) => void;
   deleteNote: (id: string) => void;
+  shareNote: () => void;
   notes: NotesItems;
 }
 
-export const NotesMenu = memo(({editNote, deleteNote, notes}: Props) => {
-  const {colors} = useTheme();
-  const {t} = useTranslation();
-  const [visible, setVisible] = useState(false);
+export const NotesMenu = memo(
+  ({editNote, deleteNote, shareNote, notes}: Props) => {
+    const {colors} = useTheme();
+    const {t} = useTranslation();
+    const [visible, setVisible] = useState(false);
 
-  const openMenu = () => setVisible(true);
-  const closeMenu = () => setVisible(false);
+    const openMenu = () => setVisible(true);
+    const closeMenu = () => setVisible(false);
 
-  const changeFolder = () => {
-    closeMenu();
-    editNote(notes.id);
-  };
+    const changeFolder = () => {
+      closeMenu();
+      editNote(notes.id);
+    };
 
-  const delFolder = () => {
-    deleteNote(notes.id);
-  };
+    const delFolder = () => {
+      deleteNote(notes.id);
+    };
 
-  return (
-    <View>
-      <Menu
-        visible={visible}
-        onDismiss={closeMenu}
-        contentStyle={[{backgroundColor: colors.whiteColor}, styles.content]}
-        anchor={
-          <IconButton size={24} icon="dots-vertical" onPress={openMenu} />
-        }>
-        <Menu.Item
-          onPress={() => {
-            delFolder();
-          }}
-          title={t('common.delete')}
-        />
-        <Divider />
-        <Menu.Item onPress={() => changeFolder()} title={t('common.edit')} />
-        {/* <Divider />
-        <Menu.Item onPress={() => {}} title="To do" /> */}
-      </Menu>
-    </View>
-  );
-});
+    return (
+      <View>
+        <Menu
+          visible={visible}
+          onDismiss={closeMenu}
+          contentStyle={[{backgroundColor: colors.whiteColor}, styles.content]}
+          anchor={
+            <IconButton size={24} icon="dots-vertical" onPress={openMenu} />
+          }>
+          <Menu.Item
+            leadingIcon="pencil-outline"
+            onPress={() => changeFolder()}
+            title={t('common.edit')}
+          />
+          <Divider />
+          <Menu.Item
+            leadingIcon="share-variant-outline"
+            onPress={() => {
+              shareNote();
+              closeMenu();
+            }}
+            title={t('common.share')}
+          />
+          <Divider />
+          <Menu.Item
+            leadingIcon="delete-outline"
+            onPress={() => {
+              delFolder();
+            }}
+            title={t('common.delete')}
+          />
+        </Menu>
+      </View>
+    );
+  },
+);
 
 const styles = StyleSheet.create({
   content: {

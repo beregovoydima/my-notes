@@ -34,7 +34,7 @@ import {useTheme} from '@/assets/config/colors';
 import {Button, Chip, Divider} from 'react-native-paper';
 import {useSelector} from 'react-redux';
 import {getUuid, handleShare, hex2rgba, parseNoteLabel} from '@/core/utils';
-import {ColorPicker} from '@/components/modals/ui/ColorPicker';
+import {ColorMenu} from '@/components/ui/menu/ColorMenu';
 import {NotesEditMenu} from '@/components/ui/menu/NotesEditMenu';
 import {useNavigation} from '@react-navigation/native';
 import {AddFolderModal} from '@/components/modals/notes/AddFolderModal';
@@ -286,11 +286,6 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
         },
       ]}>
       <AddFolderModal visible={visible} hideModal={() => setVisible(false)} />
-      <ColorPicker
-        visible={showColorPicker}
-        hideModal={() => setShowColorPicker(false)}
-        changeColor={changeColor}
-      />
       <View
         style={[
           styles.content,
@@ -308,16 +303,23 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
           saveText={e => setNote({...note, title: e})}
           isChecked={false}
         />
-        <TouchableOpacity onPress={() => setShowColorPicker(true)}>
-          <View
-            style={[
-              {
-                backgroundColor: note.color ? note.color : colors.primary,
-              },
-              styles.colorPicker,
-            ]}
-          />
-        </TouchableOpacity>
+        <ColorMenu
+          visible={showColorPicker}
+          onDismiss={() => setShowColorPicker(false)}
+          onSelectColor={changeColor}
+          anchorComponent={
+            <TouchableOpacity onPress={() => setShowColorPicker(true)}>
+              <View
+                style={[
+                  {
+                    backgroundColor: note.color ? note.color : colors.primary,
+                  },
+                  styles.colorPicker,
+                ]}
+              />
+            </TouchableOpacity>
+          }
+        />
         <View>
           <Icon
             name="share-variant"

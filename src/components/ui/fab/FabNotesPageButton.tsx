@@ -32,6 +32,7 @@ export const FabNotesPageButton = ({showFolderModal, pageType}: Props) => {
       <FAB
         visible={isFocused}
         icon={'plus'}
+        color={lightColors.whiteColor}
         onPress={() => onButtonPress()}
         style={[fabStyle.button]}
       />

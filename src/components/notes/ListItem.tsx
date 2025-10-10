@@ -2,9 +2,8 @@ import React, {memo, useMemo} from 'react';
 import {StyleSheet, Text} from 'react-native';
 import {NotesListItem, NotesSortType, SortDirection} from '@/core/interfaces';
 import {ListCard} from './card/ListCard';
-import {notesService} from '@/core/services';
+import {notesService, appService} from '@/core/services';
 import {useSelector} from 'react-redux';
-import {styleColorArr} from '@/core/utils';
 import {FlashList} from '@shopify/flash-list';
 import {useTranslation} from '@/core/i18n';
 
@@ -18,6 +17,7 @@ const renderItem = ({item}: {item: NotesListItem}) => <ListCard list={item} />;
 
 export const ListItem = memo(({sortedType, sortDirection}: Props) => {
   const allList = useSelector(() => notesService.storeGetListCollection());
+  const storeColors = useSelector(() => appService.getStoreColors());
   const {t} = useTranslation();
 
   const sortedList = useMemo(() => {
@@ -47,7 +47,7 @@ export const ListItem = memo(({sortedType, sortDirection}: Props) => {
     }
 
     if (sortedType === 'color') {
-      const colors: Record<string, number> = styleColorArr.reduce(
+      const colors: Record<string, number> = storeColors.reduce(
         (acc: Record<string, number>, cur, i) => {
           acc[cur] = i;
           return acc;
@@ -64,7 +64,7 @@ export const ListItem = memo(({sortedType, sortDirection}: Props) => {
     }
 
     return allList;
-  }, [allList, sortedType]);
+  }, [allList, sortedType, storeColors]);
 
   const sortedListWithDiraction = useMemo(() => {
     if (sortDirection === 'asc') {

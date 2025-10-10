@@ -6,6 +6,7 @@ export const en = {
     delete: 'Delete',
     edit: 'Edit',
     add: 'Add',
+    share: 'Share',
     search: 'Search',
     loading: 'Loading...',
     error: 'Error',
@@ -145,6 +146,7 @@ export const en = {
     selectDate: 'Select Date',
     selectStartTime: 'Select Start Time',
     selectEndTime: 'Select End Time',
+    unsavedChangesWarning: 'Task is not saved, are you sure you want to exit?',
   },
 
   // Tasks
@@ -281,6 +283,7 @@ export const en = {
     zToA: 'Z to A',
     byColorIndex: 'By color index',
     colorOrderInfo: 'Sorting order depends on the selected color number',
+    colorSortOrder: 'Color sort order',
   },
 
   // Filters

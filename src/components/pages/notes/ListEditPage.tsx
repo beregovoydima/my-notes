@@ -26,7 +26,7 @@ import {ListModalItem} from '@/components/notes/list/ListModalItem';
 import {useNavigation} from '@react-navigation/native';
 import {getUuid, handleShare, hex2rgba, parseList} from '@/core/utils';
 import {useSelector} from 'react-redux';
-import {ColorPicker} from '@/components/modals/ui/ColorPicker';
+import {ColorMenu} from '@/components/ui/menu/ColorMenu';
 import {ListEditMenu} from '@/components/ui/menu/ListEditMenu';
 import {AddFolderModal} from '@/components/modals/notes/AddFolderModal';
 import {useTranslation} from '@/core/i18n';
@@ -200,11 +200,6 @@ export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
   return (
     <SafeAreaView
       style={[styles.container, {backgroundColor: colors.background}]}>
-      <ColorPicker
-        visible={showColorPicker}
-        hideModal={() => setShowColorPicker(false)}
-        changeColor={changeColor}
-      />
       <AddFolderModal visible={visible} hideModal={() => setVisible(false)} />
       <View
         style={[
@@ -235,16 +230,23 @@ export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
             }
             saveText={val => saveTitleText(val)}
           />
-          <TouchableOpacity onPress={() => setShowColorPicker(true)}>
-            <View
-              style={[
-                {
-                  backgroundColor: list.color ? list.color : colors.primary,
-                },
-                styles.colorPicker,
-              ]}
-            />
-          </TouchableOpacity>
+          <ColorMenu
+            visible={showColorPicker}
+            onDismiss={() => setShowColorPicker(false)}
+            onSelectColor={changeColor}
+            anchorComponent={
+              <TouchableOpacity onPress={() => setShowColorPicker(true)}>
+                <View
+                  style={[
+                    {
+                      backgroundColor: list.color ? list.color : colors.primary,
+                    },
+                    styles.colorPicker,
+                  ]}
+                />
+              </TouchableOpacity>
+            }
+          />
 
           <View>
             <Icon

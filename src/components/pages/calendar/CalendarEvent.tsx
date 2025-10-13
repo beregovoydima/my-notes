@@ -459,7 +459,7 @@ export function CalendarEvent({route}: {route: any}) {
 
                   <TouchableOpacity onPress={addNotification}>
                     <Text
-                      variant="titleMedium"
+                      variant="titleSmall"
                       style={{padding: 5, paddingTop: 0}}>
                       {t('calendar.addNotification')}
                     </Text>

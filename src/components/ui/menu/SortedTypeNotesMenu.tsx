@@ -66,7 +66,11 @@ export const SortedTypeNotesMenu = memo(
       <Menu
         visible={visible}
         onDismiss={closeMenu}
-        contentStyle={[{backgroundColor: colors.whiteColor}, styles.content]}
+        contentStyle={[
+          {backgroundColor: colors.whiteColor},
+          styles.content,
+          styles.menuPadding,
+        ]}
         anchor={getIconButton()}>
         <Menu.Item
           leadingIcon="sort-descending"
@@ -94,5 +98,9 @@ const styles = StyleSheet.create({
     padding: 0,
     bottom: 8,
     right: 8,
+  },
+  menuPadding: {
+    paddingVertical: 0,
+    paddingHorizontal: 0,
   },
 });

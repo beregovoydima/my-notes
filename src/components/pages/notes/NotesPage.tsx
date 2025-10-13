@@ -39,15 +39,8 @@ export function NotesPage({}: {route: any; navigation: any}) {
   const {colors} = useTheme();
   const {t} = useTranslation();
 
-  const changeValue = (val: string) => {
-    if (
-      val === 'folders' ||
-      val === 'notes' ||
-      val === 'list' ||
-      val === 'all'
-    ) {
-      setPage(val);
-    }
+  const changeValue = (val: NotesPageType) => {
+    setPage(val);
   };
 
   const setNotesCollection = async () => {
@@ -106,14 +99,16 @@ export function NotesPage({}: {route: any; navigation: any}) {
             {filterFolder.name}
           </Chip>
         ) : null}
-        <Appbar.Action
-          icon={() => (
-            <SortedNotesMenu
-              sortType={sortedType}
-              changeSort={changeSortType}
-            />
-          )}
-        />
+        {(page === 'notes' || page === 'list' || page === 'all') && (
+          <Appbar.Action
+            icon={() => (
+              <SortedNotesMenu
+                sortType={sortedType}
+                changeSort={changeSortType}
+              />
+            )}
+          />
+        )}
       </Appbar.Header>
       <View style={[styles.container, {backgroundColor: colors.background}]}>
         <NotesSegmentedButtons page={page} changePageType={changeValue} />

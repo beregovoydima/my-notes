@@ -34,7 +34,11 @@ export const ListMenu = memo(
         <Menu
           visible={visible}
           onDismiss={closeMenu}
-          contentStyle={[{backgroundColor: colors.whiteColor}, styles.content]}
+          contentStyle={[
+            {backgroundColor: colors.whiteColor},
+            styles.content,
+            styles.menuPadding,
+          ]}
           anchor={
             <IconButton
               style={styles.icon}
@@ -79,5 +83,9 @@ const styles = StyleSheet.create({
   },
   icon: {
     margin: 0,
+  },
+  menuPadding: {
+    paddingVertical: 0,
+    paddingHorizontal: 0,
   },
 });

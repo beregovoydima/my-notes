@@ -27,7 +27,11 @@ export const ColorMenu = memo(
       <Menu
         visible={visible}
         onDismiss={onDismiss}
-        contentStyle={[{backgroundColor: colors.whiteColor}, styles.content]}
+        contentStyle={[
+          {backgroundColor: colors.whiteColor},
+          styles.content,
+          styles.menuPadding,
+        ]}
         anchor={anchorComponent}>
         <View style={styles.colorGrid}>
           {storeColors.map((color, index) => (
@@ -62,5 +66,9 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  menuPadding: {
+    paddingVertical: 0,
+    paddingHorizontal: 0,
   },
 });

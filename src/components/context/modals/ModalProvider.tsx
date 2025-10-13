@@ -12,8 +12,6 @@ const ModalContext = createContext<ModalContextProps>({
 });
 
 export const useModal = () => {
-  console.log(ModalContext);
-
   return useContext(ModalContext);
 };
 

@@ -222,6 +222,7 @@ export const uk = {
     permissionRequired:
       'Для роботи сповіщень необхідно дозволити їх у налаштуваннях додатку. Перейти в налаштування?',
     selectTime: 'Виберіть час',
+    selectDate: 'Оберіть дату',
     custom: 'Інше',
     dayBefore: 'За день',
     twoDaysBefore: 'За 2 дні',
@@ -296,7 +297,9 @@ export const uk = {
     title: 'Більше',
     version: 'Версія',
     about: 'Про додаток',
-    settings: 'Налаштування',
+    settings: 'НАЛАШТУВАННЯ',
+    information: 'ІНФОРМАЦІЯ',
+    privacy: 'КОНФІДЕНЦІЙНІСТЬ',
     help: 'Допомога',
     feedback: 'Відгук',
     language: 'Мова',
@@ -304,5 +307,6 @@ export const uk = {
     cancel: 'Скасувати',
     showCardBackground: 'Показувати фон карток',
     showCardBackgroundDescription: 'Відображати кольоровий фон',
+    privacyPolicy: 'Політика конфіденційності',
   },
 };

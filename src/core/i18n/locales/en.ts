@@ -299,7 +299,9 @@ export const en = {
     title: 'More',
     version: 'Version',
     about: 'About',
-    settings: 'Settings',
+    settings: 'SETTINGS',
+    information: 'INFORMATION',
+    privacy: 'PRIVACY',
     help: 'Help',
     feedback: 'Feedback',
     language: 'Language',
@@ -307,5 +309,6 @@ export const en = {
     cancel: 'Cancel',
     showCardBackground: 'Show card background',
     showCardBackgroundDescription: 'Display colored background',
+    privacyPolicy: 'Privacy Policy',
   },
 };

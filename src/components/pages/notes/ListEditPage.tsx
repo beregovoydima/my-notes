@@ -155,7 +155,9 @@ export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
     const handleAppStateChange = (nextAppState: AppStateStatus) => {
       if (nextAppState === 'background') {
         backSave();
-        navigation.navigate('ListEdit', {listId: list.id});
+        if (list.title || list.items.length) {
+          navigation.navigate('ListEdit', {listId: list.id});
+        }
       }
     };
 
@@ -167,7 +169,7 @@ export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
     return () => {
       subscription.remove();
     };
-  }, [backSave, list.id, navigation]);
+  }, [backSave, list.id, navigation, list.title, list.items.length]);
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(

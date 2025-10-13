@@ -1,4 +1,4 @@
-package com.mynotes
+package com.freenotes
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

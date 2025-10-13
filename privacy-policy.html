@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Privacy Policy for Free Notes - Core Features Free Forever">
+    <title>Privacy Policy - Free Notes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .lang-switch {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .lang-btn {
+            padding: 10px 24px;
+            border: 2px solid white;
+            background: transparent;
+            color: white;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .lang-btn:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        .lang-btn.active {
+            background: white;
+            color: #667eea;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .language-content {
+            display: none;
+        }
+
+        .language-content.active {
+            display: block;
+        }
+
+        h2 {
+            color: #667eea;
+            margin: 30px 0 15px;
+            font-size: 1.8em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: #764ba2;
+            margin: 20px 0 10px;
+            font-size: 1.3em;
+        }
+
+        p {
+            margin: 15px 0;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin: 15px 0 15px 30px;
+        }
+
+        li {
+            margin: 8px 0;
+        }
+
+        .highlight {
+            background: #f0f4ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .highlight strong {
+            color: #667eea;
+            font-size: 1.1em;
+        }
+
+        .success-box {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .success-box strong {
+            color: #28a745;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin: 5px 5px 5px 0;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .emoji {
+            font-size: 1.2em;
+        }
+
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .content {
+                padding: 30px 20px;
+            }
+
+            h2 {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📝 Free Notes</h1>
+            <p>Privacy Policy</p>
+            <div class="lang-switch">
+                <button class="lang-btn active" onclick="switchLanguage('en')">English</button>
+                <button class="lang-btn" onclick="switchLanguage('uk')">Українська</button>
+            </div>
+        </div>
+
+        <!-- English Version -->
+        <div id="en-content" class="content language-content active">
+            <p><strong>Last Updated:</strong> October 13, 2025</p>
+
+            <h2>🔒 Introduction</h2>
+            <p>Free Notes ("we", "our", or "the app") is committed to protecting your privacy. This Privacy Policy explains how we handle your information when you use our mobile application.</p>
+
+            <div class="success-box">
+                <strong>💚 Core Features Free Forever</strong>
+                <p>All essential note-taking features will remain <strong>completely free forever</strong>:</p>
+                <ul>
+                    <li>✅ Unlimited notes, lists, and calendar events</li>
+                    <li>✅ All organization features (folders, colors, search)</li>
+                    <li>✅ Local notifications and reminders</li>
+                    <li>✅ No ads, ever</li>
+                </ul>
+                <p>Optional premium features (like cloud backups) may be offered in the future, but the core app will always be 100% free.</p>
+            </div>
+
+            <div class="highlight">
+                <strong>⭐ We do NOT collect any personal data from free features.</strong>
+            </div>
+
+            <h2>📊 Data Collection</h2>
+            <p>Free Notes is designed with privacy as a core principle. We believe your data belongs to you, and only you.</p>
+            
+            <h3>Current App (Free Forever Features):</h3>
+            <ul>
+                <li><span class="emoji">✅</span> <strong>No user accounts</strong> required</li>
+                <li><span class="emoji">✅</span> <strong>No registration</strong> or login</li>
+                <li><span class="emoji">✅</span> <strong>No personal information</strong> collected</li>
+                <li><span class="emoji">✅</span> <strong>No analytics</strong> or tracking</li>
+                <li><span class="emoji">✅</span> <strong>No third-party services</strong></li>
+                <li><span class="emoji">✅</span> <strong>No advertising networks</strong></li>
+                <li><span class="emoji">✅</span> <strong>All data stored locally</strong> on your device only</li>
+            </ul>
+
+            <h3>Future Optional Premium Features:</h3>
+            <p>If you choose to use optional premium features in the future (such as cloud backups), we will:</p>
+            <ul>
+                <li>Request explicit consent before collecting any data</li>
+                <li>Only collect the minimum data necessary for the feature to work</li>
+                <li>Clearly explain what data is collected and why</li>
+                <li>Update this Privacy Policy and notify you</li>
+                <li>Never use your data for advertising or sell it to third parties</li>
+            </ul>
+            <p><strong>Important:</strong> Premium features are entirely optional. All core note-taking functionality remains free and private.</p>
+
+            <h2>💾 Data Storage</h2>
+            <p>All your notes, lists, and calendar events are stored <strong>locally on your device only</strong>:</p>
+            <ul>
+                <li>✅ Saved in your device's local storage (SQLite database)</li>
+                <li>✅ No data transmitted to external servers</li>
+                <li>✅ No cloud synchronization (unless you opt-in to premium backup feature in the future)</li>
+                <li>✅ No data shared with third parties</li>
+                <li>✅ You have complete control over your data</li>
+            </ul>
+
+            <h2>🔑 Permissions</h2>
+            <p>The app may request the following permissions:</p>
+            
+            <h3>📱 Notifications Permission (Optional)</h3>
+            <p>Used to send you reminders for calendar events and tasks. Can be disabled at any time in your device settings.</p>
+            
+            <h3>💾 Storage Permission</h3>
+            <p>Used to save your notes, lists, and events on your device's local storage. No data is uploaded or transmitted.</p>
+            
+            <p><strong>Note:</strong> All permissions are used solely for app functionality and do not involve any data collection or transmission to external servers.</p>
+
+            <h2>🚫 Third-Party Services</h2>
+            <p>Free Notes does <strong>NOT</strong> currently use any third-party services:</p>
+            <div>
+                <span class="badge">No Google Analytics</span>
+                <span class="badge">No Firebase</span>
+                <span class="badge">No Facebook SDK</span>
+                <span class="badge">No Ad Networks</span>
+                <span class="badge">No Social Media APIs</span>
+                <span class="badge">No Cloud Services</span>
+                <span class="badge">No Tracking Tools</span>
+            </div>
+            <p style="margin-top: 15px;"><em>If we introduce optional premium features that require third-party services (like cloud storage), we will update this policy and clearly inform you.</em></p>
+
+            <h2>🛡️ Data Security</h2>
+            <p>Your data is as secure as your device:</p>
+            <ul>
+                <li>All data stays on your device</li>
+                <li>No transmission over the internet for free features</li>
+                <li>No risk of server breaches or data leaks</li>
+                <li>Your device's built-in security (encryption, lock screen) protects your notes</li>
+                <li>Only you have access to your data</li>
+            </ul>
+
+            <h2>☁️ Future Cloud Backup Feature (Optional Premium)</h2>
+            <p>We may offer an <strong>optional</strong> cloud backup feature in the future. If you choose to use it:</p>
+            <ul>
+                <li><strong>Opt-in only:</strong> You must explicitly enable cloud backups</li>
+                <li><strong>Account required:</strong> You'll need to create an account (email only)</li>
+                <li><strong>Data encrypted:</strong> Your notes will be encrypted before upload</li>
+                <li><strong>You control it:</strong> You can disable backups and delete cloud data anytime</li>
+                <li><strong>Core app still free:</strong> Local notes remain completely free without cloud backup</li>
+            </ul>
+            <p><strong>Reminder:</strong> This is an optional feature. You can continue using Free Notes forever without any cloud services.</p>
+
+            <h2>👶 Children's Privacy</h2>
+            <p>Free Notes does not knowingly collect any data from children under 13. The app is safe for all ages. No data is collected from the free features, making it compliant with COPPA and similar regulations.</p>
+
+            <h2>🔄 Changes to This Privacy Policy</h2>
+            <p>We will notify you of any changes by:</p>
+            <ul>
+                <li>Posting the new Privacy Policy on this page</li>
+                <li>Updating the "Last Updated" date at the top</li>
+                <li>Showing a notice in the app for significant changes</li>
+                <li>Requesting new consent if we start collecting data</li>
+            </ul>
+
+            <h2>⚖️ Your Rights</h2>
+            <p>Since we don't collect any data from free features:</p>
+            <ul>
+                <li><strong>Data Access:</strong> All your data is already on your device</li>
+                <li><strong>Data Control:</strong> You have complete control over your local data</li>
+                <li><strong>Data Deletion:</strong> Clear data in app settings or uninstall the app</li>
+                <li><strong>No Tracking:</strong> We don't track your usage or behavior</li>
+            </ul>
+
+            <h2>🗑️ Data Deletion</h2>
+            <p>To delete your data:</p>
+            <ol>
+                <li>Open the app → Settings → Clear Data, or</li>
+                <li>Uninstall the app from your device</li>
+            </ol>
+            <p>This will permanently delete all local notes, lists, and events. There is no backup on our servers (unless you explicitly enabled cloud backup in the future).</p>
+
+            <h2>✉️ Contact Us</h2>
+            <p>If you have any questions about this Privacy Policy:</p>
+            <p><strong>Email:</strong> <a href="mailto:your-email@example.com">your-email@example.com</a></p>
+
+            <h2>💯 Our Commitment</h2>
+            <div class="success-box">
+                <strong>🎁 Forever Free Promise</strong>
+                <p><strong>We guarantee that core note-taking features will remain free forever:</strong></p>
+                <ul>
+                    <li>✅ Create unlimited notes, lists, and events</li>
+                    <li>✅ Organize with folders and colors</li>
+                    <li>✅ Search and filter your notes</li>
+                    <li>✅ Set reminders and notifications</li>
+                    <li>✅ Export your data</li>
+                    <li>✅ No advertisements, ever</li>
+                </ul>
+                <p><strong>Why?</strong> We believe everyone deserves access to quality productivity tools without subscriptions or data harvesting.</p>
+                <p><em>Optional premium features (like cloud backups) help support development while keeping core features free for everyone.</em></p>
+            </div>
+
+            <h2>🌍 Compliance</h2>
+            <p>This Privacy Policy complies with:</p>
+            <ul>
+                <li>GDPR (General Data Protection Regulation) - EU</li>
+                <li>CCPA (California Consumer Privacy Act) - USA</li>
+                <li>COPPA (Children's Online Privacy Protection Act) - USA</li>
+                <li>Google Play Store Privacy Requirements</li>
+            </ul>
+        </div>
+
+        <!-- Ukrainian Version -->
+        <div id="uk-content" class="content language-content">
+            <p><strong>Останнє оновлення:</strong> 13 жовтня 2025</p>
+
+            <h2>🔒 Вступ</h2>
+            <p>Free Notes ("ми", "наш" або "додаток") прагне захистити вашу конфіденційність. Ця Політика конфіденційності пояснює, як ми обробляємо вашу інформацію під час використання нашого мобільного додатку.</p>
+
+            <div class="success-box">
+                <strong>💚 Основні функції безкоштовні назавжди</strong>
+                <p>Всі важливі функції для нотаток залишаться <strong>повністю безкоштовними назавжди</strong>:</p>
+                <ul>
+                    <li>✅ Необмежена кількість нотаток, списків та подій календаря</li>
+                    <li>✅ Всі функції організації (папки, кольори, пошук)</li>
+                    <li>✅ Локальні сповіщення та нагадування</li>
+                    <li>✅ Без реклами, ніколи</li>
+                </ul>
+                <p>Опціональні преміум-функції (як хмарні бекапи) можуть з'явитися в майбутньому, але основний додаток завжди буде 100% безкоштовним.</p>
+            </div>
+
+            <div class="highlight">
+                <strong>⭐ Ми НЕ збираємо жодних персональних даних з безкоштовних функцій.</strong>
+            </div>
+
+            <h2>📊 Збір даних</h2>
+            <p>Free Notes розроблений з конфіденційністю як основним принципом. Ми вважаємо, що ваші дані належать вам, і тільки вам.</p>
+            
+            <h3>Поточна версія додатку (Безкоштовні назавжди функції):</h3>
+            <ul>
+                <li><span class="emoji">✅</span> <strong>Не потрібні облікові записи</strong></li>
+                <li><span class="emoji">✅</span> <strong>Без реєстрації</strong> або входу</li>
+                <li><span class="emoji">✅</span> <strong>Не збирається особиста інформація</strong></li>
+                <li><span class="emoji">✅</span> <strong>Без аналітики</strong> та відстеження</li>
+                <li><span class="emoji">✅</span> <strong>Без сторонніх сервісів</strong></li>
+                <li><span class="emoji">✅</span> <strong>Без рекламних мереж</strong></li>
+                <li><span class="emoji">✅</span> <strong>Всі дані зберігаються локально</strong> тільки на вашому пристрої</li>
+            </ul>
+
+            <h3>Майбутні опціональні преміум-функції:</h3>
+            <p>Якщо ви вирішите використовувати опціональні преміум-функції в майбутньому (наприклад, хмарні бекапи), ми:</p>
+            <ul>
+                <li>Запросимо явну згоду перед збором будь-яких даних</li>
+                <li>Збиратимемо лише мінімум даних, необхідних для роботи функції</li>
+                <li>Чітко пояснимо, які дані збираються і чому</li>
+                <li>Оновимо цю Політику конфіденційності та повідомимо вас</li>
+                <li>Ніколи не використовуватимемо ваші дані для реклами та не продаватимемо третім особам</li>
+            </ul>
+            <p><strong>Важливо:</strong> Преміум-функції повністю опціональні. Весь основний функціонал для нотаток залишається безкоштовним та приватним.</p>
+
+            <h2>💾 Зберігання даних</h2>
+            <p>Всі ваші нотатки, списки та події календаря зберігаються <strong>локально тільки на вашому пристрої</strong>:</p>
+            <ul>
+                <li>✅ Зберігаються в локальному сховищі вашого пристрою (база даних SQLite)</li>
+                <li>✅ Дані не передаються на зовнішні сервери</li>
+                <li>✅ Без хмарної синхронізації (якщо ви не активуєте преміум-функцію бекапів у майбутньому)</li>
+                <li>✅ Дані не передаються третім особам</li>
+                <li>✅ Ви маєте повний контроль над своїми даними</li>
+            </ul>
+
+            <h2>🔑 Дозволи</h2>
+            <p>Додаток може запитувати наступні дозволи:</p>
+            
+            <h3>📱 Дозвіл на сповіщення (опціонально)</h3>
+            <p>Використовується для надсилання нагадувань про події календаря та завдання. Може бути вимкнено в будь-який час у налаштуваннях пристрою.</p>
+            
+            <h3>💾 Дозвіл на сховище</h3>
+            <p>Використовується для збереження ваших нотаток, списків та подій у локальному сховищі пристрою. Дані не завантажуються і не передаються.</p>
+            
+            <p><strong>Примітка:</strong> Всі дозволи використовуються виключно для функціональності додатку і не передбачають збору чи передачі даних на зовнішні сервери.</p>
+
+            <h2>🚫 Сторонні сервіси</h2>
+            <p>Free Notes наразі <strong>НЕ</strong> використовує жодних сторонніх сервісів:</p>
+            <div>
+                <span class="badge">Немає Google Analytics</span>
+                <span class="badge">Немає Firebase</span>
+                <span class="badge">Немає Facebook SDK</span>
+                <span class="badge">Немає рекламних мереж</span>
+                <span class="badge">Немає соціальних API</span>
+                <span class="badge">Немає хмарних сервісів</span>
+                <span class="badge">Немає трекінгу</span>
+            </div>
+            <p style="margin-top: 15px;"><em>Якщо ми введемо опціональні преміум-функції, які потребують сторонніх сервісів (наприклад, хмарне сховище), ми оновимо цю політику та чітко проінформуємо вас.</em></p>
+
+            <h2>🛡️ Безпека даних</h2>
+            <p>Ваші дані настільки ж безпечні, як і ваш пристрій:</p>
+            <ul>
+                <li>Всі дані залишаються на вашому пристрої</li>
+                <li>Немає передачі через інтернет для безкоштовних функцій</li>
+                <li>Немає ризику злому серверів або витоку даних</li>
+                <li>Вбудована безпека вашого пристрою (шифрування, блокування екрана) захищає ваші нотатки</li>
+                <li>Тільки ви маєте доступ до своїх даних</li>
+            </ul>
+
+            <h2>☁️ Майбутня функція хмарних бекапів (опціональний преміум)</h2>
+            <p>Ми можемо запропонувати <strong>опціональну</strong> функцію хмарних бекапів у майбутньому. Якщо ви вирішите її використовувати:</p>
+            <ul>
+                <li><strong>Тільки за згодою:</strong> Ви повинні явно активувати хмарні бекапи</li>
+                <li><strong>Потрібен обліковий запис:</strong> Буде потрібно створити обліковий запис (тільки email)</li>
+                <li><strong>Дані зашифровані:</strong> Ваші нотатки будуть зашифровані перед завантаженням</li>
+                <li><strong>Ви контролюєте:</strong> Ви можете вимкнути бекапи та видалити хмарні дані в будь-який час</li>
+                <li><strong>Основний додаток залишається безкоштовним:</strong> Локальні нотатки залишаються повністю безкоштовними без хмарних бекапів</li>
+            </ul>
+            <p><strong>Нагадування:</strong> Це опціональна функція. Ви можете продовжувати використовувати Free Notes назавжди без будь-яких хмарних сервісів.</p>
+
+            <h2>👶 Конфіденційність дітей</h2>
+            <p>Free Notes не збирає свідомо жодних даних від дітей віком до 13 років. Додаток безпечний для всіх вікових груп. Дані не збираються з безкоштовних функцій, що робить його відповідним COPPA та аналогічним нормам.</p>
+
+            <h2>🔄 Зміни в цій Політиці конфіденційності</h2>
+            <p>Ми повідомимо вас про будь-які зміни:</p>
+            <ul>
+                <li>Розміщенням нової Політики конфіденційності на цій сторінці</li>
+                <li>Оновленням дати "Останнє оновлення" вгорі</li>
+                <li>Показом повідомлення в додатку для значних змін</li>
+                <li>Запитом нової згоди, якщо ми почнемо збирати дані</li>
+            </ul>
+
+            <h2>⚖️ Ваші права</h2>
+            <p>Оскільки ми не збираємо жодних даних з безкоштовних функцій:</p>
+            <ul>
+                <li><strong>Доступ до даних:</strong> Всі ваші дані вже на вашому пристрої</li>
+                <li><strong>Контроль даних:</strong> Ви маєте повний контроль над своїми локальними даними</li>
+                <li><strong>Видалення даних:</strong> Очистіть дані в налаштуваннях додатку або видаліть додаток</li>
+                <li><strong>Без відстеження:</strong> Ми не відстежуємо ваше використання або поведінку</li>
+            </ul>
+
+            <h2>🗑️ Видалення даних</h2>
+            <p>Для видалення ваших даних:</p>
+            <ol>
+                <li>Відкрийте додаток → Налаштування → Очистити дані, або</li>
+                <li>Видаліть додаток з вашого пристрою</li>
+            </ol>
+            <p>Це назавжди видалить всі локальні нотатки, списки та події. У нас немає резервної копії на серверах (якщо ви явно не активували хмарний бекап у майбутньому).</p>
+
+            <h2>✉️ Зв'яжіться з нами</h2>
+            <p>Якщо у вас є питання щодо цієї Політики конфіденційності:</p>
+            <p><strong>Email:</strong> <a href="mailto:your-email@example.com">your-email@example.com</a></p>
+
+            <h2>💯 Наше зобов'язання</h2>
+            <div class="success-box">
+                <strong>🎁 Обіцянка безкоштовності назавжди</strong>
+                <p><strong>Ми гарантуємо, що основні функції для нотаток залишаться безкоштовними назавжди:</strong></p>
+                <ul>
+                    <li>✅ Створюйте необмежену кількість нотаток, списків та подій</li>
+                    <li>✅ Організовуйте за допомогою папок та кольорів</li>
+                    <li>✅ Шукайте та фільтруйте свої нотатки</li>
+                    <li>✅ Встановлюйте нагадування та сповіщення</li>
+                    <li>✅ Експортуйте свої дані</li>
+                    <li>✅ Без реклами, ніколи</li>
+                </ul>
+                <p><strong>Чому?</strong> Ми вважаємо, що кожен заслуговує доступ до якісних інструментів продуктивності без підписок або збору даних.</p>
+                <p><em>Опціональні преміум-функції (як хмарні бекапи) допомагають підтримувати розробку, зберігаючи основні функції безкоштовними для всіх.</em></p>
+            </div>
+
+            <h2>🌍 Відповідність</h2>
+            <p>Ця Політика конфіденційності відповідає:</p>
+            <ul>
+                <li>GDPR (Загальний регламент про захист даних) - ЄС</li>
+                <li>CCPA (Каліфорнійський закон про конфіденційність споживачів) - США</li>
+                <li>COPPA (Закон про захист конфіденційності дітей в інтернеті) - США</li>
+                <li>Вимоги конфіденційності Google Play Store</li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            <p><strong>Free Notes</strong> - Your privacy is our priority</p>
+            <p>Core Features Free Forever • Optional Premium Features Support Development</p>
+            <p style="margin-top: 15px; font-size: 0.9em; color: #666;">
+                © 2025 Free Notes. All rights reserved.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function switchLanguage(lang) {
+            // Hide all content
+            document.querySelectorAll('.language-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Show selected language content
+            document.getElementById(lang + '-content').classList.add('active');
+            
+            // Update button states
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update page language attribute
+            document.documentElement.lang = lang;
+        }
+    </script>
+</body>
+</html>

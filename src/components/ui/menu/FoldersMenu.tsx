@@ -35,25 +35,33 @@ export const FoldersMenu = memo(({editFolder, deleteFolder, folder}: Props) => {
       <Menu
         visible={visible}
         onDismiss={closeMenu}
-        contentStyle={[{backgroundColor: colors.whiteColor}, styles.content]}
+        contentStyle={[
+          {backgroundColor: colors.whiteColor},
+          styles.content,
+          styles.menuPadding,
+        ]}
         anchor={
           <IconButton size={24} icon="dots-vertical" onPress={openMenu} />
         }>
+        <Menu.Item
+          onPress={() => changeFolder()}
+          title={t('common.edit')}
+          leadingIcon="pencil-outline"
+        />
         {folder.isDeletable ? (
           <>
+            <Divider />
             <Menu.Item
               onPress={() => {
                 delFolder();
               }}
               title={t('common.delete')}
+              leadingIcon="delete-outline"
             />
-            <Divider />
           </>
         ) : (
           <></>
         )}
-
-        <Menu.Item onPress={() => changeFolder()} title={t('common.edit')} />
         {/* <Divider />
         <Menu.Item onPress={() => {}} title="To do" /> */}
       </Menu>
@@ -65,5 +73,9 @@ const styles = StyleSheet.create({
   content: {
     top: 16,
     right: 16,
+  },
+  menuPadding: {
+    paddingVertical: 0,
+    paddingHorizontal: 0,
   },
 });

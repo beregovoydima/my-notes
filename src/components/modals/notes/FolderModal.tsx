@@ -11,6 +11,8 @@ interface Props {
   editFolderData: NotesFolderItem | null;
 }
 
+const MAX_FOLDER_NAME_LENGTH = 28;
+
 export const FolderModal = ({
   visible,
   hideModal,
@@ -57,6 +59,12 @@ export const FolderModal = ({
             mode="outlined"
             value={text}
             onChangeText={val => setText(val)}
+            maxLength={MAX_FOLDER_NAME_LENGTH}
+            right={
+              <TextInput.Affix
+                text={`${text.length}/${MAX_FOLDER_NAME_LENGTH}`}
+              />
+            }
           />
           <View style={styles.footer}>
             <Button style={[styles.button]} onPress={() => closeModal()}>

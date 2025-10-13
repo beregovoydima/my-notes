@@ -6,7 +6,7 @@ import {NotesPageType} from '@/core/interfaces';
 import {useTranslation} from '@/core/i18n';
 
 interface Props {
-  changePageType: (val: string) => void;
+  changePageType: (val: NotesPageType) => void;
   page: NotesPageType;
 }
 
@@ -17,7 +17,7 @@ export const NotesSegmentedButtons = ({changePageType, page}: Props) => {
     <View style={styles.container}>
       <SegmentedButtons
         value={page}
-        onValueChange={changePageType}
+        onValueChange={val => changePageType(val as NotesPageType)}
         style={styles.buttons}
         buttons={[
           {

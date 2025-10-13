@@ -22,7 +22,11 @@ export const ListEditMenu = memo(({deleteList, saveList}: Props) => {
       <Menu
         visible={visible}
         onDismiss={closeMenu}
-        contentStyle={[{backgroundColor: colors.whiteColor}, styles.content]}
+        contentStyle={[
+          {backgroundColor: colors.whiteColor},
+          styles.content,
+          styles.menuPadding,
+        ]}
         anchor={
           <IconButton
             size={24}
@@ -36,6 +40,7 @@ export const ListEditMenu = memo(({deleteList, saveList}: Props) => {
             saveList();
           }}
           title={t('common.save')}
+          leadingIcon="check"
         />
         <Divider />
         <Menu.Item
@@ -43,6 +48,7 @@ export const ListEditMenu = memo(({deleteList, saveList}: Props) => {
             deleteList();
           }}
           title={t('common.delete')}
+          leadingIcon="delete"
         />
       </Menu>
     </View>
@@ -53,5 +59,9 @@ const styles = StyleSheet.create({
   content: {
     top: 16,
     right: 16,
+  },
+  menuPadding: {
+    paddingVertical: 0,
+    paddingHorizontal: 0,
   },
 });

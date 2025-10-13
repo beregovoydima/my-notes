@@ -110,7 +110,9 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
     const handleAppStateChange = (nextAppState: AppStateStatus) => {
       if (nextAppState === 'background') {
         backSave();
-        navigation.navigate('NoteEdit', {noteId: note.id});
+        if (note.title || note.label) {
+          navigation.navigate('NoteEdit', {noteId: note.id});
+        }
       }
     };
 
@@ -122,7 +124,7 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
     return () => {
       subscription.remove();
     };
-  }, [backSave, navigation, note.id]);
+  }, [backSave, navigation, note.id, note.label, note.title]);
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(

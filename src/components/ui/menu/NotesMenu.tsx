@@ -37,7 +37,11 @@ export const NotesMenu = memo(
         <Menu
           visible={visible}
           onDismiss={closeMenu}
-          contentStyle={[{backgroundColor: colors.whiteColor}, styles.content]}
+          contentStyle={[
+            {backgroundColor: colors.whiteColor},
+            styles.content,
+            styles.menuPadding,
+          ]}
           anchor={
             <IconButton size={24} icon="dots-vertical" onPress={openMenu} />
           }>
@@ -73,5 +77,9 @@ const styles = StyleSheet.create({
   content: {
     top: 16,
     right: 16,
+  },
+  menuPadding: {
+    paddingVertical: 0,
+    paddingHorizontal: 0,
   },
 });

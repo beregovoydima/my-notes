@@ -179,11 +179,11 @@ export const NotificationDialog = ({
                         alignItems: 'center',
                       }}>
                       <Icon source="checkbox-blank-circle-outline" size={18} />
-                      <Text variant="titleMedium" style={{marginLeft: 10}}>
+                      <Text variant="titleSmall" style={{marginLeft: 10}}>
                         {el.name}
                       </Text>
                     </View>
-                    <Text variant="titleMedium" style={{marginLeft: 15}}>
+                    <Text variant="titleSmall" style={{marginLeft: 15}}>
                       ({moment(el.value).format('DD.MM.YY HH.mm')})
                     </Text>
                   </View>
@@ -198,7 +198,7 @@ export const NotificationDialog = ({
                     padding: 10,
                   }}>
                   <Icon source="checkbox-blank-circle-outline" size={18} />
-                  <Text variant="titleMedium" style={{marginLeft: 10}}>
+                  <Text variant="titleSmall" style={{marginLeft: 10}}>
                     {t('notifications.custom')}
                   </Text>
                 </View>

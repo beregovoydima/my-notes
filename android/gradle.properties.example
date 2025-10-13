@@ -39,7 +39,11 @@ newArchEnabled=false
 # Use this property to enable or disable the Hermes JS engine.
 # If set to false, you will be using JSC instead.
 hermesEnabled=true
+
+# Android signing configuration
+# Copy this file to gradle.properties and fill in your actual values
 MYAPP_UPLOAD_STORE_FILE=my-upload-key.keystore
 MYAPP_UPLOAD_KEY_ALIAS=my-key-alias
-MYAPP_UPLOAD_STORE_PASSWORD=M24kvdKts
-MYAPP_UPLOAD_KEY_PASSWORD=M24kvdKts
+MYAPP_UPLOAD_STORE_PASSWORD=your_password_here
+MYAPP_UPLOAD_KEY_PASSWORD=your_password_here
+

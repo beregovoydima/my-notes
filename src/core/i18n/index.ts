@@ -11,10 +11,22 @@ import {registerTranslation} from 'react-native-paper-dates';
 import {uk} from './locales/uk';
 import {ru} from './locales/ru';
 import {en} from './locales/en';
+import {de} from './locales/de';
+import {es} from './locales/es';
+import {fr} from './locales/fr';
+import {fi} from './locales/fi';
 import {setMomentLocale} from '../utils/dateLocalization';
 
 // Поддерживаемые языки
-export const supportedLocales = ['uk', 'ru', 'en'] as const;
+export const supportedLocales = [
+  'uk',
+  'ru',
+  'en',
+  'de',
+  'es',
+  'fr',
+  'fi',
+] as const;
 export type SupportedLocale = (typeof supportedLocales)[number];
 
 // Интерфейс для переводов
@@ -334,6 +346,10 @@ const registerDatePickerTranslations = () => {
   registerTranslation('en', en.datePicker as any);
   registerTranslation('ru', ru.datePicker as any);
   registerTranslation('uk', uk.datePicker as any);
+  registerTranslation('de', de.datePicker as any);
+  registerTranslation('es', es.datePicker as any);
+  registerTranslation('fr', fr.datePicker as any);
+  registerTranslation('fi', fi.datePicker as any);
 };
 
 // Инициализация i18next
@@ -352,6 +368,18 @@ const initializeI18n = async () => {
           },
           en: {
             translation: en,
+          },
+          de: {
+            translation: de,
+          },
+          es: {
+            translation: es,
+          },
+          fr: {
+            translation: fr,
+          },
+          fi: {
+            translation: fi,
           },
         },
         lng: currentLocale, // используем сохраненную локаль

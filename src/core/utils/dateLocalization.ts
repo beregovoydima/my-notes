@@ -1,8 +1,14 @@
 import moment from 'moment';
+import 'moment/locale/de';
+import 'moment/locale/es';
+import 'moment/locale/fr';
+import 'moment/locale/fi';
+import 'moment/locale/ru';
+import 'moment/locale/uk';
 import {SupportedLocale} from '@/core/i18n';
 
 // Локали для moment.js
-const momentLocales = {
+const momentLocales: Partial<Record<SupportedLocale, any>> = {
   uk: {
     months:
       'січень_лютий_березень_квітень_травень_червень_липень_серпень_вересень_жовтень_листопад_грудень'.split(
@@ -109,6 +115,18 @@ const momentLocales = {
   en: {
     // Английский использует стандартные настройки moment
   },
+  de: {
+    // Немецкий использует стандартные настройки moment
+  },
+  es: {
+    // Испанский использует стандартные настройки moment
+  },
+  fr: {
+    // Французский использует стандартные настройки moment
+  },
+  fi: {
+    // Финский использует стандартные настройки moment
+  },
 };
 
 // Инициализация локалей moment
@@ -120,7 +138,13 @@ Object.entries(momentLocales).forEach(([locale, config]) => {
 
 // Функция для установки локали moment
 export const setMomentLocale = (locale: SupportedLocale): void => {
-  moment.updateLocale(locale, momentLocales[locale]);
+  // Устанавливаем локаль moment
+  moment.locale(locale);
+
+  // Дополнительно обновляем настройки для uk и ru, если нужно
+  if (momentLocales[locale]) {
+    moment.updateLocale(locale, momentLocales[locale]);
+  }
 };
 
 // Функция для форматирования даты

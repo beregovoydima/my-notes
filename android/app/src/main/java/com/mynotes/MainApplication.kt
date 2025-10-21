@@ -1,4 +1,4 @@
-package com.freenotes
+package com.mynotes
 
 import android.app.Application
 import com.facebook.react.PackageList

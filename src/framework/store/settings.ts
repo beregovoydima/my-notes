@@ -17,8 +17,11 @@ const initialState: StateSettings = {
     lightColors.info,
     lightColors.orangeColor,
     lightColors.blueGrey,
+    lightColors.primary,
+    lightColors.accent,
+    lightColors.error,
   ],
-  showCardBackground: true,
+  showCardBackground: false,
 };
 
 const settingsSlice = createSlice({

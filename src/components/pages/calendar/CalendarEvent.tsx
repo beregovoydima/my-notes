@@ -15,7 +15,7 @@ import {
   Button,
   Text,
   Icon,
-  Checkbox,
+  Switch,
   TextInput,
   Divider,
 } from 'react-native-paper';
@@ -56,14 +56,14 @@ export function CalendarEvent({route}: {route: any}) {
   const [event, setEvent] = useState<CalendarEventTaskType>({
     title: '',
     created: moment().format(),
-    startDate: moment().format(),
-    endDate: moment().endOf('day').format(),
+    startDate: moment().startOf('hour').add(1, 'hour').format(),
+    endDate: moment().startOf('hour').add(2, 'hour').format(),
     type: 'task',
     color: colors.lime,
     info: '',
     id: getUuid(),
     updated: null,
-    dateType: 'day',
+    dateType: 'time',
   });
   const [notificationTime, setNotificationTime] = useState<Date[]>([]);
 
@@ -128,9 +128,11 @@ export function CalendarEvent({route}: {route: any}) {
       setEventById(route.params.eventId);
     }
     if (route.params.selectedDate && !route.params.eventId) {
+      const selectedMoment = moment(route.params.selectedDate);
+      const time = moment().startOf('hour').add(1, 'hour').get('hour');
       setEvent({
         ...event,
-        startDate: moment(route.params.selectedDate).format(),
+        startDate: selectedMoment.set({hour: time}).format(),
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -181,6 +183,12 @@ export function CalendarEvent({route}: {route: any}) {
   };
 
   const saveEvent = () => {
+    // Не сохранять событие, если оно полностью пустое
+    if (!event.title.trim() && !event.info.trim()) {
+      navigation.goBack();
+      return;
+    }
+
     if (event.dateType === 'day') {
       setEvent({
         ...event,
@@ -230,7 +238,13 @@ export function CalendarEvent({route}: {route: any}) {
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
       () => {
-        setDialogVisible(!dialogVisible);
+        // Если событие пустое, просто выходим
+        if (!event.title.trim() && !event.info.trim()) {
+          navigation.goBack();
+        } else {
+          // Если событие не пустое, показываем диалог
+          setDialogVisible(!dialogVisible);
+        }
 
         return true;
       },
@@ -239,15 +253,15 @@ export function CalendarEvent({route}: {route: any}) {
     return () => {
       backHandler.remove();
     };
-  }, [dialogVisible]);
+  }, [dialogVisible, event.title, event.info, navigation]);
 
   const showStartTimePicker = () => {
     setStartTimePickerVisible(true);
   };
 
-  const showEndTimePicker = () => {
-    setEndTimePickerVisible(true);
-  };
+  // const showEndTimePicker = () => {
+  //   setEndTimePickerVisible(true);
+  // };
 
   const showDatePicker = () => {
     setDatePickerVisible(true);
@@ -267,7 +281,14 @@ export function CalendarEvent({route}: {route: any}) {
     <>
       <AcceptDialog
         visible={dialogVisible}
-        apply={() => navigation.navigate('Calendar')}
+        apply={() => {
+          saveEvent();
+          setDialogVisible(false);
+        }}
+        exitWithoutSaving={() => {
+          setDialogVisible(false);
+          navigation.goBack();
+        }}
         cancel={() => setDialogVisible(false)}
         content={t('calendar.unsavedChangesWarning')}
       />
@@ -312,6 +333,7 @@ export function CalendarEvent({route}: {route: any}) {
               label={event.title}
               customText={t('tasks.enterTaskTitle')}
               isChecked={false}
+              autofocus={!route.params.eventId}
               saveText={val => {
                 setEvent({...event, title: val});
               }}
@@ -362,48 +384,65 @@ export function CalendarEvent({route}: {route: any}) {
                   flexDirection: 'row',
                 }}>
                 <Text>{t('calendar.allDay')}: </Text>
-                <Checkbox
-                  status={event.dateType === 'day' ? 'checked' : 'unchecked'}
-                  color={event.color}
-                  onPress={() =>
+                <Switch
+                  value={event.dateType === 'day'}
+                  onValueChange={() =>
                     setEvent({
                       ...event,
                       dateType: event.dateType === 'day' ? 'time' : 'day',
                     })
                   }
+                  color={event.color}
                 />
               </View>
             </View>
             <View
               style={{
                 display: 'flex',
-                width: '100%',
                 margin: 20,
                 marginTop: 10,
                 flexDirection: 'row',
+                justifyContent: 'space-between',
               }}>
-              <Button
-                style={{width: '45%'}}
-                textColor={event.color}
-                onPress={showDatePicker}>
+              <Button textColor={event.color} onPress={showDatePicker}>
                 {moment(event.startDate).format('ll')}
               </Button>
-              {event.dateType === 'time' && (
-                <Button
-                  style={{width: '22%'}}
-                  textColor={event.color}
-                  onPress={showStartTimePicker}>
-                  {moment(event.startDate).format('HH:mm')}
-                </Button>
-              )}
-              {event.dateType === 'time' && (
-                <Button
-                  style={{width: '22%'}}
-                  textColor={event.color}
-                  onPress={showEndTimePicker}>
-                  {moment(event.endDate).format('HH:mm')}
-                </Button>
-              )}
+              <View
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                {event.dateType === 'time' && (
+                  <Button
+                    style={{width: '20%'}}
+                    textColor={event.color}
+                    onPress={showStartTimePicker}>
+                    {moment(event.startDate).format('HH:mm')}
+                  </Button>
+                )}
+                {/* {event.dateType === 'time' && (
+                  <View
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: 120,
+                    }}>
+                    <Text style={{color: event.color, marginHorizontal: 5}}>
+                      {t('calendar.to')}
+                    </Text>
+                    <Button
+                      style={{width: '20%'}}
+                      textColor={event.color}
+                      onPress={showEndTimePicker}>
+                      {moment(event.endDate).format('HH:mm')}
+                    </Button>
+                  </View>
+                )} */}
+              </View>
             </View>
 
             <Divider />

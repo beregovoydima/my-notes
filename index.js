@@ -9,8 +9,6 @@ import PushNotification from 'react-native-push-notification';
 
 PushNotification.configure({
   onNotification: function (notification) {
-    console.log('NOTIFICATION:', notification);
-
     // Обработка клика на уведомление
     if (notification.userInteraction) {
       const eventDate = notification.data?.eventDate;

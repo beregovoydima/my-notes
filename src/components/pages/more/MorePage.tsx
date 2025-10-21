@@ -49,6 +49,10 @@ export function MorePage() {
     Linking.openURL('https://beregovoydima.github.io/Private-policy/');
   };
 
+  const openContactEmail = () => {
+    Linking.openURL('mailto:papernote.help@gmail.com');
+  };
+
   return (
     <>
       <View>
@@ -103,13 +107,24 @@ export function MorePage() {
         <Divider style={styles.divider} />
 
         {/* ИНФОРМАЦИЯ */}
-        {/* <Text
+        <Text
           variant="titleMedium"
           style={[styles.sectionTitle, {color: colors.text}]}>
           {t('more.information')}
         </Text>
 
         <List.Item
+          title={t('more.contactUs')}
+          left={props => <List.Icon {...props} icon="email-outline" />}
+          right={props => <List.Icon {...props} icon="chevron-right" />}
+          onPress={openContactEmail}
+          titleStyle={{color: colors.text}}
+          style={styles.listItem}
+        />
+
+        <Divider style={styles.divider} />
+
+        {/*<List.Item
           title={t('more.about')}
           left={props => <List.Icon {...props} icon="information-outline" />}
           right={props => <List.Icon {...props} icon="chevron-right" />}
@@ -160,7 +175,7 @@ export function MorePage() {
             {t('more.version')}: {appVersion}
           </Text>
           <Text variant="bodySmall" style={{color: colors.greyColor}}>
-            Free Notes - Free Forever
+            Paper Notes - Free Forever
           </Text>
         </View>
       </View>

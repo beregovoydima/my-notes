@@ -9,6 +9,8 @@ import {useNavigation} from '@react-navigation/native';
 import {getHighlightedParts, hex2rgba} from '@/core/utils';
 import {useTranslation} from '@/core/i18n';
 import {useCardBackground} from '@/core/hooks';
+import {CalendarEventCardMenu} from '@/components/ui/menu/CalendarEventCardMenu';
+import {calendarService, notificationService} from '@/core/services';
 
 interface CalendarEventCardProps {
   item: CalendarEventTaskType;
@@ -28,6 +30,18 @@ export const CalendarEventCard = ({
     navigation.push('CalendarEvent', {eventId: id});
   };
 
+  const handleEdit = (id: string) => {
+    navigation.push('CalendarEvent', {eventId: id});
+  };
+
+  const handleDelete = (id: string) => {
+    calendarService.deleteCalendarEvent(id);
+
+    if (item.notificationIds) {
+      notificationService.cancelSheduleNotifications(item.notificationIds);
+    }
+  };
+
   const leftContent = (props: {size: number}) => {
     return (
       <Avatar.Icon
@@ -45,6 +59,14 @@ export const CalendarEventCard = ({
       />
     );
   };
+
+  const rightContent = () => (
+    <CalendarEventCardMenu
+      eventId={item.id}
+      editEvent={handleEdit}
+      deleteEvent={handleDelete}
+    />
+  );
 
   return (
     <Card
@@ -81,6 +103,7 @@ export const CalendarEventCard = ({
         }
         titleNumberOfLines={2}
         left={props => leftContent(props)}
+        right={rightContent}
       />
       <Card.Content
         style={[
@@ -128,9 +151,7 @@ export const CalendarEventCard = ({
               }}>
               {item.dateType === 'day'
                 ? moment(item.startDate).format('YYYY-MM-DD')
-                : moment(item.startDate).format('YYYY-MM-DD HH:mm') +
-                  ' - ' +
-                  moment(item.endDate).format('HH:mm')}
+                : moment(item.startDate).format('YYYY-MM-DD HH:mm')}
             </Text>
           </View>
         </View>

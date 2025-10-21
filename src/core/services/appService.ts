@@ -55,6 +55,7 @@ export class AppService implements AppServiceContract {
 
   public async initializeSettings(): Promise<void> {
     const settings = await this.getStorageSettings();
+
     if (settings) {
       // Загружаем настройки в Redux store
       this.setStoreColors(settings.colors);

@@ -80,6 +80,8 @@ export const EditableText = ({
           onBlur={handleSave}
           autoFocus={isFocused}
           selectionColor={colors.primary}
+          placeholder={!text ? customText || t('common.enterText') : undefined}
+          placeholderTextColor={colors.greyIconColor}
           onSubmitEditing={e => {
             e.preventDefault(); // Избегаем действия по умолчанию для Enter
             handleSave();

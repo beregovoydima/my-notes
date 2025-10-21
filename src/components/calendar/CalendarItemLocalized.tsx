@@ -6,7 +6,7 @@ import {hex2rgba} from '@/core/utils';
 import {useTranslation} from '@/core/i18n';
 import {setMomentLocale, formatDate} from '@/core/utils/dateLocalization';
 import moment from 'moment';
-import React, {Fragment, useMemo, useState, useEffect} from 'react';
+import React, {Fragment, useMemo, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Calendar, CalendarProvider, LocaleConfig} from 'react-native-calendars';
 import {Positions} from 'react-native-calendars/src/expandableCalendar';
@@ -161,8 +161,13 @@ export const CalendarItemLocalized = () => {
     setMomentLocale(locale);
 
     // Настройка локали для react-native-calendars
-    LocaleConfig.locales[locale] = calendarLocales[locale];
-    LocaleConfig.defaultLocale = locale;
+    if (calendarLocales[locale]) {
+      LocaleConfig.locales[locale] = calendarLocales[locale];
+      LocaleConfig.defaultLocale = locale;
+    } else {
+      // Fallback на английский, если локаль не определена
+      LocaleConfig.defaultLocale = 'en';
+    }
   }, [locale]);
 
   const onDayPress = (day: any) => {

@@ -6,11 +6,13 @@ export const AcceptDialog = ({
   visible,
   cancel,
   apply,
+  exitWithoutSaving,
   content,
 }: {
   visible: boolean;
   cancel: () => void;
   apply: () => void;
+  exitWithoutSaving?: () => void;
   content?: string;
 }) => {
   const {t} = useTranslation();
@@ -24,8 +26,10 @@ export const AcceptDialog = ({
           </Text>
         </Dialog.Content>
         <Dialog.Actions>
-          <Button onPress={apply}>{t('common.exit')}</Button>
-          <Button onPress={cancel}>{t('common.continue')}</Button>
+          <Button onPress={exitWithoutSaving}>
+            {t('common.exitWithoutSaving')}
+          </Button>
+          <Button onPress={apply}>{t('common.save')}</Button>
         </Dialog.Actions>
       </Dialog>
     </Portal>

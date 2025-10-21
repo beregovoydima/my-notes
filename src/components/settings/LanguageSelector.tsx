@@ -11,6 +11,10 @@ const languageOptions = [
   {code: 'uk', name: 'Ukrainian', nativeName: 'Українська'},
   {code: 'ru', name: 'Russian', nativeName: 'Русский'},
   {code: 'en', name: 'English', nativeName: 'English'},
+  {code: 'de', name: 'German', nativeName: 'Deutsch'},
+  {code: 'es', name: 'Spanish', nativeName: 'Español'},
+  {code: 'fr', name: 'French', nativeName: 'Français'},
+  {code: 'fi', name: 'Finnish', nativeName: 'Suomi'},
 ] as const;
 
 export const LanguageSelector: React.FC<LanguageSelectorProps> = ({

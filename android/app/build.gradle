@@ -75,13 +75,13 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.freenotes"
+    namespace "com.mynotes"
     defaultConfig {
-        applicationId "com.freenotes"
+        applicationId "com.mynotes"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 7
-        versionName "1.33"
+        versionCode 1
+        versionName "1.0.0"
     }
     signingConfigs {
         debug {

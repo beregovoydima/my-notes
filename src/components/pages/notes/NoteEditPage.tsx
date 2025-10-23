@@ -304,6 +304,7 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
           customText={t('notes.enterNoteTitle')}
           saveText={e => setNote({...note, title: e})}
           isChecked={false}
+          autofocus={!route.params.noteId}
         />
         <ColorMenu
           visible={showColorPicker}

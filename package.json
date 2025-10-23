@@ -4,14 +4,21 @@
   "private": true,
   "scripts": {
     "android": "react-native run-android",
+    "android:prod": "react-native run-android --appIdSuffix \"\"",
+    "//android:prod": "PROD версия с Metro Bundler",
     "ios": "react-native run-ios",
-    "lint": "eslint .",
+    
     "start": "react-native start",
+    "lint": "eslint .",
     "test": "jest",
+    "clean": "cd android && gradlew clean",
+    
     "build-apk": "cd android && gradlew assembleRelease",
-    "build-aab": "cd android && gradlew bundleRelease",
-    "build-release": "cd android && gradlew bundleRelease",
-    "clean": "cd android && gradlew clean"
+    "build-apk:dev": "cd android && gradlew assembleDevRelease",
+    "build-apk:prod": "cd android && gradlew assembleProdRelease",
+    
+    "build-aab:dev": "cd android && gradlew bundleDevRelease",
+    "build-release": "cd android && gradlew bundleProdRelease"
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "^4.6.3",

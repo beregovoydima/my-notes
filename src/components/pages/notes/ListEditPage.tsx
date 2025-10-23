@@ -231,6 +231,7 @@ export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
               !!list.items.length && list.items.every(el => el.isChecked)
             }
             saveText={val => saveTitleText(val)}
+            autofocus={!route.params.listId}
           />
           <ColorMenu
             visible={showColorPicker}
@@ -249,7 +250,6 @@ export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
               </TouchableOpacity>
             }
           />
-
           <View>
             <Icon
               name="share-variant"

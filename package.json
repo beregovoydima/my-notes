@@ -1,6 +1,6 @@
 {
   "name": "paper-notes",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -8,8 +8,10 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
-    "build-test": "cd android && gradlew assembleRelease",
-    "build-release": "cd android && gradlew "
+    "build-apk": "cd android && gradlew assembleRelease",
+    "build-aab": "cd android && gradlew bundleRelease",
+    "build-release": "cd android && gradlew bundleRelease",
+    "clean": "cd android && gradlew clean"
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "^4.6.3",
@@ -39,7 +41,7 @@
     "react-native-push-notification": "^8.1.1",
     "react-native-reanimated": "^3.12.1",
     "react-native-safe-area-context": "^4.8.2",
-    "react-native-screens": "^3.29.0",
+    "react-native-screens": "3.29.0",
     "react-native-uuid": "^2.0.1",
     "react-native-vector-icons": "^10.0.3",
     "react-native-webview": "^13.6.4",

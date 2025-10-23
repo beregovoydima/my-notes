@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Paper Notes Feature Graphic</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #f0f0f0;
+        }
+        .feature-graphic {
+            width: 1024px;
+            height: 500px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .icon {
+            width: 180px;
+            height: 180px;
+            background: white;
+            border-radius: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            padding: 15px;
+        }
+        .icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .content {
+            display: flex;
+            flex-direction: column;
+        }
+        .title {
+            font-size: 68px;
+            font-weight: bold;
+            color: white;
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        .subtitle {
+            font-size: 28px;
+            color: white;
+            margin: 8px 0 0 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            opacity: 0.95;
+        }
+        .features {
+            display: flex;
+            gap: 24px;
+            margin-top: 20px;
+        }
+        .feature {
+            font-size: 22px;
+            color: white;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="feature-graphic">
+        <div class="icon">
+            <img src="src/metadata/assets/icon/ic_launcher_512x512.png" alt="Paper Notes Icon">
+        </div>
+        <div class="content">
+            <h1 class="title">Paper Notes</h1>
+            <p class="subtitle">Simple. Private.</p>
+            <div class="features">
+                <span class="feature">📝 Notes</span>
+                <span class="feature">✅ Lists</span>
+                <span class="feature">📁 Folders</span>
+                <span class="feature">📅 Calendar</span>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Инструкция
+        setTimeout(() => {
+            alert('Инструкция:\n\n1. Правой кнопкой мыши на фиолетовом баннере\n2. Выберите "Сохранить изображение как..." или сделайте скриншот\n3. Сохраните как feature-graphic.png\n4. Загрузите в Google Play Console\n\nИли нажмите Print Screen и обрежьте в Paint до 1024x500');
+        }, 500);
+    </script>
+</body>
+</html>
+

@@ -1,7 +1,7 @@
 import {useTheme} from '@/assets/config/colors';
-import React, {memo, useState} from 'react';
+import React, {memo, useCallback, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Divider, IconButton, Menu} from 'react-native-paper';
+import {IconButton, Icon, Menu, Text} from 'react-native-paper';
 import {useTranslation} from '@/core/i18n';
 
 interface Props {
@@ -29,6 +29,45 @@ export const ListMenu = memo(
       deleteList(listId);
     };
 
+    const getEditTitle = useCallback(
+      () => <Text style={{color: colors.text}}>{t('common.edit')}</Text>,
+      [colors.text, t],
+    );
+
+    const getShareTitle = useCallback(
+      () => <Text style={{color: colors.text}}>{t('common.share')}</Text>,
+      [colors.text, t],
+    );
+
+    const getDeleteTitle = useCallback(
+      () => <Text style={{color: colors.text}}>{t('common.delete')}</Text>,
+      [colors.text, t],
+    );
+
+    const getMenuIcon = useCallback(
+      () => (
+        <Icon source="dots-vertical" size={22} color={colors.greyIconColor} />
+      ),
+      [colors.greyIconColor],
+    );
+
+    const getEditIcon = useCallback(
+      () => <Icon source="pencil-outline" size={22} color={colors.text} />,
+      [colors.text],
+    );
+
+    const getShareIcon = useCallback(
+      () => (
+        <Icon source="share-variant-outline" size={22} color={colors.text} />
+      ),
+      [colors.text],
+    );
+
+    const getDeleteIcon = useCallback(
+      () => <Icon source="delete-outline" size={22} color={colors.text} />,
+      [colors.text],
+    );
+
     return (
       <View>
         <Menu
@@ -40,35 +79,27 @@ export const ListMenu = memo(
             styles.menuPadding,
           ]}
           anchor={
-            <IconButton
-              style={styles.icon}
-              size={26}
-              icon="dots-vertical"
-              iconColor={colors.greyColor}
-              onPress={openMenu}
-            />
+            <IconButton size={22} icon={getMenuIcon} onPress={openMenu} />
           }>
           <Menu.Item
-            leadingIcon="pencil-outline"
+            leadingIcon={getEditIcon}
             onPress={() => changeFolder()}
-            title={t('common.edit')}
+            title={getEditTitle()}
           />
-          <Divider />
           <Menu.Item
-            leadingIcon="share-variant-outline"
+            leadingIcon={getShareIcon}
             onPress={() => {
               shareList();
               closeMenu();
             }}
-            title={t('common.share')}
+            title={getShareTitle()}
           />
-          <Divider />
           <Menu.Item
-            leadingIcon="delete-outline"
+            leadingIcon={getDeleteIcon}
             onPress={() => {
               delFolder();
             }}
-            title={t('common.delete')}
+            title={getDeleteTitle()}
           />
         </Menu>
       </View>

@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, Linking} from 'react-native';
+import {View, StyleSheet, Linking, ScrollView} from 'react-native';
 import {Appbar, Text, List, Divider, Switch} from 'react-native-paper';
 import {useTheme} from '@/assets/config/colors';
 import {useTranslation} from '@/core/i18n';
@@ -62,7 +62,8 @@ export function MorePage() {
           {/* <Appbar.Action icon="magnify" onPress={() => {}} /> */}
         </Appbar.Header>
       </View>
-      <View style={[styles.container, {backgroundColor: colors.background}]}>
+      <ScrollView
+        style={[styles.container, {backgroundColor: colors.background}]}>
         {/* НАСТРОЙКИ */}
         <Text
           variant="titleMedium"
@@ -178,7 +179,7 @@ export function MorePage() {
             Paper Notes - Free Forever
           </Text>
         </View>
-      </View>
+      </ScrollView>
 
       {/* Модальное окно выбора языка */}
       <LanguageModal

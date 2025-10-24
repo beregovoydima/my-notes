@@ -34,6 +34,17 @@ export const ListCard = memo(({list, searchQuery}: Props) => {
   const navigation: ScreenNavigationProp = useNavigation();
   const showCardBackground = useCardBackground();
 
+  // Получаем название папки по ID
+  const getFolderName = useCallback(() => {
+    if (!list.folder?.id) {
+      return '';
+    }
+
+    const folders = notesService.storeGetFoldersCollection();
+    const folder = folders.find(f => f.id === list.folder?.id);
+    return folder?.label || '';
+  }, [list.folder?.id]);
+
   const getLeftIcon = (props: any) => {
     return (
       <Avatar.Icon
@@ -194,7 +205,7 @@ export const ListCard = memo(({list, searchQuery}: Props) => {
             </View>
 
             <View style={styles.footer}>
-              {list.folder?.name ? (
+              {getFolderName() ? (
                 <Icon
                   source="folder-outline"
                   size={12}
@@ -206,9 +217,9 @@ export const ListCard = memo(({list, searchQuery}: Props) => {
                 // eslint-disable-next-line react-native/no-inline-styles
                 style={{
                   color: colors.greyColor,
-                  marginLeft: list.folder?.name ? 4 : 0,
+                  marginLeft: getFolderName() ? 4 : 0,
                 }}>
-                {list.folder?.name}
+                {getFolderName()}
               </Text>
             </View>
           </View>

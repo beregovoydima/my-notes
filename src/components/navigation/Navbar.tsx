@@ -36,6 +36,7 @@ export function NavBar({route}: {route: RouteProp<ParamListBase>}) {
   const getNoteLabel = (focused: boolean) => {
     return (
       <Text
+        numberOfLines={1}
         style={[
           {color: focused ? colors.primary : colors.greyIconColor},
           styles.navbarLabel,
@@ -58,6 +59,7 @@ export function NavBar({route}: {route: RouteProp<ParamListBase>}) {
   const getCalendarLabel = (focused: boolean) => {
     return (
       <Text
+        numberOfLines={1}
         style={[
           {color: focused ? colors.primary : colors.greyIconColor},
           styles.navbarLabel,
@@ -80,6 +82,7 @@ export function NavBar({route}: {route: RouteProp<ParamListBase>}) {
   const getProfileLabel = (focused: boolean) => {
     return (
       <Text
+        numberOfLines={1}
         style={[
           {color: focused ? colors.primary : colors.greyIconColor},
           styles.navbarLabel,
@@ -125,6 +128,7 @@ export function NavBar({route}: {route: RouteProp<ParamListBase>}) {
   const getSearchLabel = (focused: boolean) => {
     return (
       <Text
+        numberOfLines={1}
         style={[
           {color: focused ? colors.primary : colors.greyIconColor},
           styles.navbarLabel,

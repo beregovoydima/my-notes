@@ -1,8 +1,9 @@
 import {useTheme} from '@/assets/config/colors';
 import {FoldersMenu} from '@/components/ui/menu/FoldersMenu';
 import {NotesFolderItem, NotesFolderItemKey} from '@/core/interfaces';
-import moment from 'moment';
-import React, {useCallback} from 'react';
+import {notesService} from '@/core/services';
+// import moment from 'moment';
+import React, {useCallback, useMemo} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Avatar, Card, Icon, Text} from 'react-native-paper';
 
@@ -17,22 +18,68 @@ export const FolderCard = React.memo(
   ({item, deleteFolder, setEditFolder, setFilterFolder}: Props) => {
     const {colors} = useTheme();
 
+    // Используем useMemo для вычисления количества элементов
+    const itemsCount = useMemo(() => {
+      const notes = notesService.storeGetCollectionNote();
+      const lists = notesService.storeGetListCollection();
+      const notesInFolder = notes.filter(
+        note => note.folder && note.folder.id === item.id,
+      ).length;
+
+      const listsInFolder = lists.filter(
+        list => list.folder && list.folder.id === item.id,
+      ).length;
+
+      return {
+        notes: notesInFolder,
+        lists: listsInFolder,
+      };
+    }, [item.id]);
+
     const getLeftIcon = (props: any) => {
       return <Avatar.Icon {...props} icon="folder" />;
     };
 
-    const getMoreIcon = useCallback(
-      (folder: NotesFolderItem) => {
-        return (
-          <FoldersMenu
-            editFolder={() => setEditFolder(folder)}
-            folder={folder}
-            deleteFolder={() => deleteFolder(folder.id)}
-          />
-        );
-      },
-      [deleteFolder, setEditFolder],
-    );
+    const getMoreIcon = useCallback(() => {
+      return (
+        <FoldersMenu
+          editFolder={() => setEditFolder(item)}
+          folder={item}
+          deleteFolder={() => deleteFolder(item.id)}
+        />
+      );
+    }, [deleteFolder, setEditFolder, item]);
+
+    const getRightContent = useCallback(() => {
+      return (
+        <View style={styles.titleRightContainer}>
+          {/* Счетчик заметок и списков */}
+          <View style={styles.countContainer}>
+            <View style={styles.countItem}>
+              <Icon source="note-outline" size={14} color={colors.secondary} />
+              <Text
+                variant="labelSmall"
+                style={[styles.countText, {color: colors.secondary}]}>
+                {itemsCount.notes}
+              </Text>
+            </View>
+            <View style={styles.countItem}>
+              <Icon
+                source="format-list-bulleted"
+                size={14}
+                color={colors.secondary}
+              />
+              <Text
+                variant="labelSmall"
+                style={[styles.countText, {color: colors.secondary}]}>
+                {itemsCount.lists}
+              </Text>
+            </View>
+          </View>
+          {getMoreIcon()}
+        </View>
+      );
+    }, [itemsCount, colors, getMoreIcon]);
 
     return (
       <View style={[styles.item]}>
@@ -46,9 +93,9 @@ export const FolderCard = React.memo(
           <Card.Title
             title={item.label}
             left={getLeftIcon}
-            right={() => getMoreIcon(item)}
+            right={getRightContent}
           />
-          <Card.Content>
+          {/* <Card.Content>
             <View style={styles.footer}>
               {item.updated ? (
                 <Icon
@@ -69,7 +116,7 @@ export const FolderCard = React.memo(
                 )}
               </Text>
             </View>
-          </Card.Content>
+          </Card.Content> */}
         </Card>
       </View>
     );
@@ -79,6 +126,27 @@ export const FolderCard = React.memo(
 const styles = StyleSheet.create({
   item: {
     margin: 5,
+  },
+  titleRightContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  countContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  countItem: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  countText: {
+    fontWeight: '600',
   },
   footer: {
     display: 'flex',

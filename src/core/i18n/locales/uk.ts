@@ -50,11 +50,11 @@ export const uk = {
 
   // Заметки
   notes: {
-    title: 'Заметки',
+    title: 'Нотатки',
     newNote: 'Нова нотатка',
     editNote: 'Редагувати нотатку',
     deleteNote: 'Видалити нотатку',
-    noteTitle: 'Заголовок нотатки',
+    noteTitle: 'Назва нотатки',
     noteContent: 'Зміст нотатки',
     saveNote: 'Зберегти нотатку',
     noteSaved: 'Нотатку збережено',
@@ -68,11 +68,11 @@ export const uk = {
     createNote: 'Створити нотатку',
     createList: 'Створити список',
     createFolder: 'Створити папку',
-    enterNoteTitle: 'Введіть назву заметки',
+    enterNoteTitle: 'Введіть назву нотатки',
     enterListTitle: 'Введіть назву списку',
     enterFolderName: 'Введіть назву папки',
-    noteText: 'Текст заметки',
-    emptyNotesList: 'Список заметок порожній.',
+    noteText: 'Текст нотатки',
+    emptyNotesList: 'Список нотаток порожній.',
   },
 
   // Списки

@@ -98,5 +98,5 @@ export const getAppVersion = (): string => {
   // В React Native можно использовать react-native-device-info
   // или получить версию из нативных модулей
   // Пока возвращаем статичную версию
-  return '1.0.3';
+  return '1.0.5';
 };

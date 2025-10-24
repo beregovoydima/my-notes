@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Divider, IconButton, Menu} from 'react-native-paper';
+import {IconButton, Icon, Menu, Text} from 'react-native-paper';
 import {useTheme} from '@/assets/config/colors';
 import {useTranslation} from '@/core/i18n';
 
@@ -32,6 +32,25 @@ export const CalendarEventCardMenu = ({
     closeMenu();
   };
 
+  const getEditIcon = useCallback(
+    () => <Icon source="pencil-outline" size={22} color={colors.text} />,
+    [colors.text],
+  );
+
+  const getDeleteIcon = useCallback(
+    () => <Icon source="delete-outline" size={22} color={colors.text} />,
+    [colors.text],
+  );
+
+  const getEditTitle = useCallback(
+    () => <Text style={{color: colors.text}}>{t('common.edit')}</Text>,
+    [colors.text, t],
+  );
+
+  const getDeleteTitle = useCallback(
+    () => <Text style={{color: colors.text}}>{t('common.delete')}</Text>,
+    [colors.text, t],
+  );
   return (
     <View>
       <Menu
@@ -52,15 +71,14 @@ export const CalendarEventCardMenu = ({
           />
         }>
         <Menu.Item
-          leadingIcon="pencil-outline"
+          leadingIcon={getEditIcon}
           onPress={handleEdit}
-          title={t('common.edit')}
+          title={getEditTitle()}
         />
-        <Divider />
         <Menu.Item
-          leadingIcon="delete-outline"
+          leadingIcon={getDeleteIcon}
           onPress={handleDelete}
-          title={t('common.delete')}
+          title={getDeleteTitle()}
         />
       </Menu>
     </View>

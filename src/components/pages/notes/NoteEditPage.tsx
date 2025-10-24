@@ -376,7 +376,9 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
                     height: 34,
                   }}
                   onPress={() => handleFolderSet(el)}>
-                  {el.label}
+                  {el.label.length > 10
+                    ? el.label.slice(0, 10) + '...  '
+                    : el.label + ' '}
                 </Chip>
               );
             })}

@@ -1,11 +1,11 @@
-import React from 'react';
-import {Menu} from 'react-native-paper';
+import React, {useCallback} from 'react';
+import {Icon, Menu, Text} from 'react-native-paper';
 import {useTheme} from '@/assets/config/colors';
 import {NotesFolderItem} from '@/core/interfaces';
 import {useTranslation} from '@/core/i18n';
 import {memo, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Divider, IconButton} from 'react-native-paper';
+import {IconButton} from 'react-native-paper';
 
 interface Props {
   editFolder: (id: string) => void;
@@ -30,6 +30,33 @@ export const FoldersMenu = memo(({editFolder, deleteFolder, folder}: Props) => {
     deleteFolder(folder.id);
   };
 
+  const getMenuIcon = useCallback(
+    () => (
+      <Icon source="dots-vertical" size={22} color={colors.greyIconColor} />
+    ),
+    [colors.greyIconColor],
+  );
+
+  const getEditIcon = useCallback(
+    () => <Icon source="pencil-outline" size={22} color={colors.text} />,
+    [colors.text],
+  );
+
+  const getDeleteIcon = useCallback(
+    () => <Icon source="delete-outline" size={22} color={colors.text} />,
+    [colors.text],
+  );
+
+  const getEditTitle = useCallback(
+    () => <Text style={{color: colors.text}}>{t('common.edit')}</Text>,
+    [colors.text, t],
+  );
+
+  const getDeleteTitle = useCallback(
+    () => <Text style={{color: colors.text}}>{t('common.delete')}</Text>,
+    [colors.text, t],
+  );
+
   return (
     <View>
       <Menu
@@ -40,23 +67,20 @@ export const FoldersMenu = memo(({editFolder, deleteFolder, folder}: Props) => {
           styles.content,
           styles.menuPadding,
         ]}
-        anchor={
-          <IconButton size={24} icon="dots-vertical" onPress={openMenu} />
-        }>
+        anchor={<IconButton size={22} icon={getMenuIcon} onPress={openMenu} />}>
         <Menu.Item
           onPress={() => changeFolder()}
-          title={t('common.edit')}
-          leadingIcon="pencil-outline"
+          title={getEditTitle()}
+          leadingIcon={getEditIcon}
         />
         {folder.isDeletable ? (
           <>
-            <Divider />
             <Menu.Item
               onPress={() => {
                 delFolder();
               }}
-              title={t('common.delete')}
-              leadingIcon="delete-outline"
+              title={getDeleteTitle()}
+              leadingIcon={getDeleteIcon}
             />
           </>
         ) : (

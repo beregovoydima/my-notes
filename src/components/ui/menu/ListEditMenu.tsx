@@ -1,6 +1,6 @@
-import React, {memo, useState} from 'react';
+import React, {memo, useCallback, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Divider, IconButton, Menu} from 'react-native-paper';
+import {IconButton, Icon, Menu, Text} from 'react-native-paper';
 import {useTranslation} from '@/core/i18n';
 import {useTheme} from '@/assets/config/colors';
 
@@ -17,6 +17,25 @@ export const ListEditMenu = memo(({deleteList, saveList}: Props) => {
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
 
+  const getSaveIcon = useCallback(
+    () => <Icon source="check" size={22} color={colors.text} />,
+    [colors.text],
+  );
+
+  const getDeleteIcon = useCallback(
+    () => <Icon source="delete" size={22} color={colors.text} />,
+    [colors.text],
+  );
+
+  const getSaveTitle = useCallback(
+    () => <Text style={{color: colors.text}}>{t('common.save')}</Text>,
+    [colors.text, t],
+  );
+
+  const getDeleteTitle = useCallback(
+    () => <Text style={{color: colors.text}}>{t('common.delete')}</Text>,
+    [colors.text, t],
+  );
   return (
     <View>
       <Menu
@@ -39,16 +58,15 @@ export const ListEditMenu = memo(({deleteList, saveList}: Props) => {
           onPress={() => {
             saveList();
           }}
-          title={t('common.save')}
-          leadingIcon="check"
+          title={getSaveTitle()}
+          leadingIcon={getSaveIcon}
         />
-        <Divider />
         <Menu.Item
           onPress={() => {
             deleteList();
           }}
-          title={t('common.delete')}
-          leadingIcon="delete"
+          title={getDeleteTitle()}
+          leadingIcon={getDeleteIcon}
         />
       </Menu>
     </View>

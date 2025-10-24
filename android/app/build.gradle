@@ -80,8 +80,8 @@ android {
         applicationId "com.papernotes"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 4
-        versionName "1.0.3"
+        versionCode 6
+        versionName "1.0.5"
     }
     
     flavorDimensions "version"
@@ -134,6 +134,16 @@ android {
             include "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
         }
     }
+}
+
+// Создаем алиас для React Native CLI
+// По умолчанию используем dev flavor
+tasks.register('installDebug') {
+    dependsOn 'installDevDebug'
+}
+
+tasks.register('uninstallDebug') {
+    dependsOn 'uninstallDevDebug'
 }
 
 dependencies {

@@ -5,7 +5,7 @@ import {NotesSortType, SortDirection} from '@/core/interfaces';
 import {useTranslation} from '@/core/i18n';
 import {memo, useState} from 'react';
 import {StyleSheet} from 'react-native';
-import {Divider, IconButton} from 'react-native-paper';
+import {IconButton} from 'react-native-paper';
 
 interface Props {
   sortType: NotesSortType;
@@ -50,55 +50,46 @@ export const SortedNotesMenu = memo(({changeSort}: Props) => {
         onPress={() => change('created', 'asc')}
         title={t('sorting.byCreationDate')}
       />
-      <Divider />
       <Menu.Item
         leadingIcon="sort-clock-descending-outline"
         onPress={() => change('created', 'desc')}
         title={t('sorting.byCreationDate')}
       />
-      <Divider />
       <Menu.Item
         leadingIcon="sort-clock-ascending"
         onPress={() => change('updated', 'asc')}
         title={t('sorting.byUpdateDate')}
       />
-      <Divider />
       <Menu.Item
         leadingIcon="sort-clock-descending"
         onPress={() => change('updated', 'desc')}
         title={t('sorting.byUpdateDate')}
       />
-      <Divider />
       <Menu.Item
         leadingIcon="sort-bool-ascending"
         onPress={() => change('color', 'asc')}
         title={t('sorting.byColor')}
       />
-      <Divider />
       <Menu.Item
         leadingIcon="sort-bool-descending"
         onPress={() => change('color', 'desc')}
         title={t('sorting.byColor')}
       />
-      <Divider />
       <Menu.Item
         leadingIcon="sort-alphabetical-ascending"
         onPress={() => change('title', 'asc')}
         title={t('sorting.byTitle')}
       />
-      <Divider />
       <Menu.Item
         leadingIcon="sort-alphabetical-descending"
         onPress={() => change('title', 'desc')}
         title={t('sorting.byTitle')}
       />
-      <Divider />
       <Menu.Item
         leadingIcon="sort-alphabetical-ascending"
         onPress={() => change('folder', 'asc')}
         title={t('sorting.byFolderName')}
       />
-      <Divider />
       <Menu.Item
         leadingIcon="sort-alphabetical-descending"
         onPress={() => change('folder', 'desc')}

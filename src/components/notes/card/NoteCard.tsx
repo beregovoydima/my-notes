@@ -21,6 +21,16 @@ export const NoteCard = React.memo(
     const navigation: ScreenNavigationProp = useNavigation();
     const showCardBackground = useCardBackground();
 
+    // Получаем название папки по ID
+    const getFolderName = useCallback(() => {
+      if (!item.folder?.id) {
+        return '';
+      }
+      const folders = notesService.storeGetFoldersCollection();
+      const folder = folders.find(f => f.id === item.folder?.id);
+      return folder?.label || '';
+    }, [item.folder?.id]);
+
     const stripHtmlTags = (htmlString: string) => {
       const stringWithLineBreaks = htmlString.replace(/<li>/g, '\n');
       return stringWithLineBreaks.replace(/<[^>]*>/g, ' ');
@@ -146,7 +156,7 @@ export const NoteCard = React.memo(
                 </Text>
               </View>
               <View style={styles.footer}>
-                {item.folder?.name ? (
+                {getFolderName() ? (
                   <Icon
                     source="folder-outline"
                     size={12}
@@ -158,9 +168,9 @@ export const NoteCard = React.memo(
                   // eslint-disable-next-line react-native/no-inline-styles
                   style={{
                     color: colors.greyColor,
-                    marginLeft: item.folder?.name ? 4 : 0,
+                    marginLeft: getFolderName() ? 4 : 0,
                   }}>
-                  {item.folder?.name}
+                  {getFolderName()}
                 </Text>
               </View>
             </View>

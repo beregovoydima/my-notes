@@ -1,11 +1,11 @@
 import React from 'react';
-import {Menu} from 'react-native-paper';
+import {Menu, Icon, Text} from 'react-native-paper';
 import {useTheme} from '@/assets/config/colors';
 import {NotesItems} from '@/core/interfaces';
 import {useTranslation} from '@/core/i18n';
 import {StyleSheet, View} from 'react-native';
-import {Divider, IconButton} from 'react-native-paper';
-import {memo, useState} from 'react';
+import {IconButton} from 'react-native-paper';
+import {memo, useState, useCallback} from 'react';
 
 interface Props {
   editNote: (id: string) => void;
@@ -22,6 +22,45 @@ export const NotesMenu = memo(
 
     const openMenu = () => setVisible(true);
     const closeMenu = () => setVisible(false);
+
+    const getEditIcon = useCallback(
+      () => <Icon source="pencil-outline" size={22} color={colors.text} />,
+      [colors.text],
+    );
+
+    const getShareIcon = useCallback(
+      () => (
+        <Icon source="share-variant-outline" size={22} color={colors.text} />
+      ),
+      [colors.text],
+    );
+
+    const getDeleteIcon = useCallback(
+      () => <Icon source="delete-outline" size={22} color={colors.text} />,
+      [colors.text],
+    );
+
+    const getMenuIcon = useCallback(
+      () => (
+        <Icon source="dots-vertical" size={22} color={colors.greyIconColor} />
+      ),
+      [colors.greyIconColor],
+    );
+
+    const getEditTitle = useCallback(
+      () => <Text style={{color: colors.text}}>{t('common.edit')}</Text>,
+      [colors.text, t],
+    );
+
+    const getShareTitle = useCallback(
+      () => <Text style={{color: colors.text}}>{t('common.share')}</Text>,
+      [colors.text, t],
+    );
+
+    const getDeleteTitle = useCallback(
+      () => <Text style={{color: colors.text}}>{t('common.delete')}</Text>,
+      [colors.text, t],
+    );
 
     const changeFolder = () => {
       closeMenu();
@@ -43,29 +82,27 @@ export const NotesMenu = memo(
             styles.menuPadding,
           ]}
           anchor={
-            <IconButton size={24} icon="dots-vertical" onPress={openMenu} />
+            <IconButton size={22} icon={getMenuIcon} onPress={openMenu} />
           }>
           <Menu.Item
-            leadingIcon="pencil-outline"
+            leadingIcon={getEditIcon}
             onPress={() => changeFolder()}
-            title={t('common.edit')}
+            title={getEditTitle()}
           />
-          <Divider />
           <Menu.Item
-            leadingIcon="share-variant-outline"
+            leadingIcon={getShareIcon}
             onPress={() => {
               shareNote();
               closeMenu();
             }}
-            title={t('common.share')}
+            title={getShareTitle()}
           />
-          <Divider />
           <Menu.Item
-            leadingIcon="delete-outline"
+            leadingIcon={getDeleteIcon}
             onPress={() => {
               delFolder();
             }}
-            title={t('common.delete')}
+            title={getDeleteTitle()}
           />
         </Menu>
       </View>

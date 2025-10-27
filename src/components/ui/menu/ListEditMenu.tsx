@@ -9,7 +9,7 @@ interface Props {
   saveList: () => void;
 }
 
-export const ListEditMenu = memo(({deleteList, saveList}: Props) => {
+export const ListEditMenu = memo(({deleteList}: Props) => {
   const {colors} = useTheme();
   const {t} = useTranslation();
   const [visible, setVisible] = useState(false);
@@ -17,20 +17,20 @@ export const ListEditMenu = memo(({deleteList, saveList}: Props) => {
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
 
-  const getSaveIcon = useCallback(
-    () => <Icon source="check" size={22} color={colors.text} />,
-    [colors.text],
-  );
+  // const getSaveIcon = useCallback(
+  //   () => <Icon source="check" size={22} color={colors.text} />,
+  //   [colors.text],
+  // );
 
   const getDeleteIcon = useCallback(
     () => <Icon source="delete" size={22} color={colors.text} />,
     [colors.text],
   );
 
-  const getSaveTitle = useCallback(
-    () => <Text style={{color: colors.text}}>{t('common.save')}</Text>,
-    [colors.text, t],
-  );
+  // const getSaveTitle = useCallback(
+  //   () => <Text style={{color: colors.text}}>{t('common.save')}</Text>,
+  //   [colors.text, t],
+  // );
 
   const getDeleteTitle = useCallback(
     () => <Text style={{color: colors.text}}>{t('common.delete')}</Text>,
@@ -54,19 +54,21 @@ export const ListEditMenu = memo(({deleteList, saveList}: Props) => {
             onPress={openMenu}
           />
         }>
-        <Menu.Item
+        {/* <Menu.Item
           onPress={() => {
             saveList();
           }}
           title={getSaveTitle()}
           leadingIcon={getSaveIcon}
-        />
+          titleStyle={styles.titleStyle}
+        /> */}
         <Menu.Item
           onPress={() => {
             deleteList();
           }}
           title={getDeleteTitle()}
           leadingIcon={getDeleteIcon}
+          titleStyle={styles.titleStyle}
         />
       </Menu>
     </View>
@@ -81,5 +83,8 @@ const styles = StyleSheet.create({
   menuPadding: {
     paddingVertical: 0,
     paddingHorizontal: 0,
+  },
+  titleStyle: {
+    lineHeight: 18,
   },
 });

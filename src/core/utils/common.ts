@@ -6,6 +6,30 @@ export const getUuid = () => {
   return uuid.v4().toString();
 };
 
+/**
+ * Извлекает чистый текст из HTML, удаляя все теги и заменяя HTML-сущности
+ * Используется для поиска по содержимому без учета HTML-разметки
+ */
+export const extractTextFromHtml = (htmlString: string): string => {
+  let result = htmlString;
+
+  // Заменяем HTML-сущности
+  result = result.replace(/&nbsp;/g, ' ');
+  result = result.replace(/&amp;/g, '&');
+  result = result.replace(/&lt;/g, '<');
+  result = result.replace(/&gt;/g, '>');
+  result = result.replace(/&quot;/g, '"');
+  result = result.replace(/&#39;/g, "'");
+
+  // Удаляем все HTML-теги
+  result = result.replace(/<[^>]*>/g, ' ');
+
+  // Убираем лишние пробелы
+  result = result.replace(/\s+/g, ' ').trim();
+
+  return result;
+};
+
 export const parseNoteLabel = (htmlString: string) => {
   // Заменяем <div> на новую строку
   const stringWithLineBreaks = htmlString.replace(/<div>/g, '\n');
@@ -98,5 +122,5 @@ export const getAppVersion = (): string => {
   // В React Native можно использовать react-native-device-info
   // или получить версию из нативных модулей
   // Пока возвращаем статичную версию
-  return '1.0.5';
+  return '1.0.6';
 };

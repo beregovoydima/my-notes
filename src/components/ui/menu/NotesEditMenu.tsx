@@ -52,6 +52,7 @@ export const NotesEditMenu = memo(({deleteNote}: Props) => {
             deleteNote();
           }}
           title={getDeleteTitle()}
+          titleStyle={styles.titleStyle}
         />
       </Menu>
     </View>
@@ -66,5 +67,8 @@ const styles = StyleSheet.create({
   menuPadding: {
     paddingVertical: 0,
     paddingHorizontal: 0,
+  },
+  titleStyle: {
+    lineHeight: 18,
   },
 });

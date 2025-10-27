@@ -99,6 +99,12 @@ export function CalendarEvent({route}: {route: any}) {
       case RESULTS.BLOCKED:
         setSettigsVisible(true);
         break;
+      case RESULTS.UNAVAILABLE:
+        setNotificationDialogVisible(true);
+        break;
+      default:
+        setNotificationDialogVisible(true);
+        break;
     }
   };
 
@@ -415,10 +421,7 @@ export function CalendarEvent({route}: {route: any}) {
                   justifyContent: 'center',
                 }}>
                 {event.dateType === 'time' && (
-                  <Button
-                    style={{width: '20%'}}
-                    textColor={event.color}
-                    onPress={showStartTimePicker}>
+                  <Button textColor={event.color} onPress={showStartTimePicker}>
                     {moment(event.startDate).format('HH:mm')}
                   </Button>
                 )}

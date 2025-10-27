@@ -85,6 +85,7 @@ export const ListMenu = memo(
             leadingIcon={getEditIcon}
             onPress={() => changeFolder()}
             title={getEditTitle()}
+            titleStyle={styles.titleStyle}
           />
           <Menu.Item
             leadingIcon={getShareIcon}
@@ -93,6 +94,7 @@ export const ListMenu = memo(
               closeMenu();
             }}
             title={getShareTitle()}
+            titleStyle={styles.titleStyle}
           />
           <Menu.Item
             leadingIcon={getDeleteIcon}
@@ -100,6 +102,7 @@ export const ListMenu = memo(
               delFolder();
             }}
             title={getDeleteTitle()}
+            titleStyle={styles.titleStyle}
           />
         </Menu>
       </View>
@@ -118,5 +121,8 @@ const styles = StyleSheet.create({
   menuPadding: {
     paddingVertical: 0,
     paddingHorizontal: 0,
+  },
+  titleStyle: {
+    lineHeight: 18,
   },
 });

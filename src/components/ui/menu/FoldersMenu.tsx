@@ -72,6 +72,7 @@ export const FoldersMenu = memo(({editFolder, deleteFolder, folder}: Props) => {
           onPress={() => changeFolder()}
           title={getEditTitle()}
           leadingIcon={getEditIcon}
+          titleStyle={styles.titleStyle}
         />
         {folder.isDeletable ? (
           <>
@@ -81,6 +82,7 @@ export const FoldersMenu = memo(({editFolder, deleteFolder, folder}: Props) => {
               }}
               title={getDeleteTitle()}
               leadingIcon={getDeleteIcon}
+              titleStyle={styles.titleStyle}
             />
           </>
         ) : (
@@ -101,5 +103,8 @@ const styles = StyleSheet.create({
   menuPadding: {
     paddingVertical: 0,
     paddingHorizontal: 0,
+  },
+  titleStyle: {
+    lineHeight: 18,
   },
 });

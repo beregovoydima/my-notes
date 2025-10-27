@@ -60,6 +60,7 @@ export const CalendarEventEditMenu = memo(({deleteEvent, saveEvent}: Props) => {
           }}
           title={getSaveTitle()}
           leadingIcon={getSaveIcon}
+          titleStyle={styles.titleStyle}
         />
         <Menu.Item
           onPress={() => {
@@ -67,6 +68,7 @@ export const CalendarEventEditMenu = memo(({deleteEvent, saveEvent}: Props) => {
           }}
           title={getDeleteTitle()}
           leadingIcon={getDeleteIcon}
+          titleStyle={styles.titleStyle}
         />
       </Menu>
     </View>
@@ -81,5 +83,8 @@ const styles = StyleSheet.create({
   menuPadding: {
     paddingVertical: 0,
     paddingHorizontal: 0,
+  },
+  titleStyle: {
+    lineHeight: 18,
   },
 });

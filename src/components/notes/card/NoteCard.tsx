@@ -3,6 +3,7 @@ import {NotesMenu} from '@/components/ui/menu/NotesMenu';
 import {NotesItems, ScreenNavigationProp} from '@/core/interfaces';
 import {notesService} from '@/core/services';
 import {
+  extractTextFromHtml,
   getHighlightedParts,
   handleShare,
   hex2rgba,
@@ -30,11 +31,6 @@ export const NoteCard = React.memo(
       const folder = folders.find(f => f.id === item.folder?.id);
       return folder?.label || '';
     }, [item.folder?.id]);
-
-    const stripHtmlTags = (htmlString: string) => {
-      const stringWithLineBreaks = htmlString.replace(/<li>/g, '\n');
-      return stringWithLineBreaks.replace(/<[^>]*>/g, ' ');
-    };
 
     const leftContent = (props: {size: number}) => {
       return (
@@ -102,7 +98,7 @@ export const NoteCard = React.memo(
               searchQuery ? (
                 <Text>
                   {getHighlightedParts(
-                    item.title || stripHtmlTags(item.label),
+                    item.title || extractTextFromHtml(item.label),
                     searchQuery,
                   ).map((part, index) => (
                     <Text
@@ -117,7 +113,7 @@ export const NoteCard = React.memo(
                   ))}
                 </Text>
               ) : (
-                item.title || stripHtmlTags(item.label)
+                item.title || extractTextFromHtml(item.label)
               )
             }
             left={props => leftContent(props)}
@@ -134,7 +130,19 @@ export const NoteCard = React.memo(
                 borderTopColor: colors.whiteColor,
               },
             ]}>
-            <View style={styles.footer}>
+            {/* Предпросмотр содержимого заметки */}
+            {item.label && !searchQuery && (
+              <View style={styles.previewContainer}>
+                <Text
+                  variant="bodyMedium"
+                  numberOfLines={2}
+                  style={[styles.previewText, {color: colors.greyColor}]}>
+                  {extractTextFromHtml(item.label)}
+                </Text>
+              </View>
+            )}
+
+            <View style={[styles.footer, styles.footerContainer]}>
               <View style={styles.footer}>
                 {item.updated ? (
                   <Icon
@@ -185,11 +193,20 @@ const styles = StyleSheet.create({
   item: {
     margin: 5,
   },
+  previewContainer: {
+    marginBottom: 8,
+  },
+  previewText: {
+    lineHeight: 20,
+  },
   footer: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  footerContainer: {
+    marginTop: 8,
   },
   topBorder: {
     borderTopEndRadius: 12,

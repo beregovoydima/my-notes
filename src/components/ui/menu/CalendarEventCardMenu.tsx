@@ -74,11 +74,13 @@ export const CalendarEventCardMenu = ({
           leadingIcon={getEditIcon}
           onPress={handleEdit}
           title={getEditTitle()}
+          titleStyle={styles.titleStyle}
         />
         <Menu.Item
           leadingIcon={getDeleteIcon}
           onPress={handleDelete}
           title={getDeleteTitle()}
+          titleStyle={styles.titleStyle}
         />
       </Menu>
     </View>
@@ -96,5 +98,8 @@ const styles = StyleSheet.create({
   menuPadding: {
     paddingVertical: 0,
     paddingHorizontal: 0,
+  },
+  titleStyle: {
+    lineHeight: 18,
   },
 });

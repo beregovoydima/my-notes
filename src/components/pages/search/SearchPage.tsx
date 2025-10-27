@@ -10,6 +10,7 @@ import {
   NotesItems,
   NotesListItem,
 } from '@/core/interfaces';
+import {extractTextFromHtml} from '@/core/utils';
 import {NoteCard} from '../../notes/card/NoteCard';
 import {ListCard} from '../../notes/card/ListCard';
 import {CalendarEventCard} from '../../calendar/CalendarEventCard';
@@ -90,7 +91,12 @@ export function SearchPage() {
     const lowerCaseQuery = searchQuery.toLowerCase();
 
     const filteredNotes = notes
-      .filter(note => note.title.toLowerCase().includes(lowerCaseQuery))
+      .filter(note => {
+        const titleMatch = note.title.toLowerCase().includes(lowerCaseQuery);
+        const labelText = extractTextFromHtml(note.label);
+        const contentMatch = labelText.toLowerCase().includes(lowerCaseQuery);
+        return titleMatch || contentMatch;
+      })
       .map(note => ({item: note, type: 'note' as const}));
 
     const filteredLists = lists

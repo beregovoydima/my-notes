@@ -88,6 +88,7 @@ export const NotesMenu = memo(
             leadingIcon={getEditIcon}
             onPress={() => changeFolder()}
             title={getEditTitle()}
+            titleStyle={styles.titleStyle}
           />
           <Menu.Item
             leadingIcon={getShareIcon}
@@ -96,6 +97,7 @@ export const NotesMenu = memo(
               closeMenu();
             }}
             title={getShareTitle()}
+            titleStyle={styles.titleStyle}
           />
           <Menu.Item
             leadingIcon={getDeleteIcon}
@@ -103,6 +105,7 @@ export const NotesMenu = memo(
               delFolder();
             }}
             title={getDeleteTitle()}
+            titleStyle={styles.titleStyle}
           />
         </Menu>
       </View>
@@ -118,5 +121,8 @@ const styles = StyleSheet.create({
   menuPadding: {
     paddingVertical: 0,
     paddingHorizontal: 0,
+  },
+  titleStyle: {
+    lineHeight: 18,
   },
 });

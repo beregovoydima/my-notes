@@ -310,8 +310,22 @@ export const uk = {
     language: 'Мова',
     selectLanguage: 'Виберіть мову',
     cancel: 'Скасувати',
+    theme: 'Тема',
+    themeDescription: 'Перемикання між світлою та темною темою',
     showCardBackground: 'Показувати фон карток',
     showCardBackgroundDescription: 'Відображати кольоровий фон',
     privacyPolicy: 'Політика конфіденційності',
+    supportUs: 'Підтримайте нас',
+    supportUsDescription: 'Допоможіть розвитку додатка, зробивши пожертву',
+  },
+
+  // Тема
+  theme: {
+    light: 'Світла',
+    dark: 'Темна',
+    system: 'Системна',
+    lightDescription: 'Використовувати світлу тему',
+    darkDescription: 'Використовувати темну тему',
+    systemDescription: 'Слідувати налаштуванням системи',
   },
 };

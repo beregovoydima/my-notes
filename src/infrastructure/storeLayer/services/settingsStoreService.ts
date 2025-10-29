@@ -1,6 +1,7 @@
 import {SettingsStoreServiceContract} from '@/infrastructure/storeLayer/services/contracts';
 import {StoreRepositoryContract} from '@/infrastructure/storeLayer/repository/contracts';
 import {StateSettings} from '@/framework/store/settings';
+import {ThemeMode} from '@/core/interfaces';
 
 export class SettingsStoreService implements SettingsStoreServiceContract {
   constructor(private readonly storeRepository: StoreRepositoryContract) {}
@@ -19,5 +20,9 @@ export class SettingsStoreService implements SettingsStoreServiceContract {
       'setShowCardBackground',
       showCardBackground,
     );
+  }
+
+  public setStoreThemeMode(themeMode: ThemeMode): void {
+    this.storeRepository.set('settings', 'setThemeMode', themeMode);
   }
 }

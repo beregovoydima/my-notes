@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useRef} from 'react';
 import {ScrollView, StyleSheet, View, Keyboard} from 'react-native';
-import {Searchbar, Text, Chip} from 'react-native-paper';
+import {Searchbar, Text} from 'react-native-paper';
 import {useTheme} from '@/assets/config/colors';
 import {useSelector} from 'react-redux';
 import {RootState} from '@/framework/store/store';
@@ -15,6 +15,7 @@ import {NoteCard} from '../../notes/card/NoteCard';
 import {ListCard} from '../../notes/card/ListCard';
 import {CalendarEventCard} from '../../calendar/CalendarEventCard';
 import {FabSearchButton} from '../../ui/fab';
+import {ActiveChip} from '@/components/ui/chips/ActiveChip';
 
 type SearchResult =
   | {type: 'note'; item: NotesItems}
@@ -152,57 +153,24 @@ export function SearchPage() {
         />
         {visibleTypes.size > 1 && (
           <View style={styles.filterContainer}>
-            <Chip
+            <ActiveChip
               icon="note"
-              style={[
-                styles.chip,
-                styles.activeChip,
-                {
-                  backgroundColor: activeFilters.includes('note')
-                    ? colors.secondaryContainer
-                    : colors.whiteColor,
-                  borderColor: activeFilters.includes('note')
-                    ? colors.secondaryContainer
-                    : colors.greyColor,
-                },
-              ]}
-              onPress={() => toggleFilter('note')}>
-              {t('filters.notes')}
-            </Chip>
-            <Chip
+              label={t('filters.notes')}
+              active={activeFilters.includes('note')}
+              onPress={() => toggleFilter('note')}
+            />
+            <ActiveChip
               icon="clipboard-list"
-              style={[
-                styles.chip,
-                styles.activeChip,
-                {
-                  backgroundColor: activeFilters.includes('list')
-                    ? colors.secondaryContainer
-                    : colors.whiteColor,
-                  borderColor: activeFilters.includes('list')
-                    ? colors.secondaryContainer
-                    : colors.greyColor,
-                },
-              ]}
-              onPress={() => toggleFilter('list')}>
-              {t('filters.lists')}
-            </Chip>
-            <Chip
+              label={t('filters.lists')}
+              active={activeFilters.includes('list')}
+              onPress={() => toggleFilter('list')}
+            />
+            <ActiveChip
               icon="calendar"
-              style={[
-                styles.chip,
-                styles.activeChip,
-                {
-                  backgroundColor: activeFilters.includes('event')
-                    ? colors.secondaryContainer
-                    : colors.whiteColor,
-                  borderColor: activeFilters.includes('event')
-                    ? colors.secondaryContainer
-                    : colors.greyColor,
-                },
-              ]}
-              onPress={() => toggleFilter('event')}>
-              {t('calendar.title')}
-            </Chip>
+              label={t('calendar.title')}
+              active={activeFilters.includes('event')}
+              onPress={() => toggleFilter('event')}
+            />
           </View>
         )}
         <ScrollView style={styles.container}>

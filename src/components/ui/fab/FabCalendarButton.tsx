@@ -1,4 +1,4 @@
-import {lightColors, useTheme} from '@/assets/config/colors';
+import {useTheme} from '@/assets/config/colors';
 import {ScreenNavigationProp} from '@/core/interfaces';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
@@ -37,7 +37,7 @@ export const FabCalendarButton = () => {
         backdropColor={colors.background}
         variant="secondary"
         color="white"
-        fabStyle={fabStyle.button}
+        fabStyle={[fabStyle.button, {backgroundColor: colors.primary}]}
         style={fabStyle.buttonStyle}
         actions={[
           {
@@ -60,7 +60,6 @@ export const FabCalendarButton = () => {
 
 const fabStyle = StyleSheet.create({
   button: {
-    backgroundColor: lightColors.primary,
     borderRadius: 40,
   },
   buttonStyle: {

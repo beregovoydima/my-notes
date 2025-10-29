@@ -39,7 +39,7 @@ export const TabMenu = ({changeActivePage, activePage}: Props) => {
       style={[
         styles.tabBar,
         {
-          backgroundColor: colors.whiteColor,
+          backgroundColor: colors.background,
           borderTopColor: colors.lineGreyColor,
         },
       ]}>
@@ -60,7 +60,7 @@ export const TabMenu = ({changeActivePage, activePage}: Props) => {
                 },
                 styles.text,
               ]}>
-              {el.label}
+              {el.label} + 'asa
             </Text>
           </View>
         );

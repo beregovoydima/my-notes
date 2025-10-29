@@ -3,6 +3,7 @@ import {SettingsStoreServiceContract} from '@/infrastructure/storeLayer/services
 import {AppServiceContract} from '../contracts/appService.contract';
 import {StateSettings} from '@/framework/store/settings';
 import {styleColorArr} from '@/core/utils';
+import {ThemeMode} from '@/core/interfaces';
 
 export class AppService implements AppServiceContract {
   constructor(
@@ -53,6 +54,19 @@ export class AppService implements AppServiceContract {
     });
   }
 
+  public setStoreThemeMode(themeMode: ThemeMode): void {
+    return this.settingsStoreService.setStoreThemeMode(themeMode);
+  }
+
+  public async setStorageThemeMode(themeMode: ThemeMode): Promise<void> {
+    const settings = this.getStoreSettings();
+
+    return await this.asyncStorageSettingsService.setSettings({
+      ...settings,
+      themeMode,
+    });
+  }
+
   public async initializeSettings(): Promise<void> {
     const settings = await this.getStorageSettings();
 
@@ -60,6 +74,9 @@ export class AppService implements AppServiceContract {
       // Загружаем настройки в Redux store
       this.setStoreColors(settings.colors);
       this.setStoreShowCardBackground(settings.showCardBackground);
+      if (settings.themeMode) {
+        this.setStoreThemeMode(settings.themeMode);
+      }
     }
   }
 

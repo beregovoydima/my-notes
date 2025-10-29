@@ -74,7 +74,7 @@ export const ListMenu = memo(
           visible={visible}
           onDismiss={closeMenu}
           contentStyle={[
-            {backgroundColor: colors.whiteColor},
+            {backgroundColor: colors.menuBackgroundColor},
             styles.content,
             styles.menuPadding,
           ]}

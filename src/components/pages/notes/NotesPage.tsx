@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, {useEffect, useState} from 'react';
-import {FabButton} from '@/components/ui/fab/FabButton';
+import {FabButton, FabNotesPageButton} from '@/components/ui/fab';
 import {SafeAreaView, StyleSheet, View} from 'react-native';
 import {Appbar, Chip} from 'react-native-paper';
 import {useTheme} from '@/assets/config/colors';
@@ -17,7 +17,6 @@ import {notesService} from '@/core/services';
 import {ListItem} from '@/components/notes/ListItem';
 import {SortedNotesMenu} from '@/components/ui/menu/SortedNotesMenu';
 import {AllNotesItem} from '@/components/notes/AllNotesItem';
-import {FabNotesPageButton} from '@/components/ui/fab/FabNotesPageButton';
 import {useTranslation} from '@/core/i18n';
 
 export function NotesPage({}: {route: any; navigation: any}) {
@@ -88,12 +87,7 @@ export function NotesPage({}: {route: any; navigation: any}) {
             icon="folder"
             mode="outlined"
             closeIcon="close"
-            style={[
-              styles.chip,
-              {
-                backgroundColor: colors.whiteColor,
-              },
-            ]}
+            style={[styles.chip]}
             onPress={() => setFilterFolder(null)}
             onClose={() => setFilterFolder(null)}>
             {filterFolder.name}
@@ -164,6 +158,5 @@ const styles = StyleSheet.create({
   list: {
     flex: 1,
     marginTop: 4,
-    marginBottom: 4,
   },
 });

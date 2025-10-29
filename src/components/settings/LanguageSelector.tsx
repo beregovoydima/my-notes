@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {List, RadioButton, Divider} from 'react-native-paper';
 import {useTranslation, SupportedLocale} from '@/core/i18n';
+import {useTheme} from '@/assets/config/colors';
 
 interface LanguageSelectorProps {
   onLanguageChange: (locale: SupportedLocale) => void;
@@ -23,7 +24,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
   const {locale} = useTranslation();
   const [selectedLanguage, changeSelectedLanguage] =
     useState<SupportedLocale>(locale);
-
+  const {colors} = useTheme();
   const handleLanguageChange = (newLocale: SupportedLocale) => {
     onLanguageChange(newLocale);
     changeSelectedLanguage(newLocale);
@@ -40,6 +41,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
               // eslint-disable-next-line react/no-unstable-nested-components
               left={() => (
                 <RadioButton
+                  color={colors.accent}
                   value={option.code}
                   status={
                     selectedLanguage === option.code ? 'checked' : 'unchecked'

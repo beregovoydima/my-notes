@@ -56,10 +56,16 @@ export const ListItem = memo(({sortedType, sortDirection}: Props) => {
       );
 
       return [...allList].sort((a, b) => {
-        return colors[a.color as keyof typeof colors] >
-          colors[b.color as keyof typeof colors]
-          ? 1
-          : -1;
+        const colorA = colors[a.color as keyof typeof colors] ?? 999;
+        const colorB = colors[b.color as keyof typeof colors] ?? 999;
+
+        // Сначала сортируем по цветам
+        if (colorA !== colorB) {
+          return colorA > colorB ? 1 : -1;
+        }
+
+        // Если цвета одинаковые, сортируем по дате создания
+        return new Date(a.created) < new Date(b.created) ? 1 : -1;
       });
     }
 

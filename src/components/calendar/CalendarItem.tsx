@@ -10,12 +10,14 @@ import {StyleSheet, View} from 'react-native';
 import {Calendar, CalendarProvider, LocaleConfig} from 'react-native-calendars';
 import {Positions} from 'react-native-calendars/src/expandableCalendar';
 import {ScrollView} from 'react-native-gesture-handler';
-import {Chip, Icon, Text} from 'react-native-paper';
+import {Icon, Text} from 'react-native-paper';
 import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import {FabAddCalendarEventButton} from '../ui/fab/FabAddCalendarEventButton';
 import {CalendarEventCard} from './CalendarEventCard';
 import {useTranslation} from '@/core/i18n';
+import {useThemeMode} from '@/components/context/ThemeContext';
+import {ActiveChip} from '@/components/ui/chips/ActiveChip';
 
 export const CalendarItem = ({
   initialSelectedDate,
@@ -24,6 +26,7 @@ export const CalendarItem = ({
 }) => {
   const {colors} = useTheme();
   const {t, locale} = useTranslation();
+  const {isDarkMode} = useThemeMode();
   const INITIAL_DATE = moment().format('YYYY-MM-DD');
   const [selected, setSelected] = useState(initialSelectedDate || INITIAL_DATE);
   const [currentMonth, setCurrentMonth] = useState(
@@ -120,7 +123,7 @@ export const CalendarItem = ({
     <Fragment>
       <CalendarProvider date={selected}>
         <Calendar
-          key={locale}
+          key={`${locale}-${isDarkMode}`}
           initialPosition={Positions.OPEN}
           closeOnDayPress={false}
           enableSwipeMonths
@@ -133,8 +136,27 @@ export const CalendarItem = ({
             console.log('now these months are visible', months);
           }}
           theme={{
-            todayTextColor: colors.primary, // Цвет текста для текущей даты
-            todayBackgroundColor: 'transparent',
+            backgroundColor: colors.cardBackgroundColor,
+            calendarBackground: colors.cardBackgroundColor,
+            textSectionTitleColor: colors.text,
+            selectedDayBackgroundColor: colors.primary,
+            selectedDayTextColor: colors.whiteColor,
+            todayTextColor: colors.primary,
+            dayTextColor: colors.text,
+            textDisabledColor: colors.greyColor,
+            dotColor: colors.primary,
+            selectedDotColor: colors.whiteColor,
+            arrowColor: colors.primary,
+            monthTextColor: colors.text,
+            textDayFontFamily: 'System',
+            textMonthFontFamily: 'System',
+            textDayHeaderFontFamily: 'System',
+            textDayFontWeight: '500',
+            textMonthFontWeight: '600',
+            textDayHeaderFontWeight: '600',
+            textDayFontSize: 14,
+            textMonthFontSize: 16,
+            textDayHeaderFontSize: 12,
           }}
           firstDay={1}
           onDayPress={onDayPress}
@@ -148,27 +170,15 @@ export const CalendarItem = ({
           <Text variant="labelMedium" style={{color: colors.greyColor}}>
             {moment(selected).format('YYYY-MM-DD')}
           </Text>
-          <Chip
-            style={[
-              {
-                borderColor:
-                  selected === INITIAL_DATE ? 'transparent' : colors.greyColor,
-                backgroundColor:
-                  selected === INITIAL_DATE
-                    ? colors.primaryContainer
-                    : colors.whiteColor,
-              },
-
-              styles.chip,
-            ]}
+          <ActiveChip
             icon="calendar-today"
-            mode={selected === INITIAL_DATE ? 'flat' : 'outlined'}
+            label={t('calendar.today')}
+            active={selected === INITIAL_DATE}
             onPress={() => {
               setSelected(INITIAL_DATE);
               setCurrentMonth(INITIAL_DATE);
-            }}>
-            {t('calendar.today')}
-          </Chip>
+            }}
+          />
         </View>
         <ScrollView style={{paddingBottom: 10}}>
           {calendarEvents

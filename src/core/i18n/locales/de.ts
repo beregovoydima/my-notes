@@ -314,8 +314,23 @@ export const de = {
     language: 'Sprache',
     selectLanguage: 'Sprache auswählen',
     cancel: 'Abbrechen',
+    theme: 'Design',
+    themeDescription: 'Wechseln zwischen hellem und dunklem Design',
     showCardBackground: 'Kartenhintergrund anzeigen',
     showCardBackgroundDescription: 'Farbigen Hintergrund anzeigen',
     privacyPolicy: 'Datenschutzrichtlinie',
+    supportUs: 'Unterstützen Sie uns',
+    supportUsDescription:
+      'Helfen Sie bei der Entwicklung der App, indem Sie eine Spende tätigen',
+  },
+
+  // Design
+  theme: {
+    light: 'Hell',
+    dark: 'Dunkel',
+    system: 'System',
+    lightDescription: 'Helles Design verwenden',
+    darkDescription: 'Dunkles Design verwenden',
+    systemDescription: 'Systemeinstellung folgen',
   },
 };

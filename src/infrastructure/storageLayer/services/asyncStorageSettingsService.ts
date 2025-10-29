@@ -1,6 +1,7 @@
 import {AsyncStorageRepositoryContract} from '../asyncStorageRepository/contracts';
 import {AsyncStorageSettingsServiceContract} from './contracts';
 import {StateSettings} from '@/framework/store/settings';
+import {ThemeMode} from '@/core/interfaces';
 
 export class AsyncStorageSettingsService
   implements AsyncStorageSettingsServiceContract
@@ -36,6 +37,17 @@ export class AsyncStorageSettingsService
       const updatedSettings = {
         ...settings,
         showCardBackground,
+      };
+      return await this.setSettings(updatedSettings);
+    }
+  }
+
+  public async setThemeMode(themeMode: ThemeMode): Promise<void> {
+    const settings = await this.getSettings();
+    if (settings) {
+      const updatedSettings = {
+        ...settings,
+        themeMode,
       };
       return await this.setSettings(updatedSettings);
     }

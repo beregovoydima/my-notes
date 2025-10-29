@@ -30,6 +30,7 @@ import {ColorMenu} from '@/components/ui/menu/ColorMenu';
 import {ListEditMenu} from '@/components/ui/menu/ListEditMenu';
 import {AddFolderModal} from '@/components/modals/notes/AddFolderModal';
 import {useTranslation} from '@/core/i18n';
+import {useThemeMode} from '@/components/context/ThemeContext';
 
 export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
   const {colors} = useTheme();
@@ -49,6 +50,7 @@ export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
   });
   const folders = useSelector(() => notesService.storeGetFoldersCollection());
   const [visible, setVisible] = useState(false);
+  const {isDarkMode} = useThemeMode();
 
   useEffect(() => {
     const response = notesService.storeGetListCollection();
@@ -199,6 +201,14 @@ export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
     });
   };
 
+  const backgroundColor = (color: string | null, alpha: number = 0.04) => {
+    if (isDarkMode) {
+      return colors.background;
+    }
+
+    return hex2rgba(color || colors.primary, alpha);
+  };
+
   return (
     <SafeAreaView
       style={[styles.container, {backgroundColor: colors.background}]}>
@@ -206,21 +216,16 @@ export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
       <View
         style={[
           styles.view,
+          {backgroundColor: colors.background},
           {
-            backgroundColor: hex2rgba(
-              list.color ? list.color : colors.primary,
-              0.04,
-            ),
+            backgroundColor: backgroundColor(list.color),
           },
         ]}>
         <View
           style={[
             styles.content,
             {
-              backgroundColor: hex2rgba(
-                list.color ? list.color : colors.primary,
-                0.15,
-              ),
+              backgroundColor: backgroundColor(list.color, 0.15),
             },
           ]}>
           <EditableText
@@ -270,10 +275,7 @@ export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
         </ScrollView>
         <View
           style={{
-            backgroundColor: hex2rgba(
-              list.color ? list.color : colors.primary,
-              0.04,
-            ),
+            backgroundColor: backgroundColor(list.color),
             padding: 4,
           }}>
           <ScrollView horizontal>
@@ -286,7 +288,6 @@ export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
                     selected={el.id === list.folder?.id ? true : false}
                     style={{
                       marginRight: 4,
-                      backgroundColor: colors.whiteColor,
                       height: 34,
                     }}
                     onPress={() => handleFolderSet(el)}>
@@ -297,7 +298,10 @@ export const ListEditPage = ({route}: {route: ListEditScreenRouteProp}) => {
                 );
               })}
               <View>
-                <Button mode="text" onPress={() => setVisible(true)}>
+                <Button
+                  mode="text"
+                  textColor={colors.accent}
+                  onPress={() => setVisible(true)}>
                   {folders.length === 0 ? (
                     t('folders.createFolder')
                   ) : (

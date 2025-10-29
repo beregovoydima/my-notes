@@ -57,9 +57,9 @@ export const CalendarEventCardMenu = ({
         visible={visible}
         onDismiss={closeMenu}
         contentStyle={[
-          {backgroundColor: colors.whiteColor},
           styles.content,
           styles.menuPadding,
+          {backgroundColor: colors.menuBackgroundColor},
         ]}
         anchor={
           <IconButton

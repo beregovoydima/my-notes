@@ -313,8 +313,23 @@ export const fr = {
     language: 'Langue',
     selectLanguage: 'Sélectionner la langue',
     cancel: 'Annuler',
+    theme: 'Thème',
+    themeDescription: 'Basculer entre thème clair et sombre',
     showCardBackground: 'Afficher le fond de la carte',
     showCardBackgroundDescription: 'Afficher le fond coloré',
     privacyPolicy: 'Politique de confidentialité',
+    supportUs: 'Soutenez-nous',
+    supportUsDescription:
+      'Aidez au développement de l’application en faisant un don',
+  },
+
+  // Thème
+  theme: {
+    light: 'Clair',
+    dark: 'Sombre',
+    system: 'Système',
+    lightDescription: 'Utiliser le thème clair',
+    darkDescription: 'Utiliser le thème sombre',
+    systemDescription: 'Suivre les paramètres du système',
   },
 };

@@ -86,7 +86,10 @@ export const ColorPicker = ({visible, hideModal, changeColor}: Props) => {
       <Modal
         visible={visible}
         onDismiss={hideModal}
-        contentContainerStyle={styles.containerStyle}>
+        contentContainerStyle={[
+          styles.containerStyle,
+          {backgroundColor: colors.dialogBackgroundColor},
+        ]}>
         <Text
           variant="titleLarge"
           // eslint-disable-next-line react-native/no-inline-styles

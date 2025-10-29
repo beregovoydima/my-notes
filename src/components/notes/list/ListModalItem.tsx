@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import {useTheme} from '@/assets/config/colors';
 import {NotesListItem, NotesListItemChildren} from '@/core/interfaces';
-import React, {useState} from 'react';
+import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Button, Divider} from 'react-native-paper';
 import {useTranslation} from '@/core/i18n';
@@ -49,7 +49,7 @@ export const ListModalItem = ({list, changeList}: Props) => {
   };
 
   return (
-    <View style={[styles.card, {backgroundColor: colors.whiteColor}]}>
+    <View style={[styles.card, {backgroundColor: colors.cardBackgroundColor}]}>
       <Divider />
       {list.items.map((child, i) => {
         return (

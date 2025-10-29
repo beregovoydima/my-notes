@@ -2,7 +2,6 @@ import {useTheme} from '@/assets/config/colors';
 import {FoldersMenu} from '@/components/ui/menu/FoldersMenu';
 import {NotesFolderItem, NotesFolderItemKey} from '@/core/interfaces';
 import {notesService} from '@/core/services';
-// import moment from 'moment';
 import React, {useCallback, useMemo} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Avatar, Card, Icon, Text} from 'react-native-paper';
@@ -84,39 +83,16 @@ export const FolderCard = React.memo(
     return (
       <View style={[styles.item]}>
         <Card
-          style={[
-            {
-              backgroundColor: colors.whiteColor,
-            },
-          ]}
-          onPress={() => setFilterFolder({id: item.id, name: item.label})}>
+          onPress={() => setFilterFolder({id: item.id, name: item.label})}
+          style={{
+            backgroundColor: colors.cardBackgroundColor,
+            borderBottomColor: colors.cardBackgroundColor,
+          }}>
           <Card.Title
             title={item.label}
             left={getLeftIcon}
             right={getRightContent}
           />
-          {/* <Card.Content>
-            <View style={styles.footer}>
-              {item.updated ? (
-                <Icon
-                  source="circle-edit-outline"
-                  size={12}
-                  color={colors.greyColor}
-                />
-              ) : null}
-              <Text
-                variant="labelSmall"
-                // eslint-disable-next-line react-native/no-inline-styles
-                style={{
-                  color: colors.greyColor,
-                  marginLeft: item.updated ? 4 : 0,
-                }}>
-                {moment(item.updated ? item.updated : item.created).format(
-                  'YYYY-MM-DD HH:mm',
-                )}
-              </Text>
-            </View>
-          </Card.Content> */}
         </Card>
       </View>
     );

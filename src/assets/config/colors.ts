@@ -58,24 +58,24 @@ import {useTheme as _useTheme} from 'react-native-paper';
 // elevation: MD3ElevationColors;
 
 export const lightColors = {
-  primary: '#3F51B5', // Основной фиолетовый
-  accent: '#8f5db7',
+  primary: '#6B52AE', // Основной фиолетовый
+  accent: '#6B52AE',
   success: '#4CAF50', // Зеленый
   warning: '#f39c12', // Оранжевый
   info: '#3498db', // Синий (дополнительный)
   error: '#E53935',
-  background: '#f7f8fa', // Светлый серый
+  background: '#f1f1f1', // Светлый серый
   text: '#2c3e50', // Темный серый
-  navbar: '#ffffff', // Белый
+  navbar: '#e5e5e5', // Белый
   whiteColor: '#ffffff',
-  greyColor: '#6D7693',
+  greyColor: '#909399',
   lineGreyColor: '#d9dde0',
   blueColor: '#2a6b77',
   deepOrangeColor: '#FF5722',
   orangeColor: '#FF9800',
   redColor: '#bf2f13',
   greyDarkFill: '#F0F2F5',
-  greyIconColor: '#6D7693',
+  greyIconColor: '#616161',
   primaryContainer: '#E8EAF6',
   // onPrimaryContainer: '#DEE4F0',
   purpleDeep: '#673AB7',
@@ -85,6 +85,7 @@ export const lightColors = {
   greenAccent: '#7CB342',
   blueGrey: '#546E7A',
   secondaryContainer: '#DEE4F0', //background top active button tabs
+  cardBackgroundColor: '#ffffff',
   elevation: {
     level0: 'transparent',
     // Note: Color values with transparency cause RN to transfer shadows to children nodes
@@ -96,25 +97,28 @@ export const lightColors = {
     level4: '#e7eaf6', // palette.primary40, alpha 0.12
     level5: '#e4e6f4', // palette.primary40, alpha 0.14
   },
+  selectedTextColor: '#E8EAF6',
+  dialogBackgroundColor: '#ffffff',
+  black: '#000000',
 };
 
 export const darkColors = {
   primary: '#6B52AE', // Основной фиолетовый
-  accent: '#8f5db7',
+  accent: '#bfa7dd',
   success: '#26A69A', // Зеленый
   warning: '#f39c12', // Оранжевый
   info: '#3498db', // #f7f8fa#2c3e50', // Темно-синий
   background: '#f7f8fa', // Светлый серый
   text: '#ecf0f1', // Светлый серый
-  navbar: '#34495e', // Темно-синий
+  navbar: '#292929', // Темно-синий
   whiteColor: '#ffffff',
-  greyColor: '#6D7693',
+  greyColor: '#909399',
   lineGreyColor: '#d9dde0',
   blueColor: '#2a6b77',
   orangeColor: '#d68f00',
   redColor: '#bf2f13',
   greyDarkFill: '#F0F2F5',
-  greyIconColor: '#6D7693',
+  greyIconColor: '#d4d4d4',
   primaryContainer: '#E8EAF6',
   onPrimaryContainer: '#DEE4F0',
   purpleDeep: '#673AB7',
@@ -124,6 +128,10 @@ export const darkColors = {
   greenAccent: '#7CB342',
   blueGrey: '#546E7A',
   secondaryContainer: '#DEE4F0',
+  cardBackgroundColor: '#292929',
+  selectedTextColor: '#a882cd',
+  dialogBackgroundColor: '#292929',
+  black: '#000000',
 };
 
 export const lightTheme = {
@@ -133,7 +141,24 @@ export const lightTheme = {
   // Specify custom property in nested object
   colors: {
     ...MD3LightTheme.colors,
-    ...lightColors,
+    whiteColor: lightColors.whiteColor,
+    greyIconColor: lightColors.greyIconColor,
+    text: lightColors.text,
+    greyColor: lightColors.greyColor,
+    lime: lightColors.lime,
+    lineGreyColor: lightColors.lineGreyColor,
+    greyDarkFill: lightColors.greyDarkFill,
+    primary: lightColors.primary,
+    cardBackgroundColor: lightColors.cardBackgroundColor,
+    background: lightColors.background,
+    menuBackgroundColor: lightColors.whiteColor,
+    navbar: lightColors.navbar,
+    accent: lightColors.accent,
+    selectedTextColor: lightColors.selectedTextColor,
+    dialogBackgroundColor: lightColors.dialogBackgroundColor,
+    activeChipColor: MD3LightTheme.colors.secondaryContainer,
+    inactiveChipColor: lightColors.cardBackgroundColor,
+    black: lightColors.black,
   },
 };
 
@@ -144,7 +169,23 @@ export const darkTheme = {
   // Specify custom property in nested object
   colors: {
     ...MD3DarkTheme.colors,
-    ...darkColors,
+    whiteColor: darkColors.whiteColor,
+    greyIconColor: darkColors.greyIconColor,
+    text: darkColors.text,
+    greyColor: darkColors.greyColor,
+    lime: darkColors.lime,
+    lineGreyColor: darkColors.lineGreyColor,
+    greyDarkFill: darkColors.greyDarkFill,
+    primary: darkColors.primary,
+    cardBackgroundColor: darkColors.cardBackgroundColor,
+    menuBackgroundColor: MD3DarkTheme.colors.background,
+    navbar: darkColors.cardBackgroundColor,
+    accent: darkColors.accent,
+    selectedTextColor: darkColors.selectedTextColor,
+    dialogBackgroundColor: darkColors.dialogBackgroundColor,
+    activeChipColor: MD3DarkTheme.colors.secondary,
+    inactiveChipColor: darkColors.cardBackgroundColor,
+    black: darkColors.black,
   },
 };
 

@@ -1,4 +1,5 @@
 import {StateSettings} from '@/framework/store/settings';
+import {ThemeMode} from '@/core/interfaces';
 
 export interface AppServiceContract {
   getStoreSettings(): StateSettings;
@@ -8,6 +9,8 @@ export interface AppServiceContract {
   setStorageColors(colors: string[]): Promise<void>;
   setStoreShowCardBackground(showCardBackground: boolean): void;
   setStorageShowCardBackground(showCardBackground: boolean): Promise<void>;
+  setStoreThemeMode(themeMode: ThemeMode): void;
+  setStorageThemeMode(themeMode: ThemeMode): Promise<void>;
   initializeSettings(): Promise<void>;
   initializeApp(): Promise<void>;
 }

@@ -1,31 +1,35 @@
 import React, {useState} from 'react';
 import {Portal, Button, Dialog} from 'react-native-paper';
-import {useTranslation, SupportedLocale, setLocale} from '@/core/i18n';
-import {LanguageSelector} from '@/components/settings/LanguageSelector';
+import {useTranslation} from '@/core/i18n';
+import {ThemeSelector} from '@/components/settings/ThemeSelector';
 import {useTheme} from '@/assets/config/colors';
+import {useThemeMode} from '@/components/context/ThemeContext';
 import {StyleSheet} from 'react-native';
+import {ThemeMode} from '@/core/interfaces';
 
-interface LanguageModalProps {
+interface ThemeModalProps {
   visible: boolean;
   onDismiss: () => void;
 }
 
-export const LanguageModal = ({visible, onDismiss}: LanguageModalProps) => {
-  const {t, locale} = useTranslation();
-  const [selectedLanguage, setSelectedLanguage] =
-    useState<SupportedLocale>(locale);
+export const ThemeModal = ({visible, onDismiss}: ThemeModalProps) => {
+  const {t} = useTranslation();
   const {colors} = useTheme();
+  const {themeMode, setThemeMode} = useThemeMode();
+  const [selectedTheme, setSelectedTheme] = useState<ThemeMode>(themeMode);
+
   const handleApply = async () => {
-    await setLocale(selectedLanguage);
+    await setThemeMode(selectedTheme);
     onDismiss();
   };
 
   const handleCancel = () => {
+    setSelectedTheme(themeMode); // Сброс к текущей теме
     onDismiss();
   };
 
-  const handleLanguageChange = (customlocale: SupportedLocale) => {
-    setSelectedLanguage(customlocale);
+  const handleThemeChange = (theme: ThemeMode) => {
+    setSelectedTheme(theme);
   };
 
   return (
@@ -40,9 +44,12 @@ export const LanguageModal = ({visible, onDismiss}: LanguageModalProps) => {
             borderColor: colors.background,
           },
         ]}>
-        <Dialog.Title>{t('more.selectLanguage')}</Dialog.Title>
+        <Dialog.Title>{t('more.theme')}</Dialog.Title>
         <Dialog.Content>
-          <LanguageSelector onLanguageChange={handleLanguageChange} />
+          <ThemeSelector
+            selectedTheme={selectedTheme}
+            onThemeChange={handleThemeChange}
+          />
         </Dialog.Content>
         <Dialog.Actions>
           <Button textColor={colors.accent} onPress={handleCancel}>

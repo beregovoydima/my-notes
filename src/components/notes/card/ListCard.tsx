@@ -21,6 +21,7 @@ import {notesService} from '@/core/services';
 import {useNavigation} from '@react-navigation/native';
 import {useTranslation} from '@/core/i18n';
 import {useCardBackground} from '@/core/hooks';
+import {useThemeMode} from '@/components/context/ThemeContext';
 
 interface Props {
   list: NotesListItem;
@@ -29,6 +30,7 @@ interface Props {
 
 export const ListCard = memo(({list, searchQuery}: Props) => {
   const {colors} = useTheme();
+  const {isDarkMode} = useThemeMode();
   const [isExpanded, setIsExpanded] = useState(false);
   const {t} = useTranslation();
   const navigation: ScreenNavigationProp = useNavigation();
@@ -76,6 +78,14 @@ export const ListCard = memo(({list, searchQuery}: Props) => {
       title: list.title,
       message: parseList(list),
     });
+  };
+
+  const cardBackgroundColor = (color: string | undefined | null) => {
+    if (isDarkMode) {
+      return colors.cardBackgroundColor;
+    }
+
+    return hex2rgba(color || colors.primary, 0.08);
   };
 
   const getMoreIcon = (el: NotesListItem) => {
@@ -136,14 +146,16 @@ export const ListCard = memo(({list, searchQuery}: Props) => {
 
   return (
     <View style={[styles.container]}>
-      <Card
-        style={[{backgroundColor: colors.whiteColor}]}
-        onPress={() => editList(list.id)}>
+      <Card onPress={() => editList(list.id)}>
         <Card.Title
           style={[
             showCardBackground && {
-              backgroundColor: hex2rgba(list.color || colors.primary, 0.08),
-              borderBottomColor: hex2rgba(list.color || colors.primary, 0.08),
+              backgroundColor: cardBackgroundColor(list.color),
+              borderBottomColor: cardBackgroundColor(list.color),
+            },
+            !showCardBackground && {
+              backgroundColor: colors.cardBackgroundColor,
+              borderBottomColor: colors.cardBackgroundColor,
             },
             styles.topBorder,
           ]}
@@ -156,7 +168,7 @@ export const ListCard = memo(({list, searchQuery}: Props) => {
                       key={index}
                       style={
                         part.highlight
-                          ? {backgroundColor: colors.primaryContainer}
+                          ? {backgroundColor: colors.selectedTextColor}
                           : {}
                       }>
                       {part.text}
@@ -178,7 +190,11 @@ export const ListCard = memo(({list, searchQuery}: Props) => {
         <Card.Content
           style={[
             showCardBackground && {
-              backgroundColor: hex2rgba(list.color || colors.primary, 0.08),
+              backgroundColor: cardBackgroundColor(list.color),
+            },
+            !showCardBackground && {
+              backgroundColor: colors.cardBackgroundColor,
+              borderTopColor: colors.cardBackgroundColor,
             },
             styles.bottomBorder,
           ]}>

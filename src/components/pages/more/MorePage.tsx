@@ -6,13 +6,17 @@ import {useTheme} from '@/assets/config/colors';
 import {useTranslation} from '@/core/i18n';
 import {getAppVersion} from '@/core/utils';
 import {LanguageModal} from '@/components/modals/common/LanguageModal';
+import {ThemeModal} from '@/components/modals/common/ThemeModal';
 import {ColorPicker} from '@/components/modals/ui/ColorPicker';
+import {useThemeMode} from '@/components/context/ThemeContext';
 import {appService} from '@/core/services';
 
 export function MorePage() {
   const {colors} = useTheme();
   const {t} = useTranslation();
+  const {themeMode} = useThemeMode();
   const [languageModalVisible, setLanguageModalVisible] = useState(false);
+  const [themeModalVisible, setThemeModalVisible] = useState(false);
   const [colorPickerVisible, setColorPickerVisible] = useState(false);
   const [showCardBackground, setShowCardBackground] = useState(true);
 
@@ -21,8 +25,23 @@ export function MorePage() {
 
   const showLanguageModal = () => setLanguageModalVisible(true);
   const hideLanguageModal = () => setLanguageModalVisible(false);
+  const showThemeModal = () => setThemeModalVisible(true);
+  const hideThemeModal = () => setThemeModalVisible(false);
   const showColorPicker = () => setColorPickerVisible(true);
   const hideColorPicker = () => setColorPickerVisible(false);
+
+  const getThemeLabel = () => {
+    switch (themeMode) {
+      case 'light':
+        return t('theme.light');
+      case 'dark':
+        return t('theme.dark');
+      case 'system':
+        return t('theme.system');
+      default:
+        return t('theme.system');
+    }
+  };
 
   // Загружаем настройки при монтировании компонента
   useEffect(() => {
@@ -53,6 +72,13 @@ export function MorePage() {
     Linking.openURL('mailto:papernote.help@gmail.com');
   };
 
+  // const openDonate = () => {
+  //   // Открывает Google Pay или инициирует покупку в приложении
+  //   // Используйте react-native-iap для In-App Purchases
+  //   console.log('Open Google Pay donation');
+  //   // Пример: Iap.requestSubscription(productId)
+  // };
+
   return (
     <>
       <View>
@@ -77,6 +103,28 @@ export function MorePage() {
           right={props => <List.Icon {...props} icon="chevron-right" />}
           onPress={showLanguageModal}
           titleStyle={{color: colors.text}}
+          style={styles.listItem}
+        />
+        <Divider />
+        <List.Item
+          title={t('more.theme')}
+          description={getThemeLabel()}
+          left={props => (
+            <List.Icon
+              {...props}
+              icon={
+                themeMode === 'dark'
+                  ? 'weather-night'
+                  : themeMode === 'light'
+                  ? 'weather-sunny'
+                  : 'theme-light-dark'
+              }
+            />
+          )}
+          right={props => <List.Icon {...props} icon="chevron-right" />}
+          onPress={showThemeModal}
+          titleStyle={{color: colors.text}}
+          descriptionStyle={{color: colors.greyColor}}
           style={styles.listItem}
         />
         <Divider />
@@ -122,6 +170,17 @@ export function MorePage() {
           titleStyle={{color: colors.text}}
           style={styles.listItem}
         />
+        {/* <Divider /> */}
+        {/* <List.Item
+          title={t('more.supportUs')}
+          description={t('more.supportUsDescription')}
+          left={props => <List.Icon {...props} icon="heart" />}
+          right={props => <List.Icon {...props} icon="chevron-right" />}
+          onPress={openDonate}
+          titleStyle={{color: colors.text}}
+          descriptionStyle={{color: colors.greyColor}}
+          style={styles.listItem}
+        /> */}
 
         <Divider style={styles.divider} />
 
@@ -186,6 +245,9 @@ export function MorePage() {
         visible={languageModalVisible}
         onDismiss={hideLanguageModal}
       />
+
+      {/* Модальное окно выбора темы */}
+      <ThemeModal visible={themeModalVisible} onDismiss={hideThemeModal} />
 
       {/* Модальное окно порядка сортировки цветов */}
       <ColorPicker

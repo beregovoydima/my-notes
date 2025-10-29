@@ -1,4 +1,4 @@
-import {lightColors} from '@/assets/config/colors';
+import {useTheme} from '@/assets/config/colors';
 import {ScreenNavigationProp} from '@/core/interfaces';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import React from 'react';
@@ -11,7 +11,7 @@ export const FabAddCalendarEventButton = ({
   selectDate: string;
 }) => {
   const navigation: ScreenNavigationProp = useNavigation();
-
+  const {colors} = useTheme();
   const isFocused = useIsFocused();
 
   const onButtonPress = () => {
@@ -24,8 +24,8 @@ export const FabAddCalendarEventButton = ({
         visible={isFocused}
         icon={'plus'}
         onPress={() => onButtonPress()}
-        style={[fabStyle.button]}
-        color={lightColors.whiteColor}
+        style={[fabStyle.button, {backgroundColor: colors.primary}]}
+        color={colors.whiteColor}
       />
     </Portal>
   );
@@ -33,7 +33,6 @@ export const FabAddCalendarEventButton = ({
 
 const fabStyle = StyleSheet.create({
   button: {
-    backgroundColor: lightColors.primary,
     borderRadius: 30,
     position: 'absolute',
     margin: 16,

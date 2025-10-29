@@ -312,8 +312,22 @@ export const en = {
     language: 'Language',
     selectLanguage: 'Select Language',
     cancel: 'Cancel',
+    theme: 'Theme',
+    themeDescription: 'Switch between light and dark theme',
     showCardBackground: 'Show card background',
     showCardBackgroundDescription: 'Display colored background',
     privacyPolicy: 'Privacy Policy',
+    supportUs: 'Support Us',
+    supportUsDescription: 'Help develop the app by making a donation',
+  },
+
+  // Theme
+  theme: {
+    light: 'Light',
+    dark: 'Dark',
+    system: 'System',
+    lightDescription: 'Use light theme',
+    darkDescription: 'Use dark theme',
+    systemDescription: 'Follow system settings',
   },
 };

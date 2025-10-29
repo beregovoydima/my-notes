@@ -1,4 +1,4 @@
-import {lightColors} from '@/assets/config/colors';
+import {useTheme} from '@/assets/config/colors';
 import {NotesPageType, ScreenNavigationProp} from '@/core/interfaces';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import React from 'react';
@@ -12,7 +12,7 @@ interface Props {
 
 export const FabNotesPageButton = ({showFolderModal, pageType}: Props) => {
   const navigation: ScreenNavigationProp = useNavigation();
-
+  const {colors} = useTheme();
   const isFocused = useIsFocused();
 
   const onButtonPress = () => {
@@ -32,9 +32,9 @@ export const FabNotesPageButton = ({showFolderModal, pageType}: Props) => {
       <FAB
         visible={isFocused}
         icon={'plus'}
-        color={lightColors.whiteColor}
+        color={colors.whiteColor}
         onPress={() => onButtonPress()}
-        style={[fabStyle.button]}
+        style={[fabStyle.button, {backgroundColor: colors.primary}]}
       />
     </Portal>
   );
@@ -42,7 +42,6 @@ export const FabNotesPageButton = ({showFolderModal, pageType}: Props) => {
 
 const fabStyle = StyleSheet.create({
   button: {
-    backgroundColor: lightColors.primary,
     borderRadius: 30,
     position: 'absolute',
     margin: 16,

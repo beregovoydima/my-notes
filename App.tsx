@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {PaperProvider} from 'react-native-paper';
 import {NavigationContainer} from '@react-navigation/native';
-import {lightTheme} from './src/assets/config/colors';
+import {darkTheme, lightTheme} from './src/assets/config/colors';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {Appearance, StyleSheet, View, ActivityIndicator} from 'react-native';
+import {StyleSheet, View, ActivityIndicator} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {NoteEditPage} from './src/components/pages/notes/NoteEditPage';
 import {ListEditPage} from './src/components/pages/notes/ListEditPage';
@@ -13,6 +13,10 @@ import {NavBar} from './src/components/navigation/Navbar';
 import {CalendarEvent} from './src/components/pages/calendar/CalendarEvent';
 import {SnackbarProvider} from './src/components/ui/snackbar/Snackbar';
 import {ModalProvider} from './src/components/context/modals/ModalProvider';
+import {
+  ThemeProvider,
+  useThemeMode,
+} from './src/components/context/ThemeContext';
 import './src/core/i18n';
 import {appService} from './src/core/services';
 import {initI18n} from './src/core/i18n';
@@ -24,9 +28,9 @@ export function navigate(name: string, params?: any) {
   navigationRef.current?.navigate(name, params);
 }
 
-const App: React.FC = () => {
+const AppContent: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const isDarkMode = Appearance.getColorScheme() === 'dark';
+  const {isDarkMode} = useThemeMode();
 
   useEffect(() => {
     const initializeApp = async () => {
@@ -47,7 +51,7 @@ const App: React.FC = () => {
   if (isLoading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size={60} color="#3F51B5" />
+        <ActivityIndicator size={60} color="#6B52AE" />
       </View>
     );
   }
@@ -55,11 +59,18 @@ const App: React.FC = () => {
   return (
     <NavigationContainer ref={navigationRef}>
       <Provider store={store}>
-        <PaperProvider theme={isDarkMode ? lightTheme : lightTheme}>
+        <PaperProvider theme={isDarkMode ? darkTheme : lightTheme}>
           <SnackbarProvider>
             <ModalProvider>
               <GestureHandlerRootView style={styles.main}>
-                <Stack.Navigator>
+                <Stack.Navigator
+                  screenOptions={{
+                    contentStyle: {
+                      backgroundColor: isDarkMode
+                        ? darkTheme.colors.background
+                        : lightTheme.colors.background,
+                    },
+                  }}>
                   <Stack.Screen
                     name="Main"
                     component={NavBar}
@@ -90,6 +101,14 @@ const App: React.FC = () => {
   );
 };
 
+const App: React.FC = () => {
+  return (
+    <ThemeProvider>
+      <AppContent />
+    </ThemeProvider>
+  );
+};
+
 const styles = StyleSheet.create({
   main: {
     display: 'flex',
@@ -101,7 +120,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#ffffff',
   },
 });
 

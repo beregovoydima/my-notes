@@ -1,10 +1,10 @@
-import {useTheme} from '@/assets/config/colors';
 import React, {memo} from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Menu} from 'react-native-paper';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useSelector} from 'react-redux';
 import {appService} from '@/core/services';
+import {useTheme} from '@/assets/config/colors';
 
 interface ColorMenuProps {
   visible: boolean;
@@ -15,9 +15,8 @@ interface ColorMenuProps {
 
 export const ColorMenu = memo(
   ({visible, onDismiss, onSelectColor, anchorComponent}: ColorMenuProps) => {
-    const {colors} = useTheme();
     const storeColors = useSelector(() => appService.getStoreColors());
-
+    const {colors} = useTheme();
     const handleColorSelect = (color: string) => {
       onSelectColor(color);
       onDismiss();
@@ -28,9 +27,9 @@ export const ColorMenu = memo(
         visible={visible}
         onDismiss={onDismiss}
         contentStyle={[
-          {backgroundColor: colors.whiteColor},
           styles.content,
           styles.menuPadding,
+          {backgroundColor: colors.menuBackgroundColor},
         ]}
         anchor={anchorComponent}>
         <View style={styles.colorGrid}>

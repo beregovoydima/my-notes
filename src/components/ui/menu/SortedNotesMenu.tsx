@@ -13,8 +13,8 @@ interface Props {
 }
 
 export const SortedNotesMenu = memo(({changeSort}: Props) => {
-  const {colors} = useTheme();
   const {t} = useTranslation();
+  const {colors} = useTheme();
   const [visible, setVisible] = useState(false);
 
   const openMenu = () => setVisible(true);
@@ -40,7 +40,7 @@ export const SortedNotesMenu = memo(({changeSort}: Props) => {
       visible={visible}
       onDismiss={closeMenu}
       contentStyle={[
-        {backgroundColor: colors.whiteColor},
+        {backgroundColor: colors.menuBackgroundColor},
         styles.content,
         styles.menuPadding,
       ]}

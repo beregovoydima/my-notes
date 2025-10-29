@@ -13,6 +13,7 @@ import {useSelector} from 'react-redux';
 import {NoteCard} from './card/NoteCard';
 import {FlashList} from '@shopify/flash-list';
 import {useTranslation} from '@/core/i18n';
+import {useTheme} from '@/assets/config/colors';
 
 interface Props {
   sortedType: NotesSortType;
@@ -34,7 +35,7 @@ export const AllNotesItem = memo(
     const allNotes = useSelector(() => notesService.storeGetCollectionNote());
     const storeColors = useSelector(() => appService.getStoreColors());
     const {t} = useTranslation();
-
+    const {colors} = useTheme();
     const sortedItems = useMemo(() => {
       if (sortedType === 'created') {
         return [...allList, ...allNotes].sort((a, b) => {
@@ -78,7 +79,7 @@ export const AllNotesItem = memo(
       }
 
       if (sortedType === 'color') {
-        const colors: Record<string, number> = storeColors.reduce(
+        const storeColorsMap: Record<string, number> = storeColors.reduce(
           (acc: Record<string, number>, cur, i) => {
             acc[cur] = i;
             return acc;
@@ -87,10 +88,18 @@ export const AllNotesItem = memo(
         );
 
         return [...allList, ...allNotes].sort((a, b) => {
-          return colors[a.color as keyof typeof colors] >
-            colors[b.color as keyof typeof colors]
-            ? 1
-            : -1;
+          const colorA =
+            storeColorsMap[a.color as keyof typeof storeColorsMap] ?? 999;
+          const colorB =
+            storeColorsMap[b.color as keyof typeof storeColorsMap] ?? 999;
+
+          // Сначала сортируем по цветам
+          if (colorA !== colorB) {
+            return colorA > colorB ? 1 : -1;
+          }
+
+          // Если цвета одинаковые, сортируем по дате создания
+          return new Date(a.created) < new Date(b.created) ? 1 : -1;
         });
       }
 
@@ -120,7 +129,9 @@ export const AllNotesItem = memo(
         renderItem={renderItem}
         estimatedItemSize={114}
         ListEmptyComponent={
-          <Text style={styles.emptyText}>{t('notes.emptyNotesList')}</Text>
+          <Text style={{...styles.emptyText, color: colors.text}}>
+            {t('notes.emptyNotesList')}
+          </Text>
         }
       />
     );
@@ -131,6 +142,5 @@ const styles = StyleSheet.create({
   emptyText: {
     textAlign: 'center',
     marginTop: 8,
-    color: 'black',
   },
 });

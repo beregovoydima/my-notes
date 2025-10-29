@@ -312,8 +312,22 @@ export const ru = {
     language: 'Язык',
     selectLanguage: 'Выберите язык',
     cancel: 'Отмена',
+    theme: 'Тема',
+    themeDescription: 'Переключение между светлой и темной темой',
     showCardBackground: 'Показывать фон карточек',
     showCardBackgroundDescription: 'Отображать цветной фон на карточках',
     privacyPolicy: 'Политика конфиденциальности',
+    supportUs: 'Поддержите нас',
+    supportUsDescription: 'Помогите развитию приложения, сделав пожертвование',
+  },
+
+  // Тема
+  theme: {
+    light: 'Светлая',
+    dark: 'Темная',
+    system: 'Системная',
+    lightDescription: 'Использовать светлую тему',
+    darkDescription: 'Использовать темную тему',
+    systemDescription: 'Следовать настройкам системы',
   },
 };

@@ -15,13 +15,14 @@ import React, {useCallback} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Avatar, Card, Icon, Text} from 'react-native-paper';
 import {useCardBackground} from '@/core/hooks';
+import {useThemeMode} from '@/components/context/ThemeContext';
 
 export const NoteCard = React.memo(
   ({item, searchQuery}: {item: NotesItems; searchQuery?: string}) => {
     const {colors} = useTheme();
     const navigation: ScreenNavigationProp = useNavigation();
     const showCardBackground = useCardBackground();
-
+    const {isDarkMode} = useThemeMode();
     // Получаем название папки по ID
     const getFolderName = useCallback(() => {
       if (!item.folder?.id) {
@@ -68,6 +69,14 @@ export const NoteCard = React.memo(
       });
     };
 
+    const cardBackgroundColor = (color: string | undefined | null) => {
+      if (isDarkMode) {
+        return colors.cardBackgroundColor;
+      }
+
+      return hex2rgba(color || colors.primary, 0.08);
+    };
+
     const getMoreIcon = () => {
       return (
         <NotesMenu
@@ -86,12 +95,12 @@ export const NoteCard = React.memo(
             style={[
               styles.topBorder,
               showCardBackground && {
-                backgroundColor: hex2rgba(item.color || colors.primary, 0.08),
-                borderBottomColor: hex2rgba(item.color || colors.primary, 0.08),
+                backgroundColor: cardBackgroundColor(item.color),
+                borderBottomColor: cardBackgroundColor(item.color),
               },
               !showCardBackground && {
-                backgroundColor: colors.whiteColor,
-                borderBottomColor: colors.whiteColor,
+                backgroundColor: colors.cardBackgroundColor,
+                borderBottomColor: colors.cardBackgroundColor,
               },
             ]}
             title={
@@ -105,7 +114,7 @@ export const NoteCard = React.memo(
                       key={index}
                       style={
                         part.highlight
-                          ? {backgroundColor: colors.primaryContainer}
+                          ? {backgroundColor: colors.selectedTextColor}
                           : {}
                       }>
                       {part.text}
@@ -123,11 +132,11 @@ export const NoteCard = React.memo(
             style={[
               styles.bottomBorder,
               showCardBackground && {
-                backgroundColor: hex2rgba(item.color || colors.primary, 0.08),
+                backgroundColor: cardBackgroundColor(item.color),
               },
               !showCardBackground && {
-                backgroundColor: colors.whiteColor,
-                borderTopColor: colors.whiteColor,
+                backgroundColor: colors.cardBackgroundColor,
+                borderTopColor: colors.cardBackgroundColor,
               },
             ]}>
             {/* Предпросмотр содержимого заметки */}

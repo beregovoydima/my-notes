@@ -16,6 +16,8 @@ export type PagesType =
 
 export type SortDirection = 'asc' | 'desc';
 
+export type ThemeMode = 'light' | 'dark' | 'system';
+
 export interface HighlightedPart {
   text: string;
   highlight: boolean;

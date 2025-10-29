@@ -11,6 +11,7 @@ import {useTranslation} from '@/core/i18n';
 import {useCardBackground} from '@/core/hooks';
 import {CalendarEventCardMenu} from '@/components/ui/menu/CalendarEventCardMenu';
 import {calendarService, notificationService} from '@/core/services';
+import {useThemeMode} from '@/components/context/ThemeContext';
 
 interface CalendarEventCardProps {
   item: CalendarEventTaskType;
@@ -25,7 +26,7 @@ export const CalendarEventCard = ({
   const {t} = useTranslation();
   const navigation: ScreenNavigationProp = useNavigation();
   const showCardBackground = useCardBackground();
-
+  const {isDarkMode} = useThemeMode();
   const openCalendarEvent = (id: string) => {
     navigation.push('CalendarEvent', {eventId: id});
   };
@@ -40,6 +41,14 @@ export const CalendarEventCard = ({
     if (item.notificationIds) {
       notificationService.cancelSheduleNotifications(item.notificationIds);
     }
+  };
+
+  const cardBackgroundColor = (color: string | undefined | null) => {
+    if (isDarkMode) {
+      return colors.cardBackgroundColor;
+    }
+
+    return hex2rgba(color || colors.primary, 0.08);
   };
 
   const leftContent = (props: {size: number}) => {
@@ -69,14 +78,15 @@ export const CalendarEventCard = ({
   );
 
   return (
-    <Card
-      // eslint-disable-next-line react-native/no-inline-styles
-      style={{backgroundColor: colors.whiteColor, margin: 4}}
-      onPress={() => openCalendarEvent(item.id)}>
+    <Card style={[styles.card]} onPress={() => openCalendarEvent(item.id)}>
       <Card.Title
         style={[
           showCardBackground && {
-            backgroundColor: hex2rgba(item.color || colors.primary, 0.05),
+            backgroundColor: cardBackgroundColor(item.color),
+          },
+          !showCardBackground && {
+            backgroundColor: colors.cardBackgroundColor,
+            borderTopColor: colors.cardBackgroundColor,
           },
           styles.topBorder,
         ]}
@@ -108,7 +118,11 @@ export const CalendarEventCard = ({
       <Card.Content
         style={[
           showCardBackground && {
-            backgroundColor: hex2rgba(item.color || colors.primary, 0.05),
+            backgroundColor: cardBackgroundColor(item.color),
+          },
+          !showCardBackground && {
+            backgroundColor: colors.cardBackgroundColor,
+            borderTopColor: colors.cardBackgroundColor,
           },
           styles.bottomBorder,
         ]}>
@@ -178,6 +192,7 @@ const styles = StyleSheet.create({
   topBorder: {
     borderTopEndRadius: 12,
     borderTopLeftRadius: 12,
+    borderColor: 'transparent',
   },
   bottomBorder: {
     borderBottomLeftRadius: 12,

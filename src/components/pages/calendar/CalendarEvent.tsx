@@ -37,6 +37,7 @@ import {
 import {OpenNotificationSettings} from '@/components/modals/common/OpenNotificationSettings';
 import PushNotification from 'react-native-push-notification';
 import {useTranslation} from '@/core/i18n';
+import {useThemeMode} from '@/components/context/ThemeContext';
 
 export function CalendarEvent({route}: {route: any}) {
   const {colors} = useTheme();
@@ -66,6 +67,7 @@ export function CalendarEvent({route}: {route: any}) {
     dateType: 'time',
   });
   const [notificationTime, setNotificationTime] = useState<Date[]>([]);
+  const {isDarkMode} = useThemeMode();
 
   const setEventById = (id: string) => {
     const data = calendarService.getEventById(id);
@@ -283,6 +285,13 @@ export function CalendarEvent({route}: {route: any}) {
     setNotificationDialogVisible(false);
   };
 
+  const backgroundColor = (color: string) => {
+    if (isDarkMode) {
+      return colors.background;
+    }
+    return hex2rgba(color, 0.05);
+  };
+
   return (
     <>
       <AcceptDialog
@@ -314,24 +323,12 @@ export function CalendarEvent({route}: {route: any}) {
       />
       <SafeAreaView
         style={[styles.container, {backgroundColor: colors.background}]}>
-        <View
-          style={[
-            styles.view,
-            // {
-            //   backgroundColor: hex2rgba(
-            //     event.color ? event.color : colors.primary,
-            //     0.04,
-            //   ),
-            // },
-          ]}>
+        <View style={[styles.view]}>
           <View
             style={[
               styles.content,
               {
-                backgroundColor: hex2rgba(
-                  event.color ? event.color : colors.primary,
-                  0.05,
-                ),
+                backgroundColor: backgroundColor(event.color),
               },
             ]}>
             <EditableText
@@ -369,6 +366,7 @@ export function CalendarEvent({route}: {route: any}) {
               saveEvent={saveEvent}
             />
           </View>
+          <Divider />
           <ScrollView>
             <View
               style={{

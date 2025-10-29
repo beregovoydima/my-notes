@@ -314,8 +314,22 @@ export const es = {
     language: 'Idioma',
     selectLanguage: 'Seleccionar idioma',
     cancel: 'Cancelar',
+    theme: 'Tema',
+    themeDescription: 'Alternar entre tema claro y oscuro',
     showCardBackground: 'Mostrar fondo de tarjeta',
     showCardBackgroundDescription: 'Mostrar fondo de color',
     privacyPolicy: 'Política de privacidad',
+    supportUs: 'Apóyanos',
+    supportUsDescription: 'Ayuda al desarrollo de la aplicación haciendo una donación',
+  },
+
+  // Tema
+  theme: {
+    light: 'Claro',
+    dark: 'Oscuro',
+    system: 'Sistema',
+    lightDescription: 'Usar tema claro',
+    darkDescription: 'Usar tema oscuro',
+    systemDescription: 'Seguir configuración del sistema',
   },
 };

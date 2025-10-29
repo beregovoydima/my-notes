@@ -34,7 +34,7 @@ export const NotesEditMenu = memo(({deleteNote}: Props) => {
         visible={visible}
         onDismiss={closeMenu}
         contentStyle={[
-          {backgroundColor: colors.whiteColor},
+          {backgroundColor: colors.menuBackgroundColor},
           styles.content,
           styles.menuPadding,
         ]}

@@ -63,9 +63,9 @@ export const FoldersMenu = memo(({editFolder, deleteFolder, folder}: Props) => {
         visible={visible}
         onDismiss={closeMenu}
         contentStyle={[
-          {backgroundColor: colors.whiteColor},
           styles.content,
           styles.menuPadding,
+          {backgroundColor: colors.menuBackgroundColor},
         ]}
         anchor={<IconButton size={22} icon={getMenuIcon} onPress={openMenu} />}>
         <Menu.Item

@@ -39,6 +39,7 @@ import {NotesEditMenu} from '@/components/ui/menu/NotesEditMenu';
 import {useNavigation} from '@react-navigation/native';
 import {AddFolderModal} from '@/components/modals/notes/AddFolderModal';
 import {useTranslation} from '@/core/i18n';
+import {useThemeMode} from '@/components/context/ThemeContext';
 
 export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
   const navigation: ScreenNavigationProp = useNavigation();
@@ -62,7 +63,7 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
   const scroll = useRef<ScrollView | null>(null);
   const folders = useSelector(() => notesService.storeGetFoldersCollection());
   const [visible, setVisible] = useState(false);
-
+  const {isDarkMode} = useThemeMode();
   const {colors} = useTheme();
 
   const handleFontSize = () => {
@@ -276,15 +277,20 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
     await notesService.storageSetNotes(response);
   };
 
+  const backgroundColor = (color: string | null, alpha: number = 0.04) => {
+    if (isDarkMode) {
+      return colors.background;
+    }
+
+    return hex2rgba(color || colors.primary, alpha);
+  };
+
   return (
     <SafeAreaView
       style={[
         styles.container,
         {
-          backgroundColor: hex2rgba(
-            note.color ? note.color : colors.primary,
-            0.04,
-          ),
+          backgroundColor: backgroundColor(note.color),
         },
       ]}>
       <AddFolderModal visible={visible} hideModal={() => setVisible(false)} />
@@ -292,10 +298,7 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
         style={[
           styles.content,
           {
-            backgroundColor: hex2rgba(
-              note.color ? note.color : colors.primary,
-              0.15,
-            ),
+            backgroundColor: backgroundColor(note.color, 0.15),
           },
         ]}>
         <EditableText
@@ -341,7 +344,12 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
         ref={ref => (scroll.current = ref)}
         nestedScrollEnabled={true}
         scrollEventThrottle={20}
-        style={[styles.view]}>
+        style={[
+          styles.view,
+          {
+            backgroundColor: backgroundColor(note.color),
+          },
+        ]}>
         <RichEditor
           useContainer={true}
           ref={ref => (richTextRef.current = ref)}
@@ -351,15 +359,18 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
           initialContentHTML={note.label}
           pasteAsPlainText={true}
           onCursorPosition={handleCursorPosition}
+          editorStyle={{
+            backgroundColor: isDarkMode
+              ? colors.cardBackgroundColor
+              : colors.whiteColor,
+            color: colors.text,
+          }}
         />
       </ScrollView>
 
       <View
         style={{
-          backgroundColor: hex2rgba(
-            note.color ? note.color : colors.primary,
-            0.04,
-          ),
+          backgroundColor: backgroundColor(note.color, 0.08),
           padding: 4,
         }}>
         <ScrollView horizontal>
@@ -372,7 +383,6 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
                   selected={el.id === note.folder?.id ? true : false}
                   style={{
                     marginRight: 4,
-                    backgroundColor: colors.whiteColor,
                     height: 34,
                   }}
                   onPress={() => handleFolderSet(el)}>
@@ -383,7 +393,10 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
               );
             })}
             <View>
-              <Button mode="text" onPress={() => setVisible(true)}>
+              <Button
+                mode="text"
+                textColor={colors.accent}
+                onPress={() => setVisible(true)}>
                 {folders.length === 0 ? (
                   t('folders.createFolder')
                 ) : (
@@ -394,9 +407,17 @@ export const NoteEditPage = ({route}: {route: NoteEditScreenRouteProp}) => {
           </View>
         </ScrollView>
       </View>
+
       <View>
         <RichToolbar
           editor={richTextRef}
+          style={{
+            ...(isDarkMode && {backgroundColor: colors.cardBackgroundColor}),
+            borderTopWidth: 0.5,
+            borderTopColor: colors.greyColor,
+            borderBottomWidth: 0.5,
+            borderBottomColor: colors.greyColor,
+          }}
           actions={[
             actions.undo,
             actions.redo,

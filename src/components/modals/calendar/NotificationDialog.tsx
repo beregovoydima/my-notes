@@ -4,7 +4,7 @@ import {CalnedarEventTimeType} from '@/core/interfaces';
 import {DatePickerModal, TimePickerModal} from 'react-native-paper-dates';
 import moment from 'moment';
 import React, {useState} from 'react';
-import {TouchableOpacity, View} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Portal, Text, Dialog, Button, Icon} from 'react-native-paper';
 import {useTranslation} from '@/core/i18n';
 
@@ -123,7 +123,14 @@ export const NotificationDialog = ({
   };
   return (
     <Portal>
-      <Dialog visible={visible} onDismiss={closeDialog}>
+      <Dialog
+        visible={visible}
+        style={{
+          ...styles.dialog,
+          backgroundColor: colors.dialogBackgroundColor,
+          borderColor: colors.background,
+        }}
+        onDismiss={closeDialog}>
         <Dialog.Title style={{fontSize: 20}}>
           {t('notifications.selectTime')}
         </Dialog.Title>
@@ -209,10 +216,14 @@ export const NotificationDialog = ({
 
         {isCustomDate && (
           <Dialog.Actions>
-            <Button onPress={() => setIsCustomDate(false)}>
+            <Button
+              textColor={colors.accent}
+              onPress={() => setIsCustomDate(false)}>
               {t('common.cancel')}
             </Button>
-            <Button onPress={() => updateTime(moment(customDate).toDate())}>
+            <Button
+              textColor={colors.accent}
+              onPress={() => updateTime(moment(customDate).toDate())}>
               {t('common.apply')}
             </Button>
           </Dialog.Actions>
@@ -257,3 +268,9 @@ export const NotificationDialog = ({
     </Portal>
   );
 };
+
+const styles = StyleSheet.create({
+  dialog: {
+    borderWidth: 0.5,
+  },
+});

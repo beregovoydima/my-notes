@@ -8,7 +8,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {
   ParamListBase,
   RouteProp,
-  getFocusedRouteNameFromRoute,
+  // getFocusedRouteNameFromRoute,
 } from '@react-navigation/native';
 import {CalendarPage} from '../pages/calendar/CalendarPage';
 import {SearchPage} from '../pages/search/SearchPage';
@@ -17,17 +17,17 @@ import {useTranslation} from '@/core/i18n';
 
 const Tab = createBottomTabNavigator();
 
-export function NavBar({route}: {route: RouteProp<ParamListBase>}) {
+export function NavBar({}: {route: RouteProp<ParamListBase>}) {
   const {colors} = useTheme();
   const {t} = useTranslation();
 
-  const focusedRouteName = getFocusedRouteNameFromRoute(route);
+  // const focusedRouteName = getFocusedRouteNameFromRoute(route);
 
   const getNoteIcon = (focused: boolean) => {
     return (
       <SimpleIcon
         name="note"
-        color={focused ? colors.primary : colors.greyIconColor}
+        color={focused ? colors.accent : colors.greyIconColor}
         size={20}
       />
     );
@@ -38,7 +38,11 @@ export function NavBar({route}: {route: RouteProp<ParamListBase>}) {
       <Text
         numberOfLines={1}
         style={[
-          {color: focused ? colors.primary : colors.greyIconColor},
+          // eslint-disable-next-line react-native/no-inline-styles
+          {
+            color: focused ? colors.accent : colors.greyIconColor,
+            fontWeight: focused ? '700' : '400',
+          },
           styles.navbarLabel,
         ]}>
         {t('navigation.notes')}
@@ -50,7 +54,7 @@ export function NavBar({route}: {route: RouteProp<ParamListBase>}) {
     return (
       <SimpleIcon
         name="calendar"
-        color={focused ? colors.primary : colors.greyIconColor}
+        color={focused ? colors.accent : colors.greyIconColor}
         size={20}
       />
     );
@@ -61,7 +65,11 @@ export function NavBar({route}: {route: RouteProp<ParamListBase>}) {
       <Text
         numberOfLines={1}
         style={[
-          {color: focused ? colors.primary : colors.greyIconColor},
+          // eslint-disable-next-line react-native/no-inline-styles
+          {
+            color: focused ? colors.accent : colors.greyIconColor,
+            fontWeight: focused ? '700' : '400',
+          },
           styles.navbarLabel,
         ]}>
         {t('navigation.calendar')}
@@ -73,7 +81,7 @@ export function NavBar({route}: {route: RouteProp<ParamListBase>}) {
     return (
       <SimpleIcon
         name="menu"
-        color={focused ? colors.primary : colors.greyIconColor}
+        color={focused ? colors.accent : colors.greyIconColor}
         size={20}
       />
     );
@@ -84,7 +92,11 @@ export function NavBar({route}: {route: RouteProp<ParamListBase>}) {
       <Text
         numberOfLines={1}
         style={[
-          {color: focused ? colors.primary : colors.greyIconColor},
+          // eslint-disable-next-line react-native/no-inline-styles
+          {
+            color: focused ? colors.accent : colors.greyIconColor,
+            fontWeight: focused ? '700' : '400',
+          },
           styles.navbarLabel,
         ]}>
         {t('navigation.more')}
@@ -119,7 +131,7 @@ export function NavBar({route}: {route: RouteProp<ParamListBase>}) {
     return (
       <SimpleIcon
         name="magnifier"
-        color={focused ? colors.primary : colors.greyIconColor}
+        color={focused ? colors.accent : colors.greyIconColor}
         size={20}
       />
     );
@@ -130,7 +142,11 @@ export function NavBar({route}: {route: RouteProp<ParamListBase>}) {
       <Text
         numberOfLines={1}
         style={[
-          {color: focused ? colors.primary : colors.greyIconColor},
+          // eslint-disable-next-line react-native/no-inline-styles
+          {
+            color: focused ? colors.accent : colors.greyIconColor,
+            fontWeight: focused ? '700' : '400',
+          },
           styles.navbarLabel,
         ]}>
         {t('navigation.search')}
@@ -141,14 +157,17 @@ export function NavBar({route}: {route: RouteProp<ParamListBase>}) {
   return (
     <Tab.Navigator
       initialRouteName="Notes"
-      sceneContainerStyle={styles.page}
+      sceneContainerStyle={{backgroundColor: colors.navbar}}
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          height: 60,
-          paddingBottom: 5,
+          backgroundColor: colors.navbar,
+          height: 55,
+          paddingBottom: 6,
+          borderTopColor: 'transparent',
         },
-        tabBarActiveBackgroundColor: colors.greyDarkFill,
+        tabBarActiveBackgroundColor: colors.navbar,
+        tabBarInactiveBackgroundColor: colors.navbar,
       }}>
       <Tab.Screen
         name="Notes"
@@ -156,14 +175,6 @@ export function NavBar({route}: {route: RouteProp<ParamListBase>}) {
         options={{
           tabBarLabel: ({focused}) => getNoteLabel(focused),
           tabBarIcon: ({focused}) => getNoteIcon(focused),
-          tabBarItemStyle: {
-            borderRadius: 4,
-            borderWidth: 1,
-            borderColor:
-              focusedRouteName === 'Notes'
-                ? colors.lineGreyColor
-                : 'transparent',
-          },
         }}
       />
       <Tab.Screen
@@ -172,46 +183,14 @@ export function NavBar({route}: {route: RouteProp<ParamListBase>}) {
         options={{
           tabBarLabel: ({focused}) => getCalendarLabel(focused),
           tabBarIcon: ({focused}) => getCalendarIcon(focused),
-          tabBarItemStyle: {
-            borderRadius: 4,
-            borderWidth: 1,
-            borderColor:
-              focusedRouteName === 'Calendar'
-                ? colors.lineGreyColor
-                : 'transparent',
-          },
         }}
       />
-      {/* <Tab.Screen
-        name="Tasks"
-        component={SettingsPage}
-        options={{
-          tabBarLabel: ({focused}) => getTasksLabel(focused),
-          tabBarIcon: ({focused}) => getTasksIcon(focused),
-          tabBarItemStyle: {
-            borderRadius: 4,
-            borderWidth: 1,
-            borderColor:
-              focusedRouteName === 'Tasks'
-                ? colors.lineGreyColor
-                : 'transparent',
-          },
-        }}
-      /> */}
       <Tab.Screen
         name="Search"
         component={SearchPage}
         options={{
           tabBarLabel: ({focused}) => getSearchLabel(focused),
           tabBarIcon: item => getSearchIcon(item),
-          tabBarItemStyle: {
-            borderRadius: 4,
-            borderWidth: 1,
-            borderColor:
-              focusedRouteName === 'Search'
-                ? colors.lineGreyColor
-                : 'transparent',
-          },
         }}
       />
       <Tab.Screen
@@ -220,14 +199,6 @@ export function NavBar({route}: {route: RouteProp<ParamListBase>}) {
         options={{
           tabBarLabel: ({focused}) => getProfileLabel(focused),
           tabBarIcon: ({focused}) => getProfileIcon(focused),
-          tabBarItemStyle: {
-            borderRadius: 4,
-            borderWidth: 1,
-            borderColor:
-              focusedRouteName === 'Settings'
-                ? colors.lineGreyColor
-                : 'transparent',
-          },
         }}
       />
     </Tab.Navigator>
@@ -237,8 +208,5 @@ export function NavBar({route}: {route: RouteProp<ParamListBase>}) {
 const styles = StyleSheet.create({
   navbarLabel: {
     fontSize: 12,
-  },
-  page: {
-    backgroundColor: '#ffffff',
   },
 });

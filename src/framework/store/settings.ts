@@ -1,9 +1,11 @@
 import {lightColors} from '@/assets/config/colors';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {ThemeMode} from '@/core/interfaces';
 
 export interface StateSettings {
   colors: string[];
   showCardBackground: boolean;
+  themeMode?: ThemeMode;
 }
 
 const initialState: StateSettings = {
@@ -22,6 +24,7 @@ const initialState: StateSettings = {
     lightColors.error,
   ],
   showCardBackground: false,
+  themeMode: 'system',
 };
 
 const settingsSlice = createSlice({
@@ -34,8 +37,12 @@ const settingsSlice = createSlice({
     setShowCardBackground: (state, action: PayloadAction<boolean>) => {
       state.showCardBackground = action.payload;
     },
+    setThemeMode: (state, action: PayloadAction<ThemeMode>) => {
+      state.themeMode = action.payload;
+    },
   },
 });
 
-export const {setColors, setShowCardBackground} = settingsSlice.actions;
+export const {setColors, setShowCardBackground, setThemeMode} =
+  settingsSlice.actions;
 export default settingsSlice.reducer;

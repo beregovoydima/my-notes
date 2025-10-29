@@ -313,8 +313,22 @@ export const fi = {
     language: 'Kieli',
     selectLanguage: 'Valitse kieli',
     cancel: 'Peruuta',
+    theme: 'Teema',
+    themeDescription: 'Vaihda vaalean ja tumman teeman välillä',
     showCardBackground: 'Näytä kortin tausta',
     showCardBackgroundDescription: 'Näytä värillinen tausta',
     privacyPolicy: 'Tietosuojakäytäntö',
+    supportUs: 'Tue meitä',
+    supportUsDescription: 'Auta sovelluksen kehitystä tekemällä lahjoitus',
+  },
+
+  // Teema
+  theme: {
+    light: 'Vaalea',
+    dark: 'Tumma',
+    system: 'Järjestelmä',
+    lightDescription: 'Käytä vaaleaa teemaa',
+    darkDescription: 'Käytä tummaa teemaa',
+    systemDescription: 'Noudata järjestelmäasetuksia',
   },
 };

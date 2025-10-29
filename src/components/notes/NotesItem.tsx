@@ -4,7 +4,7 @@ import {NotesItems, NotesSortType, SortDirection} from '@/core/interfaces';
 import {NoteCard} from './card/NoteCard';
 import {FlashList} from '@shopify/flash-list';
 import {useSelector} from 'react-redux';
-import {notesService} from '@/core/services';
+import {notesService, appService} from '@/core/services';
 import {StyleSheet} from 'react-native';
 import {useTranslation} from '@/core/i18n';
 
@@ -18,6 +18,7 @@ const renderItem = ({item}: {item: NotesItems}) => <NoteCard item={item} />;
 
 export const NotesItem = ({sortedType, sortDirection}: Props) => {
   const notes = useSelector(() => notesService.storeGetCollectionNote());
+  const storeColors = useSelector(() => appService.getStoreColors());
   const {t} = useTranslation();
   const sortedNotes = useMemo(() => {
     if (sortedType === 'created') {
@@ -39,8 +40,31 @@ export const NotesItem = ({sortedType, sortDirection}: Props) => {
       return [...notes].sort((a, b) => a.title.localeCompare(b.title));
     }
 
+    if (sortedType === 'color') {
+      const colors: Record<string, number> = storeColors.reduce(
+        (acc: Record<string, number>, cur, i) => {
+          acc[cur] = i;
+          return acc;
+        },
+        {},
+      );
+
+      return [...notes].sort((a, b) => {
+        const colorA = colors[a.color as keyof typeof colors] ?? 999;
+        const colorB = colors[b.color as keyof typeof colors] ?? 999;
+
+        // Сначала сортируем по цветам
+        if (colorA !== colorB) {
+          return colorA > colorB ? 1 : -1;
+        }
+
+        // Если цвета одинаковые, сортируем по дате создания
+        return new Date(a.created) < new Date(b.created) ? 1 : -1;
+      });
+    }
+
     return notes;
-  }, [notes, sortedType]);
+  }, [notes, sortedType, storeColors]);
 
   const sortedListWithDiraction = useMemo(() => {
     if (sortDirection === 'asc') {

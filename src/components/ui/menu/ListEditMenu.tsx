@@ -42,9 +42,9 @@ export const ListEditMenu = memo(({deleteList}: Props) => {
         visible={visible}
         onDismiss={closeMenu}
         contentStyle={[
-          {backgroundColor: colors.whiteColor},
           styles.content,
           styles.menuPadding,
+          {backgroundColor: colors.menuBackgroundColor},
         ]}
         anchor={
           <IconButton
